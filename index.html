@@ -440,6 +440,14 @@
       background: var(--verde-claro);
     }
 
+    .botao-registrar-odd:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+      background: #ecefed;
+      border-color: #cbd1cd;
+      color: #505b54;
+    }
+
     .odd-com-acao {
       min-width: 0;
       text-align: center;
@@ -1009,6 +1017,11 @@
       color: #a52323;
     }
 
+    .atualizacao-badge.arquivada {
+      background: #ecefed;
+      color: #505b54;
+    }
+
     .tipo-mercado {
       overflow: hidden;
       font-weight: 700;
@@ -1408,6 +1421,15 @@
 
     .partida-cartao .partida {
       padding-bottom: 12px;
+    }
+
+    .partida-cartao.arquivada .partida {
+      border-style: dashed;
+      background: #f5f6f5;
+    }
+
+    .partida-cartao.arquivada .odds-cartao {
+      opacity: 0.78;
     }
 
     .favoritar-partida {
@@ -2751,6 +2773,7 @@
     const CHAVE_HISTORICOS = "odd-clara-historicos-consultados";
     const CHAVE_RADAR = "odd-clara-radar";
     const CHAVE_SNAPSHOTS_ODDS = "odd-clara-snapshots-odds-v1";
+    const CHAVE_PARTIDAS_ACOMPANHADAS = "odd-clara-partidas-acompanhadas-v1";
 
     function carregarFavoritos() {
       try {
@@ -2775,6 +2798,64 @@
     const partidasComHistorico = new Set(carregarListaLocal(CHAVE_HISTORICOS));
     let entradasRadar = carregarListaLocal(CHAVE_RADAR);
     let snapshotsOdds = carregarSnapshotsOdds();
+    let partidasAcompanhadas = carregarPartidasAcompanhadas();
+
+    function carregarPartidasAcompanhadas() {
+      try {
+        const valor = JSON.parse(localStorage.getItem(CHAVE_PARTIDAS_ACOMPANHADAS) || "{}");
+        return valor && typeof valor === "object" && !Array.isArray(valor) ? valor : {};
+      } catch (erro) {
+        return {};
+      }
+    }
+
+    function salvarPartidasAcompanhadas() {
+      try {
+        localStorage.setItem(CHAVE_PARTIDAS_ACOMPANHADAS, JSON.stringify(partidasAcompanhadas));
+      } catch (erro) {
+        // Se o navegador bloquear o armazenamento, a lista ao vivo continua funcionando.
+      }
+    }
+
+    function guardarPartidaAcompanhada(partida) {
+      if (!partida || partida.arquivada) return;
+      partidasAcompanhadas[chavePartida(partida)] = {
+        salvaEm: new Date().toISOString(),
+        partida: JSON.parse(JSON.stringify(partida))
+      };
+
+      const chaves = Object.keys(partidasAcompanhadas).sort(function (a, b) {
+        return new Date(partidasAcompanhadas[b].salvaEm) - new Date(partidasAcompanhadas[a].salvaEm);
+      });
+      chaves.slice(20).forEach(function (chave) { delete partidasAcompanhadas[chave]; });
+      salvarPartidasAcompanhadas();
+    }
+
+    function mesclarPartidasAcompanhadas(partidasAtuais) {
+      const idsAtuais = new Set(partidasAtuais.map(function (partida) { return chavePartida(partida); }));
+      const agora = Date.now();
+
+      partidasAtuais.forEach(function (partida) {
+        const chave = chavePartida(partida);
+        if (partidasAcompanhadas[chave] || partidasFavoritas.has(chave) || partida.id === partidaSelecionadaId) {
+          guardarPartidaAcompanhada(partida);
+        }
+      });
+
+      const arquivadas = [];
+      Object.keys(partidasAcompanhadas).forEach(function (chave) {
+        const registro = partidasAcompanhadas[chave];
+        const partida = registro && registro.partida;
+        if (!partida) { delete partidasAcompanhadas[chave]; return; }
+        const limite = new Date(partida.data).getTime() + 6 * 60 * 60 * 1000;
+        if (!Number.isFinite(limite) || agora > limite) { delete partidasAcompanhadas[chave]; return; }
+        if (!idsAtuais.has(chave) && partida.esporte === esporteSelecionado) {
+          arquivadas.push({ ...partida, arquivada: true, arquivadaEm: registro.salvaEm });
+        }
+      });
+      salvarPartidasAcompanhadas();
+      return partidasAtuais.concat(arquivadas);
+    }
 
     function carregarSnapshotsOdds() {
       try {
@@ -2931,6 +3012,18 @@
       botao.type = "button";
       botao.className = "botao-registrar-odd";
       botao.textContent = "Registrar na banca";
+      const partida = partidasDisponiveis.find(function (item) {
+        return item.id === partidaSelecionadaId;
+      });
+
+      // Odds arquivadas servem apenas como referência histórica. O bloqueio evita
+      // que o usuário registre como disponível uma cotação que já saiu da API.
+      if (partida && partida.arquivada) {
+        botao.disabled = true;
+        botao.textContent = "Cotação encerrada";
+        botao.setAttribute("aria-label", "Cotação encerrada; registro automático indisponível");
+        return botao;
+      }
       botao.setAttribute(
         "aria-label",
         "Registrar " + dadosAposta.selecao + " na " + dadosAposta.casa + " com odd " + formatarOdd(dadosAposta.odd)
@@ -3293,6 +3386,13 @@
       return badge;
     }
 
+    function criarBadgeArquivado() {
+      const badge = document.createElement("span");
+      badge.className = "atualizacao-badge arquivada";
+      badge.textContent = "Cotação arquivada";
+      return badge;
+    }
+
     function atualizarInformacoesDeUso(consultas) {
       if (!consultas || consultas.restantes === null) {
         consultasApi.textContent = "Consultas restantes: não informado";
@@ -3324,7 +3424,7 @@
       partidasDisponiveis.forEach(function (partida) {
         nomesTorneios.add(partida.torneio);
 
-        if (avaliarAtualizacao(partida.atualizadoEm).classe === "recente") {
+        if (!partida.arquivada && avaliarAtualizacao(partida.atualizadoEm).classe === "recente") {
           quantidadeRecentes += 1;
         }
       });
@@ -3471,7 +3571,7 @@
     */
     function criarCartaoPartida(partida) {
       const cartao = document.createElement("article");
-      cartao.className = "partida-cartao";
+      cartao.className = "partida-cartao" + (partida.arquivada ? " arquivada" : "");
 
       const botao = document.createElement("button");
       botao.type = "button";
@@ -3496,16 +3596,21 @@
       const possuiSuperbet = Boolean(obterDadosCasa(partida, "superbet"));
       const seloCobertura = document.createElement("span");
       seloCobertura.className = "selo-cobertura" + (possuiSuperbet ? " duas-casas" : "");
-      seloCobertura.textContent = possuiSuperbet ? "2 casas" : "Só Bet365";
+      seloCobertura.textContent = partida.arquivada
+        ? "Últimas odds"
+        : possuiSuperbet ? "2 casas" : "Só Bet365";
+      const badgeAtualizacao = partida.arquivada
+        ? criarBadgeArquivado()
+        : criarBadgeAtualizacao(partida.atualizadoEm);
       metaEsquerda.append(
         tipoMercado,
         seloCobertura,
-        criarBadgeAtualizacao(partida.atualizadoEm)
+        badgeAtualizacao
       );
 
       const horario = document.createElement("span");
       horario.className = "horario";
-      horario.textContent = formatarData(partida.data);
+      horario.textContent = (partida.arquivada ? "Início previsto · " : "") + formatarData(partida.data);
 
       const confronto = document.createElement("div");
       confronto.className = "confronto";
@@ -3524,7 +3629,7 @@
 
       const acao = document.createElement("span");
       acao.className = "acao";
-      acao.textContent = "Analisar →";
+      acao.textContent = partida.arquivada ? "Ver últimas odds →" : "Analisar →";
       jogadorB.appendChild(acao);
 
       const resultadosPrincipais = obterResultadosPrincipais(partida);
@@ -3579,6 +3684,7 @@
           partidasFavoritas.delete(chave);
         } else {
           partidasFavoritas.add(chave);
+          guardarPartidaAcompanhada(partida);
         }
 
         salvarFavoritos();
@@ -3778,8 +3884,9 @@
           throw new Error(dados.erro || "Não foi possível carregar as partidas.");
         }
 
-        partidasDisponiveis = dados.partidas;
         registrarSnapshotsOdds(dados.partidas);
+        partidasDisponiveis = mesclarPartidasAcompanhadas(dados.partidas);
+        dados.partidas = partidasDisponiveis;
         registrarSnapshotAlertas(dados.partidas, false);
         cacheLocalEsportes.set(esporteSelecionado, dados);
         partidaSelecionadaId = null;
@@ -4455,6 +4562,18 @@
 
       renderizarComparadorCasas(dados);
       renderizarDetectorArbitragem(dados);
+
+      if (dados.arquivada) {
+        notaComparacaoCasas.textContent =
+          "Estas são as últimas odds observadas antes de a partida sair da API; elas podem não estar mais disponíveis.";
+        arbitragemAtual = null;
+        detectorArbitragem.classList.remove("tem-oportunidade");
+        statusArbitragem.className = "status-arbitragem";
+        statusArbitragem.textContent = "Cotação encerrada";
+        descricaoArbitragem.textContent =
+          "A verificação de arbitragem foi desativada porque estas odds são apenas históricas.";
+        simuladorArbitragem.hidden = true;
+      }
       resultadoPrincipal.innerHTML = "";
       resultados.forEach(function (item) {
         const cartao = document.createElement("article");
@@ -4483,20 +4602,26 @@
         resultadoPrincipal.appendChild(cartao);
       });
 
-      const avaliacao = avaliarAtualizacao(dados.atualizadoEm);
       const statusResultado = document.querySelector("#statusResultado");
-      statusResultado.className = "atualizacao-badge " + avaliacao.classe;
-      statusResultado.textContent = avaliacao.texto;
+      if (dados.arquivada) {
+        statusResultado.className = "atualizacao-badge arquivada";
+        statusResultado.textContent = "Cotação arquivada";
+      } else {
+        const avaliacao = avaliarAtualizacao(dados.atualizadoEm);
+        statusResultado.className = "atualizacao-badge " + avaliacao.classe;
+        statusResultado.textContent = avaliacao.texto;
+      }
 
       const textoAtualizacao = dados.atualizadoEm
         ? "Odds da Bet365 atualizadas em " + formatarData(dados.atualizadoEm) + ". "
         : "";
-      document.querySelector("#resultadoAtualizacao").textContent =
-        textoAtualizacao + "O cálculo remove a margem; não prevê o vencedor.";
+      document.querySelector("#resultadoAtualizacao").textContent = dados.arquivada
+        ? textoAtualizacao + "A partida iniciou ou saiu da API. Estas odds foram preservadas apenas para acompanhamento."
+        : textoAtualizacao + "O cálculo remove a margem; não prevê o vencedor.";
 
       const abrirBet365 = document.querySelector("#abrirBet365");
 
-      if (dados.linkBet365) {
+      if (dados.linkBet365 && !dados.arquivada) {
         abrirBet365.href = dados.linkBet365;
         abrirBet365.hidden = false;
       } else {
@@ -4521,6 +4646,7 @@
 
     function selecionarPartida(partida) {
       partidaSelecionadaId = partida.id;
+      guardarPartidaAcompanhada(partida);
 
       document.querySelectorAll(".partida").forEach(function (botao) {
         botao.classList.toggle("selecionada", botao.dataset.id === partida.id);
@@ -4643,7 +4769,7 @@
     function criarSnapshot(partidas){const m=new Map();partidas.forEach(function(p){Object.keys(p.casas||{}).forEach(function(c){const casa=p.casas[c];if(casa)(casa.resultadosPrincipais||[]).forEach(function(r){m.set(p.esporte+":"+p.id+":"+c+":"+r.tipo,{odd:r.odd,nome:r.nome,evento:p.participanteA+" × "+p.participanteB,casa:casa.nome,atualizadoEm:casa.atualizadoEm});});});});return m;}
     function registrarSnapshotAlertas(partidas,comparar){const novo=criarSnapshot(partidas);if(comparar){const limite=Math.max(.1,Number(document.querySelector("#limiteAlerta").value)||3);novo.forEach(function(a,chave){const velha=snapshotAlertas.get(chave);if(velha){const v=(a.odd-velha.odd)/velha.odd*100;if(Math.abs(v)>=limite)alertasExibidos.unshift({tipo:v>0?"subiu":"caiu",texto:a.evento+" · "+a.nome+" na "+a.casa+" "+(v>0?"subiu ":"caiu ")+Math.abs(v).toFixed(1).replace(".",",")+"%"});}if(a.atualizadoEm&&Date.now()-new Date(a.atualizadoEm).getTime()>30*60*1000)alertasExibidos.unshift({tipo:"",texto:a.evento+" · odds da "+a.casa+" desatualizadas."});});alertasExibidos=alertasExibidos.slice(0,20);renderizarAlertas();}snapshotAlertas=novo;}
     function renderizarAlertas(){const l=document.querySelector("#listaAlertas");l.innerHTML="";if(!alertasExibidos.length){l.textContent="Nenhum alerta nesta sessão.";return;}alertasExibidos.forEach(function(a){const d=document.createElement("div");d.className="item-alerta "+a.tipo;d.textContent=a.texto;l.appendChild(d);});}
-    async function atualizarAlertas(){if(!document.querySelector("#ativarAlertas").checked||document.hidden)return;document.querySelector("#statusAlertas").textContent="Atualizando...";try{const r=await fetch("/api/partidas?esporte="+encodeURIComponent(esporteSelecionado)),d=await r.json();if(!r.ok)throw Error();registrarSnapshotsOdds(d.partidas);registrarSnapshotAlertas(d.partidas,true);partidasDisponiveis=d.partidas;cacheLocalEsportes.set(esporteSelecionado,d);atualizarInformacoesDeUso(d.consultas);atualizarResumoGeral();renderizarPartidas();document.querySelector("#statusAlertas").textContent="Ativos · verificado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}catch(e){document.querySelector("#statusAlertas").textContent="Falha na atualização";}}
+    async function atualizarAlertas(){if(!document.querySelector("#ativarAlertas").checked||document.hidden)return;document.querySelector("#statusAlertas").textContent="Atualizando...";try{const r=await fetch("/api/partidas?esporte="+encodeURIComponent(esporteSelecionado)),d=await r.json();if(!r.ok)throw Error();registrarSnapshotsOdds(d.partidas);registrarSnapshotAlertas(d.partidas,true);partidasDisponiveis=mesclarPartidasAcompanhadas(d.partidas);d.partidas=partidasDisponiveis;cacheLocalEsportes.set(esporteSelecionado,d);atualizarInformacoesDeUso(d.consultas);atualizarResumoGeral();renderizarPartidas();document.querySelector("#statusAlertas").textContent="Ativos · verificado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}catch(e){document.querySelector("#statusAlertas").textContent="Falha na atualização";}}
     function configurarAlertas(){clearInterval(temporizadorAlertas);if(!document.querySelector("#ativarAlertas").checked){document.querySelector("#statusAlertas").textContent="Desativados";return;}registrarSnapshotAlertas(partidasDisponiveis,false);const m=Math.max(10,Number(document.querySelector("#intervaloAlertas").value)||15);document.querySelector("#statusAlertas").textContent="Ativos · a cada "+m+" min";temporizadorAlertas=setInterval(atualizarAlertas,m*60000);}
     document.querySelector("#ativarAlertas").onchange=configurarAlertas;document.querySelector("#intervaloAlertas").onchange=configurarAlertas;document.querySelector("#limparAlertas").onclick=function(){alertasExibidos=[];renderizarAlertas();};
 

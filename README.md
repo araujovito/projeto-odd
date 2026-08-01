@@ -16,6 +16,7 @@ Ela não prevê resultados nem recomenda apostas.
 - Detector de arbitragem para mercados principais de dois resultados e futebol 1X2.
 - Simulador que distribui um valor total e mostra o retorno de cada cenário.
 - Favoritos guardados localmente no navegador, sem login ou banco de dados.
+- Partidas selecionadas ou favoritas permanecem visíveis por até seis horas após o início previsto, mesmo quando saem da API.
 - Odds principais e margem já visíveis nos cartões das partidas.
 - Mercados separados por categoria e apresentados em tabelas comparativas.
 - Gráfico da movimentação das odds do mercado vencedor na Bet365.
@@ -73,6 +74,13 @@ Os campos antigos da resposta continuam representando somente a Bet365 enquanto 
 restante da interface usa essa casa como referência, preservando a compatibilidade.
 O comparador usa somente o mercado principal completo de cada casa e informa quando
 a Superbet não possui odds suficientes, sem completar dados artificialmente.
+
+Quando uma partida acompanhada desaparece da consulta (por exemplo, ao iniciar),
+o navegador conserva localmente a última resposta por até seis horas depois do
+horário previsto. Ela aparece como `Cotação arquivada`: os dados continuam
+disponíveis para consulta e movimentação, mas os botões de registro e a análise de
+arbitragem ficam desativados, pois aquelas odds podem não estar mais disponíveis.
+Isso não transforma o site em placar ao vivo e não cria odds artificiais.
 
 O detector escolhe a melhor odd disponível para cada resultado e soma suas
 probabilidades implícitas. Só existe arbitragem matemática quando essa soma é menor
