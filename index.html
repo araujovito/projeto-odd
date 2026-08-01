@@ -2468,6 +2468,63 @@
       .navegacao a:not([href="#comoFunciona"]) { font-size: 0.67rem; }
       .linha-comparacao { grid-template-columns: minmax(88px, 1.1fr) repeat(2, minmax(68px, 0.75fr)); }
     }
+    /* Mantido no fim do CSS para vencer as regras mais específicas do painel. */
+    body.tema-escuro .painel-detalhes .resultado {
+      --verde: #55caa0;
+      --verde-escuro: #8eddbd;
+      --verde-claro: #203b31;
+      --verde-borda: #46695b;
+      --texto-suave: #bdc9c1;
+      --borda: #45554c;
+      background: #18221c !important;
+      color: #f3f7f4 !important;
+    }
+    body.tema-escuro .resultado .comparador-casas,
+    body.tema-escuro .resultado .detector-arbitragem,
+    body.tema-escuro .resultado .resultado-jogador,
+    body.tema-escuro .resultado .painel-linha-tempo,
+    body.tema-escuro .resultado .movimentacao-odds,
+    body.tema-escuro .resultado .mercado-detalhe,
+    body.tema-escuro .resultado .aposta-arbitragem,
+    body.tema-escuro .resultado .abertura-agora,
+    body.tema-escuro .resultado .comparador-momentos {
+      background: #1d2922 !important;
+      border-color: #45554c !important;
+      color: #f3f7f4 !important;
+    }
+    body.tema-escuro .resultado .resumo-casa,
+    body.tema-escuro .resultado .cabecalho-comparacao,
+    body.tema-escuro .resultado .status-arbitragem,
+    body.tema-escuro .resultado .selo-cobertura,
+    body.tema-escuro .resultado .numero,
+    body.tema-escuro .resultado .odd-resumo {
+      background: #26362e !important;
+      color: #dbe7df !important;
+    }
+    body.tema-escuro .resultado .linha-comparacao,
+    body.tema-escuro .resultado .linha-comparacao > span,
+    body.tema-escuro .resultado .tabela-comparacao {
+      border-color: #55665c !important;
+      color: #edf5ef !important;
+    }
+    body.tema-escuro .resultado .botao-registrar-odd,
+    body.tema-escuro .resultado .aba-mercado {
+      background: #15251d !important;
+      border-color: #68c9a4 !important;
+      color: #b8efd8 !important;
+    }
+    body.tema-escuro .resultado .odd-comparada.melhor-odd {
+      background: #3b3717 !important;
+      color: #fff2a0 !important;
+    }
+    body.tema-escuro .resultado .detector-arbitragem.tem-oportunidade {
+      background: #193a2b !important;
+      border-color: #58a77e !important;
+    }
+    body.tema-escuro .resultado .margem {
+      background: var(--amarelo);
+      color: #172019;
+    }
   </style>
 </head>
 
