@@ -39,6 +39,79 @@
       --sombra: 0 16px 40px rgba(0, 0, 0, 0.26);
     }
 
+    /*
+      Alguns componentes antigos usavam branco e verde escuro diretamente.
+      No tema escuro isso criava texto claro sobre campo branco. Estas regras
+      garantem contraste consistente sem alterar as cores do tema claro.
+    */
+    body.tema-escuro input,
+    body.tema-escuro select,
+    body.tema-escuro textarea {
+      background: #101914 !important;
+      border-color: #506057 !important;
+      color: #f4f7f5 !important;
+      color-scheme: dark;
+    }
+    body.tema-escuro input::placeholder,
+    body.tema-escuro textarea::placeholder { color:#aeb9b1; opacity:1; }
+    body.tema-escuro .painel,
+    body.tema-escuro .painel-lista,
+    body.tema-escuro .painel-detalhes,
+    body.tema-escuro .modulo-ferramenta,
+    body.tema-escuro .cartao-calculadora,
+    body.tema-escuro .comparador-casas,
+    body.tema-escuro .detector-arbitragem,
+    body.tema-escuro .movimentacao-odds,
+    body.tema-escuro .mercados-completos,
+    body.tema-escuro .painel-linha-tempo,
+    body.tema-escuro .dashboard-painel,
+    body.tema-escuro dialog,
+    body.tema-escuro .partida,
+    body.tema-escuro .grupo-torneio,
+    body.tema-escuro .tabela-comparacao,
+    body.tema-escuro .tabela-mercado,
+    body.tema-escuro .abertura-agora,
+    body.tema-escuro .comparador-momentos {
+      background: var(--cartao) !important;
+      border-color: var(--borda) !important;
+      color: var(--texto) !important;
+    }
+    body.tema-escuro .metrica-banca,
+    body.tema-escuro .numero,
+    body.tema-escuro .odd-resumo,
+    body.tema-escuro .linha-tempo-resumo div,
+    body.tema-escuro .resultado-jogador,
+    body.tema-escuro .margem-casa,
+    body.tema-escuro .item-mercado,
+    body.tema-escuro .distribuicao-item,
+    body.tema-escuro .resumo-arbitragem > div {
+      background: #213029 !important;
+      border-color: #405047 !important;
+      color: var(--texto) !important;
+    }
+    body.tema-escuro .modulo-topo h2,
+    body.tema-escuro .cartao-calculadora h3,
+    body.tema-escuro .grade-formulario label,
+    body.tema-escuro .campo-calculo,
+    body.tema-escuro .metrica-banca strong,
+    body.tema-escuro .resultado-calculo { color:#eef5f0; }
+    body.tema-escuro .modulo-topo p,
+    body.tema-escuro .cartao-calculadora p,
+    body.tema-escuro .metrica-banca span,
+    body.tema-escuro .texto-menor,
+    body.tema-escuro .resultado-nota,
+    body.tema-escuro .mercados-introducao { color:#bac7be; }
+    body.tema-escuro .botao-secundario {
+      background:#17241d;
+      border-color:#70b697;
+      color:#a9e3c9;
+    }
+    body.tema-escuro .partida-cartao.arquivada .partida { background:#202923 !important; }
+    body.tema-escuro .grafico-container { background:#121b16; border-color:#405047; }
+    body.tema-escuro .dica-educativa { background:#39361c; color:#fff6b3; }
+    body.tema-escuro .aviso-local { background:#39331d; border-color:#756b34; color:#fff2ad; }
+    body.tema-escuro .item-alerta { background:#302e1d; color:#f5efc6; }
+
     .acoes-topo { display:flex; align-items:center; gap:8px; }
     .botao-icone { min-width:42px; min-height:42px; border:1px solid rgba(255,255,255,.3); border-radius:12px; background:transparent; color:#fff; font-weight:700; }
     .central-acompanhamento { margin:24px 0; padding:22px; border-radius:18px; background:var(--cartao); box-shadow:var(--sombra); }
