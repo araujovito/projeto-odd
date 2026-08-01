@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Odds Justas — Tênis Bet365</title>
+  <title>Odd Clara — Odds justas de tênis</title>
 
   <style>
     /* Cores e medidas principais ficam reunidas para facilitar futuras mudanças. */
@@ -347,6 +347,144 @@
       background: var(--amarelo-escuro);
     }
 
+    .mercados-completos {
+      margin-top: 24px;
+      padding-top: 22px;
+      border-top: 1px solid var(--verde-borda);
+    }
+
+    .mercados-completos h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .mercados-introducao {
+      margin: 5px 0 16px;
+      color: var(--texto-suave);
+      font-size: 0.82rem;
+    }
+
+    .lista-mercados {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .mercado-detalhe {
+      overflow: hidden;
+      border: 1px solid var(--borda);
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .mercado-detalhe summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 14px;
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .mercado-detalhe summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .mercado-detalhe[open] summary {
+      border-bottom: 1px solid var(--borda);
+      background: #f4f8f6;
+    }
+
+    .mercado-nome {
+      font-weight: 700;
+    }
+
+    .mercado-resumo {
+      color: var(--texto-suave);
+      font-size: 0.75rem;
+    }
+
+    .grupos-mercado {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      background: #f7f9f8;
+    }
+
+    .grupo-mercado {
+      padding: 12px;
+      border: 1px solid var(--borda);
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    .grupo-mercado-topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      color: var(--texto-suave);
+      font-size: 0.75rem;
+    }
+
+    .margem-linha {
+      color: var(--verde-escuro);
+      font-weight: 700;
+    }
+
+    .resultados-mercado {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+    }
+
+    .selecao-mercado {
+      padding: 10px;
+      border-radius: 8px;
+      background: var(--verde-claro);
+    }
+
+    .selecao-nome {
+      display: block;
+      min-height: 38px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .selecao-numeros {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .selecao-numeros span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.59rem;
+      text-transform: uppercase;
+    }
+
+    .selecao-numeros strong {
+      font-size: 0.86rem;
+    }
+
+    .sem-calculo,
+    .sem-cotacoes {
+      margin: 9px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.72rem;
+    }
+
+    .sem-cotacoes {
+      margin: 0;
+      padding: 15px;
+      text-align: center;
+    }
+
     .cabecalho-lista {
       display: flex;
       align-items: center;
@@ -591,10 +729,682 @@
       display: none !important;
     }
 
+    /*
+      Os cartões abaixo resumem o que existe na tela antes de o usuário
+      começar a explorar os torneios. Eles usam os mesmos dados já baixados,
+      portanto não gastam novas consultas da API.
+    */
+    .resumo-geral {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .cartao-resumo {
+      padding: 17px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--sombra);
+    }
+
+    .cartao-resumo span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .cartao-resumo strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--verde-escuro);
+      font-size: 1.35rem;
+    }
+
+    .area-trabalho {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.78fr) minmax(0, 1.35fr);
+      align-items: start;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .painel-lista,
+    .painel-detalhes {
+      overflow: hidden;
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      background: var(--cartao);
+      box-shadow: var(--sombra);
+    }
+
+    .painel-lista .cabecalho-lista {
+      border-bottom: 1px solid var(--borda);
+    }
+
+    .painel-lista .lista-torneios {
+      max-height: 760px;
+      padding-top: 16px;
+      overflow-y: auto;
+    }
+
+    .painel-lista .partidas-do-torneio {
+      grid-template-columns: 1fr;
+    }
+
+    .painel-detalhes {
+      position: sticky;
+      top: 16px;
+      min-height: 420px;
+    }
+
+    .estado-inicial {
+      display: grid;
+      min-height: 420px;
+      place-items: center;
+      padding: 44px;
+      text-align: center;
+    }
+
+    .estado-inicial-conteudo {
+      max-width: 390px;
+    }
+
+    .estado-inicial-icone {
+      display: grid;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 18px;
+      place-items: center;
+      border-radius: 18px;
+      background: var(--verde-claro);
+      color: var(--verde);
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+
+    .estado-inicial h2 {
+      margin: 0;
+      font-size: 1.35rem;
+    }
+
+    .estado-inicial p {
+      margin: 8px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.9rem;
+    }
+
+    .painel-detalhes .resultado {
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      background: linear-gradient(135deg, #f0f8f3 0%, #ffffff 48%);
+    }
+
+    .abas-mercados {
+      display: flex;
+      gap: 7px;
+      margin: 16px 0;
+      padding-bottom: 4px;
+      overflow-x: auto;
+    }
+
+    .aba-mercado {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border: 1px solid var(--borda);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--texto-suave);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .aba-mercado[aria-selected="true"] {
+      border-color: var(--verde-escuro);
+      background: var(--verde-escuro);
+      color: #fff;
+    }
+
+    .categoria-vazia {
+      margin: 0;
+      padding: 26px;
+      border: 1px dashed var(--borda);
+      border-radius: 11px;
+      color: var(--texto-suave);
+      text-align: center;
+    }
+
+    /* Identidade principal: uma barra compacta substitui o antigo cabeçalho grande. */
+    body {
+      background: var(--fundo);
+    }
+
+    .barra-site {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      border-bottom: 3px solid var(--amarelo);
+      background: var(--verde-escuro);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(0, 35, 25, 0.16);
+    }
+
+    .barra-site-conteudo {
+      display: flex;
+      width: min(100% - 32px, 1120px);
+      min-height: 64px;
+      margin: 0 auto;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .marca {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 1.08rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .marca-simbolo {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--amarelo);
+      color: var(--verde-escuro);
+      font-size: 1.1rem;
+    }
+
+    .navegacao {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navegacao a {
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #d5e6df;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .navegacao a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .status-topo {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--amarelo);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .pagina {
+      padding-top: 22px;
+    }
+
+    .apresentacao {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 16px 2px 20px;
+    }
+
+    .apresentacao .etiqueta {
+      color: var(--verde);
+    }
+
+    .apresentacao h1 {
+      max-width: none;
+      color: var(--texto);
+      font-size: clamp(1.65rem, 4vw, 2.35rem);
+    }
+
+    .apresentacao .subtitulo {
+      max-width: 760px;
+      margin-top: 7px;
+      color: var(--texto-suave);
+    }
+
+    .barra-filtros {
+      grid-template-columns: minmax(240px, 1fr) auto;
+    }
+
+    .filtros-secundarios {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 22px 18px;
+    }
+
+    .rotulo-filtro {
+      color: var(--texto-suave);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .filtros-data {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .filtro-data,
+    .filtro-favoritas {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border: 1px solid var(--borda);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--texto-suave);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .filtro-data[aria-pressed="true"],
+    .filtro-favoritas[aria-pressed="true"] {
+      border-color: var(--verde);
+      background: var(--verde-claro);
+      color: var(--verde-escuro);
+    }
+
+    .filtro-favoritas {
+      margin-left: auto;
+    }
+
+    .partida-cartao {
+      position: relative;
+      border-radius: 14px;
+      animation: aparecer 240ms ease both;
+    }
+
+    .partida-cartao .partida {
+      padding-bottom: 12px;
+    }
+
+    .favoritar-partida {
+      position: absolute;
+      z-index: 2;
+      right: 10px;
+      bottom: 11px;
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      border: 1px solid var(--borda);
+      border-radius: 50%;
+      background: #fff;
+      color: #88928b;
+      font-size: 1rem;
+    }
+
+    .favoritar-partida:hover,
+    .favoritar-partida.ativa {
+      border-color: var(--amarelo-escuro);
+      background: #fffbd1;
+      color: #756900;
+    }
+
+    .odds-cartao {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin: 12px 48px 0 14px;
+    }
+
+    .odd-resumo {
+      padding: 7px 8px;
+      border-radius: 8px;
+      background: #f2f5f3;
+    }
+
+    .odd-resumo span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .odd-resumo strong {
+      display: block;
+      color: var(--verde-escuro);
+      font-size: 0.86rem;
+    }
+
+    .odd-resumo.margem-cartao {
+      background: #fffbd1;
+    }
+
+    /* A tabela mantém todas as seleções alinhadas e facilita a comparação. */
+    .tabela-odds {
+      overflow: hidden;
+      border: 1px solid var(--borda);
+      border-radius: 9px;
+    }
+
+    .linha-tabela {
+      display: grid;
+      grid-template-columns: minmax(130px, 1.45fr) repeat(3, minmax(70px, 0.7fr));
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-top: 1px solid var(--borda);
+      font-size: 0.79rem;
+    }
+
+    .linha-tabela:first-child {
+      border-top: 0;
+    }
+
+    .cabecalho-tabela {
+      background: var(--verde-escuro);
+      color: #dbe9e4;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .linha-tabela:not(.cabecalho-tabela):nth-child(odd) {
+      background: #f7faf8;
+    }
+
+    .linha-tabela .selecao-nome-tabela {
+      font-weight: 700;
+    }
+
+    .linha-tabela strong {
+      color: var(--verde-escuro);
+    }
+
+    .movimentacao-odds {
+      margin-top: 24px;
+      padding-top: 22px;
+      border-top: 1px solid var(--verde-borda);
+    }
+
+    .movimentacao-topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .movimentacao-topo h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .movimentacao-topo p {
+      margin: 4px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.8rem;
+    }
+
+    .botao-movimentacao {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      border: 1px solid var(--verde);
+      border-radius: 9px;
+      background: var(--verde);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .botao-movimentacao:hover {
+      background: var(--verde-escuro);
+    }
+
+    .status-movimentacao {
+      min-height: 20px;
+      margin: 12px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.76rem;
+    }
+
+    .legenda-grafico {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 10px 0;
+      color: var(--texto-suave);
+      font-size: 0.72rem;
+    }
+
+    .legenda-grafico span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legenda-grafico i {
+      width: 18px;
+      height: 3px;
+      border-radius: 99px;
+    }
+
+    .cor-jogador-a {
+      background: var(--verde);
+    }
+
+    .cor-jogador-b {
+      background: #d5a900;
+    }
+
+    .grafico-container {
+      overflow: hidden;
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    #graficoMovimentacao {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 230px;
+    }
+
+    .grafico-grade {
+      stroke: #e6ebe7;
+      stroke-width: 1;
+    }
+
+    .grafico-eixo-texto {
+      fill: #758078;
+      font-size: 11px;
+    }
+
+    .grafico-linha-a,
+    .grafico-linha-b {
+      fill: none;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .grafico-linha-a {
+      stroke: var(--verde);
+    }
+
+    .grafico-linha-b {
+      stroke: #d5a900;
+    }
+
+    .grafico-ponto-a,
+    .grafico-ponto-b {
+      stroke: #fff;
+      stroke-width: 3;
+    }
+
+    .grafico-ponto-a {
+      fill: var(--verde);
+    }
+
+    .grafico-ponto-b {
+      fill: #d5a900;
+    }
+
+    .resumo-movimentacao {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .indicador-movimento {
+      padding: 10px;
+      border-radius: 9px;
+      background: #f2f5f3;
+    }
+
+    .indicador-movimento span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .indicador-movimento strong {
+      color: var(--verde-escuro);
+      font-size: 0.88rem;
+    }
+
+    .nota-consulta {
+      margin: 10px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.68rem;
+    }
+
+    .grafico-container.carregando {
+      background: linear-gradient(90deg, #eef2ef 25%, #fff 50%, #eef2ef 75%);
+      background-size: 200% 100%;
+      animation: brilho 1.25s infinite linear;
+    }
+
+    .como-funciona {
+      margin-top: 22px;
+      padding: clamp(22px, 4vw, 32px);
+      border-radius: 18px;
+      background: var(--verde-escuro);
+      color: #fff;
+      scroll-margin-top: 84px;
+    }
+
+    .como-funciona h2 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .como-funciona > p {
+      max-width: 680px;
+      margin: 6px 0 20px;
+      color: #cfe1db;
+    }
+
+    .passos-calculo {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .passo-calculo {
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .passo-numero {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 12px;
+      place-items: center;
+      border-radius: 9px;
+      background: var(--amarelo);
+      color: var(--verde-escuro);
+      font-weight: 800;
+    }
+
+    .passo-calculo h3 {
+      margin: 0;
+      font-size: 0.98rem;
+    }
+
+    .passo-calculo p {
+      margin: 6px 0 0;
+      color: #cfe1db;
+      font-size: 0.82rem;
+    }
+
+    .esqueleto {
+      height: 108px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, #eef2ef 25%, #f8faf8 50%, #eef2ef 75%);
+      background-size: 200% 100%;
+      animation: brilho 1.25s infinite linear;
+    }
+
+    @keyframes brilho {
+      from { background-position: 200% 0; }
+      to { background-position: -200% 0; }
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+
     @media (max-width: 760px) {
       .pagina {
         width: min(100% - 20px, 1120px);
-        padding-top: 26px;
+        padding-top: 14px;
+      }
+
+      .barra-site-conteudo {
+        width: min(100% - 20px, 1120px);
+        min-height: 58px;
+      }
+
+      .navegacao a:not([href="#comoFunciona"]),
+      .status-topo {
+        display: none;
+      }
+
+      .apresentacao {
+        align-items: flex-start;
+        flex-direction: column;
+        padding-top: 8px;
       }
 
       .cabecalho {
@@ -606,6 +1416,36 @@
       .partidas-do-torneio,
       .resultado-jogadores {
         grid-template-columns: 1fr;
+      }
+
+      .filtros-secundarios {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .filtros-data {
+        width: 100%;
+      }
+
+      .filtro-favoritas {
+        margin-left: 0;
+      }
+
+      .resumo-geral {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .area-trabalho {
+        grid-template-columns: 1fr;
+      }
+
+      .painel-detalhes {
+        position: static;
+        grid-row: 1;
+      }
+
+      .painel-lista .lista-torneios {
+        max-height: none;
       }
 
       .botao-atualizar {
@@ -643,9 +1483,45 @@
       .numeros {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+
+      .passos-calculo {
+        grid-template-columns: 1fr;
+      }
+
+      .linha-tabela {
+        grid-template-columns: minmax(105px, 1.25fr) repeat(3, minmax(62px, 0.7fr));
+        gap: 6px;
+        padding: 9px 8px;
+        font-size: 0.7rem;
+      }
+
+      .movimentacao-topo {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .botao-movimentacao {
+        width: 100%;
+      }
+
+      #graficoMovimentacao {
+        min-height: 190px;
+      }
+
+      .resumo-movimentacao {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 430px) {
+      .resumo-geral {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .cartao-resumo {
+        padding: 14px;
+      }
+
       .numeros {
         grid-template-columns: 1fr;
       }
@@ -654,18 +1530,32 @@
 </head>
 
 <body>
+  <header class="barra-site">
+    <div class="barra-site-conteudo">
+      <a class="marca" href="#inicio" aria-label="Odd Clara - início">
+        <span class="marca-simbolo" aria-hidden="true">OC</span>
+        <span>Odd Clara</span>
+      </a>
+
+      <nav class="navegacao" aria-label="Navegação principal">
+        <a href="#partidas">Partidas</a>
+        <a href="#comoFunciona">Como funciona</a>
+      </nav>
+
+      <span class="status-topo"><span class="ponto"></span> Dados Bet365</span>
+    </div>
+  </header>
+
   <main class="pagina">
-    <header class="cabecalho">
+    <section id="inicio" class="apresentacao">
       <div>
-        <p class="etiqueta">Tênis · ATP e WTA</p>
-        <h1>Escolha a partida. Veja a odd justa.</h1>
+        <p class="etiqueta">Análise transparente · ATP e WTA</p>
+        <h1>Odds sem a margem escondida.</h1>
         <p class="subtitulo">
-          Selecione um confronto ATP ou WTA disponível na Bet365 e veja a margem removida automaticamente.
+          Compare as odds da Bet365 com as probabilidades normalizadas, sem previsões e sem recomendações de apostas.
         </p>
       </div>
-
-      <div class="fonte"><span class="ponto"></span> Dados Bet365</div>
-    </header>
+    </section>
 
     <section class="painel" aria-label="Partidas de tênis da Bet365">
       <div class="barra-filtros">
@@ -689,6 +1579,17 @@
         </div>
       </div>
 
+      <div class="filtros-secundarios">
+        <span class="rotulo-filtro">Data</span>
+        <div class="filtros-data" role="group" aria-label="Filtrar partidas por data">
+          <button class="filtro-data" type="button" data-periodo="todos" aria-pressed="true">Todas</button>
+          <button class="filtro-data" type="button" data-periodo="hoje" aria-pressed="false">Hoje</button>
+          <button class="filtro-data" type="button" data-periodo="amanha" aria-pressed="false">Amanhã</button>
+          <button class="filtro-data" type="button" data-periodo="proximos" aria-pressed="false">Próximos dias</button>
+        </div>
+        <button id="filtrarFavoritas" class="filtro-favoritas" type="button" aria-pressed="false">★ Favoritas</button>
+      </div>
+
       <div class="informacoes-api">
         <span id="consultasApi" class="consultas-restantes">Consultas: carregando...</span>
         <span id="cacheApi">A lista usa cache para economizar o plano gratuito.</span>
@@ -698,9 +1599,51 @@
       <p id="mensagem" class="mensagem" role="status" aria-live="polite">
         Carregando partidas da Bet365...
       </p>
+    </section>
 
-      <!-- O resultado só aparece depois que o usuário escolhe uma partida. -->
-      <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <!-- Estes números são calculados no navegador com a lista já carregada. -->
+    <section class="resumo-geral" aria-label="Resumo das partidas">
+      <article class="cartao-resumo">
+        <span>Partidas</span>
+        <strong id="resumoPartidas">—</strong>
+      </article>
+      <article class="cartao-resumo">
+        <span>Torneios</span>
+        <strong id="resumoTorneios">—</strong>
+      </article>
+      <article class="cartao-resumo">
+        <span>Odds recentes</span>
+        <strong id="resumoRecentes">—</strong>
+      </article>
+      <article class="cartao-resumo">
+        <span>Consultas restantes</span>
+        <strong id="resumoConsultas">—</strong>
+      </article>
+    </section>
+
+    <section id="partidas" class="area-trabalho">
+      <section class="painel-lista" aria-label="Torneios e partidas">
+        <div class="cabecalho-lista">
+          <h2>Torneios</h2>
+          <span id="contador" class="contador"></span>
+        </div>
+
+        <div id="listaPartidas" class="lista-torneios" aria-busy="true"></div>
+      </section>
+
+      <section class="painel-detalhes" aria-label="Análise da partida selecionada">
+        <div id="estadoInicial" class="estado-inicial">
+          <div class="estado-inicial-conteudo">
+            <div class="estado-inicial-icone" aria-hidden="true">→</div>
+            <h2>Escolha uma partida</h2>
+            <p>
+              Selecione um confronto na lista para comparar as odds da Bet365 com as odds justas.
+            </p>
+          </div>
+        </div>
+
+        <!-- O resultado só aparece depois que o usuário escolhe uma partida. -->
+        <section id="resultado" class="resultado" aria-live="polite" hidden>
         <div class="resultado-topo">
           <div>
             <p id="resultadoTorneio">Torneio</p>
@@ -745,14 +1688,75 @@
             hidden
           >Abrir confronto na Bet365 ↗</a>
         </div>
+
+        <section class="movimentacao-odds" aria-labelledby="tituloMovimentacao">
+          <div class="movimentacao-topo">
+            <div>
+              <h3 id="tituloMovimentacao">Movimentação das odds</h3>
+              <p>Histórico do mercado vencedor da partida, somente na Bet365.</p>
+            </div>
+            <button id="carregarMovimentacao" class="botao-movimentacao" type="button">
+              Carregar histórico
+            </button>
+          </div>
+
+          <p id="statusMovimentacao" class="status-movimentacao" role="status" aria-live="polite"></p>
+
+          <div class="legenda-grafico" aria-hidden="true">
+            <span><i class="cor-jogador-a"></i><b id="legendaJogadorA">Jogador A</b></span>
+            <span><i class="cor-jogador-b"></i><b id="legendaJogadorB">Jogador B</b></span>
+          </div>
+
+          <div class="grafico-container">
+            <svg
+              id="graficoMovimentacao"
+              viewBox="0 0 720 300"
+              role="img"
+              aria-labelledby="tituloGrafico descricaoGrafico"
+            >
+              <title id="tituloGrafico">Movimentação das odds da Bet365</title>
+              <desc id="descricaoGrafico">Selecione uma partida para visualizar as cotações.</desc>
+            </svg>
+          </div>
+
+          <div id="resumoMovimentacao" class="resumo-movimentacao"></div>
+          <p class="nota-consulta">O histórico só é consultado quando você usa o botão, ajudando a economizar a cota da API.</p>
+        </section>
+
+        <section class="mercados-completos" aria-labelledby="tituloMercados">
+          <h3 id="tituloMercados">Mercados da partida</h3>
+          <p class="mercados-introducao">
+            Cada linha é calculada separadamente. Mercados incompletos são exibidos sem uma falsa odd justa.
+          </p>
+          <div id="abasMercados" class="abas-mercados" role="tablist" aria-label="Categorias de mercados"></div>
+          <div id="listaMercados" class="lista-mercados"></div>
+        </section>
+        </section>
       </section>
+    </section>
 
-      <div class="cabecalho-lista">
-        <h2>Torneios disponíveis</h2>
-        <span id="contador" class="contador"></span>
+    <section id="comoFunciona" class="como-funciona" aria-labelledby="tituloComoFunciona">
+      <h2 id="tituloComoFunciona">Como a odd justa é calculada?</h2>
+      <p>
+        A Odd Clara não tenta descobrir quem vencerá. Ela apenas retira matematicamente a margem embutida pela casa.
+      </p>
+      <div class="passos-calculo">
+        <article class="passo-calculo">
+          <span class="passo-numero">1</span>
+          <h3>Transformamos odds em probabilidades</h3>
+          <p>Para cada resultado, calculamos 1 ÷ odd. A soma normalmente fica acima de 100% por causa da margem.</p>
+        </article>
+        <article class="passo-calculo">
+          <span class="passo-numero">2</span>
+          <h3>Normalizamos para 100%</h3>
+          <p>Dividimos cada probabilidade pela soma total. Assim removemos proporcionalmente a margem da casa.</p>
+        </article>
+        <article class="passo-calculo">
+          <span class="passo-numero">3</span>
+          <h3>Reconvertemos para odd justa</h3>
+          <p>Calculamos 1 ÷ probabilidade normalizada. O resultado é uma odd sem a margem matemática.</p>
+        </article>
       </div>
-
-      <div id="listaPartidas" class="lista-torneios" aria-busy="true"></div>
     </section>
 
     <aside class="jogo-responsavel">
@@ -766,7 +1770,24 @@
     // Guardamos a lista recebida para permitir pesquisas sem consultar a API novamente.
     let partidasDisponiveis = [];
     let partidaSelecionadaId = null;
+    let mercadosPartidaAtual = [];
+    let categoriaMercadoAtiva = "principal";
+    let periodoAtivo = "todos";
+    let somenteFavoritas = false;
+    let partidaGraficoAtualId = null;
     const circuitosAtivos = new Set(["ATP", "WTA"]);
+    const CHAVE_FAVORITOS = "odd-clara-favoritos";
+
+    function carregarFavoritos() {
+      try {
+        const valorSalvo = JSON.parse(localStorage.getItem(CHAVE_FAVORITOS) || "[]");
+        return new Set(Array.isArray(valorSalvo) ? valorSalvo : []);
+      } catch (erro) {
+        return new Set();
+      }
+    }
+
+    const partidasFavoritas = carregarFavoritos();
 
     const campoPesquisa = document.querySelector("#pesquisa");
     const botaoAtualizar = document.querySelector("#atualizar");
@@ -774,8 +1795,18 @@
     const listaPartidas = document.querySelector("#listaPartidas");
     const contador = document.querySelector("#contador");
     const resultado = document.querySelector("#resultado");
+    const estadoInicial = document.querySelector("#estadoInicial");
     const consultasApi = document.querySelector("#consultasApi");
     const cacheApi = document.querySelector("#cacheApi");
+    const resumoPartidas = document.querySelector("#resumoPartidas");
+    const resumoTorneios = document.querySelector("#resumoTorneios");
+    const resumoRecentes = document.querySelector("#resumoRecentes");
+    const resumoConsultas = document.querySelector("#resumoConsultas");
+    const botaoFiltrarFavoritas = document.querySelector("#filtrarFavoritas");
+    const botaoCarregarMovimentacao = document.querySelector("#carregarMovimentacao");
+    const graficoMovimentacao = document.querySelector("#graficoMovimentacao");
+    const statusMovimentacao = document.querySelector("#statusMovimentacao");
+    const resumoMovimentacao = document.querySelector("#resumoMovimentacao");
 
     function formatarOdd(valor) {
       return valor.toFixed(2).replace(".", ",");
@@ -850,11 +1881,13 @@
     function atualizarInformacoesDeUso(consultas) {
       if (!consultas || consultas.restantes === null) {
         consultasApi.textContent = "Consultas restantes: não informado";
+        resumoConsultas.textContent = "—";
         return;
       }
 
       consultasApi.textContent =
         consultas.restantes + " de " + consultas.limite + " consultas restantes nesta hora";
+      resumoConsultas.textContent = consultas.restantes;
 
       const partes = [];
 
@@ -869,11 +1902,58 @@
       cacheApi.textContent = partes.join(" · ");
     }
 
+    function atualizarResumoGeral() {
+      const nomesTorneios = new Set();
+      let quantidadeRecentes = 0;
+
+      partidasDisponiveis.forEach(function (partida) {
+        nomesTorneios.add(partida.torneio);
+
+        if (avaliarAtualizacao(partida.atualizadoEm).classe === "recente") {
+          quantidadeRecentes += 1;
+        }
+      });
+
+      resumoPartidas.textContent = partidasDisponiveis.length;
+      resumoTorneios.textContent = nomesTorneios.size;
+      resumoRecentes.textContent = quantidadeRecentes;
+    }
+
+    function inicioDoDia(data) {
+      return new Date(data.getFullYear(), data.getMonth(), data.getDate());
+    }
+
+    function partidaEstaNoPeriodo(partida) {
+      if (periodoAtivo === "todos") return true;
+
+      const dataPartida = inicioDoDia(new Date(partida.data));
+      const hoje = inicioDoDia(new Date());
+      const amanha = new Date(hoje);
+      amanha.setDate(amanha.getDate() + 1);
+      const depoisDeAmanha = new Date(hoje);
+      depoisDeAmanha.setDate(depoisDeAmanha.getDate() + 2);
+
+      if (periodoAtivo === "hoje") return dataPartida.getTime() === hoje.getTime();
+      if (periodoAtivo === "amanha") return dataPartida.getTime() === amanha.getTime();
+      return dataPartida.getTime() >= depoisDeAmanha.getTime();
+    }
+
+    function salvarFavoritos() {
+      try {
+        localStorage.setItem(CHAVE_FAVORITOS, JSON.stringify(Array.from(partidasFavoritas)));
+      } catch (erro) {
+        // O restante do site continua funcionando caso o navegador bloqueie o armazenamento.
+      }
+    }
+
     /*
       Cada partida vira um botão. Assim ela pode ser selecionada com mouse,
       toque, tecla Enter ou barra de espaço.
     */
     function criarCartaoPartida(partida) {
+      const cartao = document.createElement("article");
+      cartao.className = "partida-cartao";
+
       const botao = document.createElement("button");
       botao.type = "button";
       botao.className = "partida";
@@ -915,18 +1995,69 @@
 
       const acao = document.createElement("span");
       acao.className = "acao";
-      acao.textContent = "Ver odds →";
+      acao.textContent = "Analisar →";
       jogadorB.appendChild(acao);
+
+      const calculo = calcularOddsJustas(partida.oddA, partida.oddB);
+      const odds = document.createElement("div");
+      odds.className = "odds-cartao";
+
+      [
+        { rotulo: "Jogador A", valor: formatarOdd(partida.oddA) },
+        { rotulo: "Jogador B", valor: formatarOdd(partida.oddB) },
+        { rotulo: "Margem", valor: formatarPorcentagem(calculo.margem), margem: true }
+      ].forEach(function (item) {
+        const bloco = document.createElement("div");
+        bloco.className = "odd-resumo" + (item.margem ? " margem-cartao" : "");
+        const rotulo = document.createElement("span");
+        const valor = document.createElement("strong");
+        rotulo.textContent = item.rotulo;
+        valor.textContent = item.valor;
+        bloco.append(rotulo, valor);
+        odds.appendChild(bloco);
+      });
+
+      const favorito = document.createElement("button");
+      favorito.type = "button";
+      favorito.className = "favoritar-partida";
+
+      function atualizarBotaoFavorito() {
+        const estaFavorita = partidasFavoritas.has(partida.id);
+        favorito.classList.toggle("ativa", estaFavorita);
+        favorito.textContent = estaFavorita ? "★" : "☆";
+        favorito.setAttribute("aria-pressed", String(estaFavorita));
+        favorito.setAttribute(
+          "aria-label",
+          (estaFavorita ? "Remover dos favoritos: " : "Adicionar aos favoritos: ") +
+            partida.jogadorA + " contra " + partida.jogadorB
+        );
+      }
+
+      atualizarBotaoFavorito();
+
+      favorito.addEventListener("click", function () {
+        if (partidasFavoritas.has(partida.id)) {
+          partidasFavoritas.delete(partida.id);
+        } else {
+          partidasFavoritas.add(partida.id);
+        }
+
+        salvarFavoritos();
+        atualizarBotaoFavorito();
+
+        if (somenteFavoritas) renderizarPartidas();
+      });
 
       meta.append(metaEsquerda, horario);
       confronto.append(jogadorA, versus, jogadorB);
-      botao.append(meta, confronto);
+      botao.append(meta, confronto, odds);
 
       botao.addEventListener("click", function () {
         selecionarPartida(partida, botao);
       });
 
-      return botao;
+      cartao.append(botao, favorito);
+      return cartao;
     }
 
     function renderizarPartidas() {
@@ -937,7 +2068,12 @@
         const textoPartida = normalizarTexto(
           partida.jogadorA + " " + partida.jogadorB + " " + partida.torneio
         );
-        return circuitosAtivos.has(circuito) && textoPartida.includes(pesquisa);
+        const correspondeFavoritos = !somenteFavoritas || partidasFavoritas.has(partida.id);
+
+        return circuitosAtivos.has(circuito) &&
+          textoPartida.includes(pesquisa) &&
+          partidaEstaNoPeriodo(partida) &&
+          correspondeFavoritos;
       });
 
       listaPartidas.innerHTML = "";
@@ -946,7 +2082,9 @@
         contador.textContent = "0 torneios";
         const vazio = document.createElement("p");
         vazio.className = "vazio";
-        vazio.textContent = "Nenhuma partida encontrada para esta pesquisa.";
+        vazio.textContent = somenteFavoritas
+          ? "Nenhuma partida favorita corresponde aos filtros atuais."
+          : "Nenhuma partida encontrada para os filtros atuais.";
         listaPartidas.appendChild(vazio);
         return;
       }
@@ -1010,11 +2148,24 @@
       });
     }
 
+    function mostrarEsqueletosDeCarregamento() {
+      listaPartidas.innerHTML = "";
+
+      for (let indice = 0; indice < 4; indice += 1) {
+        const esqueleto = document.createElement("div");
+        esqueleto.className = "esqueleto";
+        esqueleto.setAttribute("aria-hidden", "true");
+        listaPartidas.appendChild(esqueleto);
+      }
+    }
+
     async function carregarPartidas() {
       botaoAtualizar.disabled = true;
       listaPartidas.setAttribute("aria-busy", "true");
       resultado.hidden = true;
+      estadoInicial.hidden = false;
       mostrarMensagem("Carregando partidas da Bet365...", false);
+      mostrarEsqueletosDeCarregamento();
 
       try {
         const resposta = await fetch("/api/partidas");
@@ -1027,10 +2178,12 @@
         partidasDisponiveis = dados.partidas;
         partidaSelecionadaId = null;
         atualizarInformacoesDeUso(dados.consultas);
+        atualizarResumoGeral();
         renderizarPartidas();
         mensagem.hidden = true;
       } catch (erro) {
         partidasDisponiveis = [];
+        atualizarResumoGeral();
         renderizarPartidas();
         mostrarMensagem(erro.message, true);
       } finally {
@@ -1055,6 +2208,412 @@
         oddJustaA: 1 / probabilidadeJustaA,
         oddJustaB: 1 / probabilidadeJustaB
       };
+    }
+
+    const ESPACO_SVG = "http://www.w3.org/2000/svg";
+
+    function criarElementoSvg(nome, atributos, texto) {
+      const elemento = document.createElementNS(ESPACO_SVG, nome);
+
+      Object.entries(atributos || {}).forEach(function ([atributo, valor]) {
+        elemento.setAttribute(atributo, valor);
+      });
+
+      if (texto !== undefined) elemento.textContent = texto;
+      return elemento;
+    }
+
+    function formatarMomentoGrafico(momento) {
+      return new Intl.DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(momento));
+    }
+
+    function criarIndicadorMovimento(rotulo, valor) {
+      const indicador = document.createElement("div");
+      indicador.className = "indicador-movimento";
+      const nome = document.createElement("span");
+      const numero = document.createElement("strong");
+      nome.textContent = rotulo;
+      numero.textContent = valor;
+      indicador.append(nome, numero);
+      return indicador;
+    }
+
+    function formatarVariacao(inicial, atual) {
+      const percentual = ((atual - inicial) / inicial) * 100;
+      const seta = percentual > 0.05 ? "↑ " : percentual < -0.05 ? "↓ " : "→ ";
+      return seta + (percentual > 0 ? "+" : "") + percentual.toFixed(1).replace(".", ",") + "%";
+    }
+
+    function desenharGraficoMovimentacao(dados) {
+      const pontos = dados.pontos || [];
+      graficoMovimentacao.innerHTML = "";
+      resumoMovimentacao.innerHTML = "";
+
+      const titulo = criarElementoSvg("title", { id: "tituloGrafico" }, "Movimentação das odds da Bet365");
+      const descricao = criarElementoSvg(
+        "desc",
+        { id: "descricaoGrafico" },
+        pontos.length > 1
+          ? "Linhas históricas das odds dos dois jogadores."
+          : "Cotação atual dos dois jogadores; histórico ainda indisponível."
+      );
+      graficoMovimentacao.append(titulo, descricao);
+
+      if (pontos.length === 0) {
+        const mensagem = criarElementoSvg(
+          "text",
+          { x: 360, y: 150, "text-anchor": "middle", class: "grafico-eixo-texto" },
+          "Nenhuma cotação disponível"
+        );
+        graficoMovimentacao.appendChild(mensagem);
+        return;
+      }
+
+      const largura = 720;
+      const altura = 300;
+      const margem = { topo: 26, direita: 24, inferior: 48, esquerda: 52 };
+      const larguraUtil = largura - margem.esquerda - margem.direita;
+      const alturaUtil = altura - margem.topo - margem.inferior;
+      const valores = pontos.flatMap(function (ponto) { return [ponto.oddA, ponto.oddB]; });
+      let minimo = Math.min(...valores);
+      let maximo = Math.max(...valores);
+      const folga = Math.max((maximo - minimo) * 0.15, 0.08);
+      minimo = Math.max(1, minimo - folga);
+      maximo += folga;
+
+      function posicaoX(indice) {
+        return pontos.length === 1
+          ? margem.esquerda + larguraUtil / 2
+          : margem.esquerda + (indice / (pontos.length - 1)) * larguraUtil;
+      }
+
+      function posicaoY(valor) {
+        return margem.topo + ((maximo - valor) / (maximo - minimo)) * alturaUtil;
+      }
+
+      for (let indice = 0; indice <= 4; indice += 1) {
+        const y = margem.topo + (indice / 4) * alturaUtil;
+        const valor = maximo - (indice / 4) * (maximo - minimo);
+        graficoMovimentacao.appendChild(criarElementoSvg("line", {
+          x1: margem.esquerda,
+          y1: y,
+          x2: largura - margem.direita,
+          y2: y,
+          class: "grafico-grade"
+        }));
+        graficoMovimentacao.appendChild(criarElementoSvg("text", {
+          x: margem.esquerda - 9,
+          y: y + 4,
+          "text-anchor": "end",
+          class: "grafico-eixo-texto"
+        }, valor.toFixed(2).replace(".", ",")));
+      }
+
+      const indicesRotulos = pontos.length === 1
+        ? [0]
+        : Array.from(new Set([0, Math.floor((pontos.length - 1) / 2), pontos.length - 1]));
+
+      indicesRotulos.forEach(function (indice) {
+        graficoMovimentacao.appendChild(criarElementoSvg("text", {
+          x: posicaoX(indice),
+          y: altura - 18,
+          "text-anchor": "middle",
+          class: "grafico-eixo-texto"
+        }, formatarMomentoGrafico(pontos[indice].momento)));
+      });
+
+      [
+        { campo: "oddA", classeLinha: "grafico-linha-a", classePonto: "grafico-ponto-a", nome: dados.jogadorA },
+        { campo: "oddB", classeLinha: "grafico-linha-b", classePonto: "grafico-ponto-b", nome: dados.jogadorB }
+      ].forEach(function (serie) {
+        if (pontos.length > 1) {
+          const caminho = pontos.map(function (ponto, indice) {
+            return (indice === 0 ? "M " : "L ") + posicaoX(indice) + " " + posicaoY(ponto[serie.campo]);
+          }).join(" ");
+          graficoMovimentacao.appendChild(criarElementoSvg("path", {
+            d: caminho,
+            class: serie.classeLinha
+          }));
+        }
+
+        pontos.forEach(function (ponto, indice) {
+          let xDoPonto = posicaoX(indice);
+
+          // Se existe apenas uma cotação e as odds são iguais, afastamos os
+          // marcadores alguns pixels para que as duas cores continuem visíveis.
+          if (pontos.length === 1 && ponto.oddA === ponto.oddB) {
+            xDoPonto += serie.campo === "oddA" ? -6 : 6;
+          }
+
+          const circulo = criarElementoSvg("circle", {
+            cx: xDoPonto,
+            cy: posicaoY(ponto[serie.campo]),
+            r: pontos.length === 1 ? 7 : 5,
+            class: serie.classePonto
+          });
+          circulo.appendChild(criarElementoSvg(
+            "title",
+            {},
+            serie.nome + ": " + formatarOdd(ponto[serie.campo]) + " em " + formatarMomentoGrafico(ponto.momento)
+          ));
+          graficoMovimentacao.appendChild(circulo);
+        });
+      });
+
+      const primeiro = pontos[0];
+      const ultimo = pontos[pontos.length - 1];
+      resumoMovimentacao.append(
+        criarIndicadorMovimento(dados.jogadorA, formatarVariacao(primeiro.oddA, ultimo.oddA)),
+        criarIndicadorMovimento(dados.jogadorB, formatarVariacao(primeiro.oddB, ultimo.oddB)),
+        criarIndicadorMovimento("Margem atual", formatarPorcentagem(ultimo.margem))
+      );
+    }
+
+    function prepararGraficoMovimentacao(partida) {
+      partidaGraficoAtualId = partida.id;
+      botaoCarregarMovimentacao.disabled = false;
+      botaoCarregarMovimentacao.textContent = "Carregar histórico";
+      document.querySelector("#legendaJogadorA").textContent = partida.jogadorA;
+      document.querySelector("#legendaJogadorB").textContent = partida.jogadorB;
+
+      const calculo = calcularOddsJustas(partida.oddA, partida.oddB);
+      const dadosAtuais = {
+        jogadorA: partida.jogadorA,
+        jogadorB: partida.jogadorB,
+        pontos: [{
+          momento: partida.atualizadoEm || new Date().toISOString(),
+          oddA: partida.oddA,
+          oddB: partida.oddB,
+          margem: calculo.margem
+        }]
+      };
+
+      desenharGraficoMovimentacao(dadosAtuais);
+      statusMovimentacao.textContent =
+        "Cotação atual exibida. Use o botão para consultar movimentos anteriores.";
+    }
+
+    async function carregarHistoricoMovimentacao() {
+      const eventoId = partidaGraficoAtualId;
+      if (!eventoId) return;
+
+      botaoCarregarMovimentacao.disabled = true;
+      botaoCarregarMovimentacao.textContent = "Carregando...";
+      graficoMovimentacao.parentElement.classList.add("carregando");
+      statusMovimentacao.textContent = "Buscando o histórico da Bet365...";
+
+      try {
+        const resposta = await fetch("/api/movimentacoes?eventoId=" + encodeURIComponent(eventoId));
+        const dados = await resposta.json();
+
+        if (!resposta.ok) throw new Error(dados.erro || "Não foi possível carregar o histórico.");
+        if (eventoId !== partidaGraficoAtualId) return;
+
+        atualizarInformacoesDeUso(dados.consultas);
+        desenharGraficoMovimentacao(dados);
+        statusMovimentacao.textContent = dados.possuiHistorico
+          ? dados.pontos.length + " registros históricos encontrados."
+          : "A API ainda não possui mudanças anteriores para esta partida; mostramos apenas a cotação atual.";
+        botaoCarregarMovimentacao.textContent = "Atualizar gráfico";
+      } catch (erro) {
+        statusMovimentacao.textContent = erro.message;
+        botaoCarregarMovimentacao.textContent = "Tentar novamente";
+      } finally {
+        graficoMovimentacao.parentElement.classList.remove("carregando");
+        botaoCarregarMovimentacao.disabled = false;
+      }
+    }
+
+    function criarSelecaoMercado(resultadoMercado, calculavel) {
+      const selecao = document.createElement("div");
+      selecao.className = "linha-tabela";
+
+      const nome = document.createElement("span");
+      nome.className = "selecao-nome-tabela";
+      nome.textContent = resultadoMercado.nome;
+
+      const valores = [
+        formatarOdd(resultadoMercado.odd),
+        calculavel ? formatarOdd(resultadoMercado.oddJusta) : "—",
+        calculavel ? formatarPorcentagem(resultadoMercado.probabilidadeJusta) : "—"
+      ];
+
+      selecao.appendChild(nome);
+
+      valores.forEach(function (item) {
+        const valor = document.createElement("strong");
+        valor.textContent = item;
+        selecao.appendChild(valor);
+      });
+
+      return selecao;
+    }
+
+    function criarGrupoMercado(grupo, posicao) {
+      const elemento = document.createElement("div");
+      elemento.className = "grupo-mercado";
+
+      const topo = document.createElement("div");
+      topo.className = "grupo-mercado-topo";
+
+      const linha = document.createElement("span");
+      linha.textContent = grupo.linha !== null ? "Linha " + grupo.linha : "Opção " + (posicao + 1);
+
+      const margem = document.createElement("span");
+      margem.className = "margem-linha";
+      margem.textContent = grupo.calculavel
+        ? "Margem " + formatarPorcentagem(grupo.margem)
+        : "Cálculo indisponível";
+
+      const resultados = document.createElement("div");
+      resultados.className = "tabela-odds";
+
+      const cabecalho = document.createElement("div");
+      cabecalho.className = "linha-tabela cabecalho-tabela";
+      ["Resultado", "Bet365", "Odd justa", "Prob. justa"].forEach(function (rotulo) {
+        const coluna = document.createElement("span");
+        coluna.textContent = rotulo;
+        cabecalho.appendChild(coluna);
+      });
+      resultados.appendChild(cabecalho);
+
+      grupo.resultados.forEach(function (resultadoMercado) {
+        resultados.appendChild(criarSelecaoMercado(resultadoMercado, grupo.calculavel));
+      });
+
+      topo.append(linha, margem);
+      elemento.append(topo, resultados);
+
+      if (!grupo.calculavel) {
+        const nota = document.createElement("p");
+        nota.className = "sem-calculo";
+        nota.textContent =
+          "A API não forneceu todos os resultados complementares desta linha; por segurança, não normalizamos.";
+        elemento.appendChild(nota);
+      }
+
+      return elemento;
+    }
+
+    /*
+      A API usa nomes técnicos em inglês. Esta função coloca cada mercado em
+      uma categoria simples para que a tela não apresente uma lista enorme.
+    */
+    function descobrirCategoriaMercado(mercado) {
+      const texto = String(mercado.codigo || mercado.nome || "").toLowerCase();
+
+      if (texto === "ml" || texto.includes("vencedor da partida")) return "principal";
+      if (texto.includes("double fault") || texto.includes("duplas faltas")) return "duplas";
+      if (texto.includes("ace")) return "aces";
+      if (texto.includes("set")) return "sets";
+      if (texto.includes("game") || texto.includes("spread")) return "games";
+      return "outros";
+    }
+
+    function renderizarMercadosDaCategoria() {
+      const lista = document.querySelector("#listaMercados");
+      lista.innerHTML = "";
+
+      const mercadosFiltrados = mercadosPartidaAtual.filter(function (mercado) {
+        return descobrirCategoriaMercado(mercado) === categoriaMercadoAtiva;
+      });
+
+      if (mercadosFiltrados.length === 0) {
+        const vazio = document.createElement("p");
+        vazio.className = "categoria-vazia";
+        vazio.textContent = "Não há mercados desta categoria para a partida selecionada.";
+        lista.appendChild(vazio);
+        return;
+      }
+
+      mercadosFiltrados.forEach(function (mercado, indice) {
+        const detalhe = document.createElement("details");
+        detalhe.className = "mercado-detalhe";
+        detalhe.open = indice === 0;
+
+        const resumo = document.createElement("summary");
+        const nome = document.createElement("span");
+        nome.className = "mercado-nome";
+        nome.textContent = mercado.nome;
+
+        const informacao = document.createElement("span");
+        informacao.className = "mercado-resumo";
+        informacao.textContent = mercado.disponivel
+          ? mercado.grupos.length + " linha(s)"
+          : "Sem cotações";
+
+        const conteudo = document.createElement("div");
+        conteudo.className = "grupos-mercado";
+
+        if (mercado.disponivel) {
+          mercado.grupos.forEach(function (grupo, posicao) {
+            conteudo.appendChild(criarGrupoMercado(grupo, posicao));
+          });
+        } else {
+          const vazio = document.createElement("p");
+          vazio.className = "sem-cotacoes";
+          vazio.textContent = "A Bet365 anunciou este mercado, mas não enviou cotações para a partida.";
+          conteudo.appendChild(vazio);
+        }
+
+        resumo.append(nome, informacao);
+        detalhe.append(resumo, conteudo);
+        lista.appendChild(detalhe);
+      });
+    }
+
+    function renderizarTodosMercados(mercados) {
+      mercadosPartidaAtual = mercados;
+
+      const rotulos = {
+        principal: "Principal",
+        games: "Games",
+        sets: "Sets",
+        aces: "Aces",
+        duplas: "Duplas faltas",
+        outros: "Outros"
+      };
+      const ordem = ["principal", "games", "sets", "aces", "duplas", "outros"];
+      const categoriasDisponiveis = ordem.filter(function (categoria) {
+        return mercados.some(function (mercado) {
+          return descobrirCategoriaMercado(mercado) === categoria;
+        });
+      });
+
+      categoriaMercadoAtiva = categoriasDisponiveis.includes("principal")
+        ? "principal"
+        : categoriasDisponiveis[0] || "principal";
+
+      const abas = document.querySelector("#abasMercados");
+      abas.innerHTML = "";
+
+      categoriasDisponiveis.forEach(function (categoria) {
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = "aba-mercado";
+        botao.setAttribute("role", "tab");
+        botao.setAttribute("aria-selected", String(categoria === categoriaMercadoAtiva));
+        botao.textContent = rotulos[categoria];
+
+        botao.addEventListener("click", function () {
+          categoriaMercadoAtiva = categoria;
+
+          abas.querySelectorAll(".aba-mercado").forEach(function (aba) {
+            aba.setAttribute("aria-selected", String(aba === botao));
+          });
+
+          renderizarMercadosDaCategoria();
+        });
+
+        abas.appendChild(botao);
+      });
+
+      renderizarMercadosDaCategoria();
     }
 
     function exibirResultado(partida, dados) {
@@ -1098,8 +2657,16 @@
         abrirBet365.hidden = true;
       }
 
+      renderizarTodosMercados(dados.mercados || []);
+      prepararGraficoMovimentacao(dados);
+
+      estadoInicial.hidden = true;
       resultado.hidden = false;
-      resultado.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      // Em telas pequenas, levamos o usuário até o painel que acabou de abrir.
+      if (window.matchMedia("(max-width: 760px)").matches) {
+        resultado.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
 
     function selecionarPartida(partida) {
@@ -1116,6 +2683,31 @@
 
     campoPesquisa.addEventListener("input", renderizarPartidas);
     botaoAtualizar.addEventListener("click", carregarPartidas);
+    botaoCarregarMovimentacao.addEventListener("click", carregarHistoricoMovimentacao);
+
+    document.querySelectorAll(".filtro-data").forEach(function (botao) {
+      botao.addEventListener("click", function () {
+        periodoAtivo = botao.dataset.periodo;
+
+        document.querySelectorAll(".filtro-data").forEach(function (item) {
+          item.setAttribute("aria-pressed", String(item === botao));
+        });
+
+        partidaSelecionadaId = null;
+        resultado.hidden = true;
+        estadoInicial.hidden = false;
+        renderizarPartidas();
+      });
+    });
+
+    botaoFiltrarFavoritas.addEventListener("click", function () {
+      somenteFavoritas = !somenteFavoritas;
+      botaoFiltrarFavoritas.setAttribute("aria-pressed", String(somenteFavoritas));
+      partidaSelecionadaId = null;
+      resultado.hidden = true;
+      estadoInicial.hidden = false;
+      renderizarPartidas();
+    });
 
     document.querySelectorAll(".filtro-circuito").forEach(function (botao) {
       botao.addEventListener("click", function () {
@@ -1129,7 +2721,9 @@
           botao.setAttribute("aria-pressed", "true");
         }
 
+        partidaSelecionadaId = null;
         resultado.hidden = true;
+        estadoInicial.hidden = false;
         renderizarPartidas();
       });
     });

@@ -2,11 +2,13 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const { calcularMercadoJusto } = require("./calculos");
 
 const CAMINHO_INDEX = path.join(__dirname, "index.html");
 const CAMINHO_ENV = path.join(__dirname, ".env");
 const ENDERECO_API = "https://api.odds-api.io/v3";
 const TEMPO_CACHE = 10 * 60 * 1000; // Dez minutos, como recomendado pela API.
+const TEMPO_CACHE_MOVIMENTOS = 5 * 60 * 1000;
 
 /*
   Lê o arquivo .env sem instalar uma biblioteca. Em uma hospedagem real,
@@ -51,6 +53,9 @@ let cachePartidas = {
   criadoEm: 0,
   dados: null
 };
+
+// Cada partida histórica fica cinco minutos em cache para proteger a cota da API.
+const cacheMovimentacoes = new Map();
 
 // Estes valores são atualizados pelos cabeçalhos de cada resposta da Odds-API.io.
 let limiteApi = {
@@ -147,15 +152,19 @@ async function consultarApi(caminho, parametros) {
   atualizarLimiteApi(resposta);
 
   if (!resposta.ok) {
+    let mensagem = "O fornecedor de odds respondeu com o erro " + resposta.status + ".";
+
     if (resposta.status === 401 || resposta.status === 403) {
-      throw new Error("A chave da API foi recusada. Confira a configuração secreta.");
+      mensagem = "A chave da API foi recusada. Confira a configuração secreta.";
     }
 
     if (resposta.status === 429) {
-      throw new Error("O limite gratuito de consultas foi atingido. Tente novamente mais tarde.");
+      mensagem = "O limite gratuito de consultas foi atingido. Tente novamente mais tarde.";
     }
 
-    throw new Error("O fornecedor de odds respondeu com o erro " + resposta.status + ".");
+    const erro = new Error(mensagem);
+    erro.codigoFornecedor = resposta.status;
+    throw erro;
   }
 
   return resposta.json();
@@ -185,6 +194,201 @@ function encontrarMercadoVencedor(mercados) {
   });
 }
 
+function converterOdd(valor) {
+  const numero = Number(valor);
+  return Number.isFinite(numero) && numero > 1 ? numero : null;
+}
+
+function formatarSinal(valor) {
+  return valor > 0 ? "+" + valor : String(valor);
+}
+
+function traduzirNomeMercado(nomeOriginal, jogadorA, jogadorB) {
+  const traducoes = {
+    "ML": "Vencedor da partida",
+    "Spread (Games)": "Handicap de games",
+    "Totals (Games)": "Total de games na partida",
+    "Totals 1st Set": "Total de games no 1º set",
+    "Totals (Aces)": "Total de aces na partida",
+    "Totals (Double Faults)": "Total de duplas faltas na partida",
+    "Set Betting": "Placar correto em sets",
+    "1st Set Winner": "Vencedor do 1º set",
+    "Tiebreak in Match": "Haverá tie-break na partida"
+  };
+
+  if (nomeOriginal === "Team Total (Aces) Home") {
+    return "Total de aces — " + jogadorA;
+  }
+
+  if (nomeOriginal === "Team Total (Aces) Away") {
+    return "Total de aces — " + jogadorB;
+  }
+
+  if (nomeOriginal === "Team Total (Double Faults) Home") {
+    return "Total de duplas faltas — " + jogadorA;
+  }
+
+  if (nomeOriginal === "Team Total (Double Faults) Away") {
+    return "Total de duplas faltas — " + jogadorB;
+  }
+
+  return traducoes[nomeOriginal] || nomeOriginal;
+}
+
+function criarResultado(nome, odd) {
+  return {
+    nome: nome,
+    odd: odd,
+    oddJusta: null,
+    probabilidadeJusta: null
+  };
+}
+
+/*
+  Converte uma linha da API em um grupo de resultados. A normalização só é
+  autorizada para pares ou conjuntos explicitamente complementares.
+*/
+function normalizarGrupo(entrada, jogadorA, jogadorB, indice) {
+  if (!entrada || typeof entrada !== "object") {
+    return null;
+  }
+
+  const linhaNumerica = Number(entrada.hdp);
+  const temLinha = Number.isFinite(linhaNumerica);
+  const home = converterOdd(entrada.home);
+  const away = converterOdd(entrada.away);
+  const draw = converterOdd(entrada.draw);
+  const over = converterOdd(entrada.over);
+  const under = converterOdd(entrada.under);
+  const yes = converterOdd(entrada.yes);
+  const no = converterOdd(entrada.no);
+  const odd = converterOdd(entrada.odd);
+  const even = converterOdd(entrada.even);
+  let resultados = [];
+  let conjuntoCompleto = false;
+
+  if (home && away) {
+    const nomeCasa = temLinha ? jogadorA + " (" + formatarSinal(linhaNumerica) + ")" : jogadorA;
+    const nomeVisitante = temLinha
+      ? jogadorB + " (" + formatarSinal(-linhaNumerica) + ")"
+      : jogadorB;
+
+    resultados = [criarResultado(nomeCasa, home)];
+
+    if (draw) {
+      resultados.push(criarResultado("Empate", draw));
+    }
+
+    resultados.push(criarResultado(nomeVisitante, away));
+    conjuntoCompleto = true;
+  } else if (over && under) {
+    const linha = temLinha ? " " + linhaNumerica : "";
+    resultados = [
+      criarResultado("Mais de" + linha, over),
+      criarResultado("Menos de" + linha, under)
+    ];
+    conjuntoCompleto = true;
+  } else if (yes && no) {
+    resultados = [criarResultado("Sim", yes), criarResultado("Não", no)];
+    conjuntoCompleto = true;
+  } else if (odd && even) {
+    resultados = [criarResultado("Ímpar", odd), criarResultado("Par", even)];
+    conjuntoCompleto = true;
+  } else {
+    // Algumas linhas trazem apenas um lado, por exemplo somente "acima".
+    if (over) {
+      resultados.push(criarResultado("Mais de" + (temLinha ? " " + linhaNumerica : ""), over));
+    }
+
+    if (under) {
+      resultados.push(criarResultado("Menos de" + (temLinha ? " " + linhaNumerica : ""), under));
+    }
+
+    const oddRotulada = converterOdd(entrada.odds || entrada.price);
+    if (oddRotulada) {
+      resultados.push(criarResultado(entrada.label || entrada.name || "Seleção", oddRotulada));
+    }
+
+    // Preserva formatos novos ou raros da API sem inventar que são complementares.
+    if (resultados.length === 0) {
+      const camposTecnicos = new Set([
+        "hdp", "max", "min", "line", "label", "name", "id", "updatedAt"
+      ]);
+
+      Object.entries(entrada).forEach(function ([nomeCampo, valor]) {
+        if (camposTecnicos.has(nomeCampo)) {
+          return;
+        }
+
+        const oddGenerica = converterOdd(valor);
+        if (oddGenerica) {
+          resultados.push(criarResultado(nomeCampo, oddGenerica));
+        }
+      });
+    }
+  }
+
+  if (resultados.length === 0) {
+    return null;
+  }
+
+  const grupo = {
+    id: String(indice),
+    linha: temLinha ? linhaNumerica : null,
+    calculavel: conjuntoCompleto,
+    margem: null,
+    somaProbabilidadesJustas: null,
+    resultados: resultados
+  };
+
+  if (conjuntoCompleto) {
+    const calculo = calcularMercadoJusto(resultados.map(function (resultado) {
+      return resultado.odd;
+    }));
+
+    grupo.margem = calculo.margem;
+    grupo.somaProbabilidadesJustas = calculo.somaProbabilidadesJustas;
+    grupo.resultados = resultados.map(function (resultado, posicao) {
+      return {
+        ...resultado,
+        oddJusta: calculo.resultados[posicao].oddJusta,
+        probabilidadeJusta: calculo.resultados[posicao].probabilidadeJusta
+      };
+    });
+  }
+
+  return grupo;
+}
+
+function normalizarMercados(mercados, jogadorA, jogadorB) {
+  if (!Array.isArray(mercados)) {
+    return [];
+  }
+
+  return mercados.map(function (mercado, indiceMercado) {
+    const entradas = Array.isArray(mercado.odds)
+      ? mercado.odds
+      : mercado.odds && typeof mercado.odds === "object"
+        ? [mercado.odds]
+        : [];
+
+    const grupos = entradas
+      .map(function (entrada, indiceGrupo) {
+        return normalizarGrupo(entrada, jogadorA, jogadorB, indiceGrupo);
+      })
+      .filter(Boolean);
+
+    return {
+      id: String(indiceMercado),
+      codigo: mercado.name,
+      nome: traduzirNomeMercado(mercado.name, jogadorA, jogadorB),
+      atualizadoEm: mercado.updatedAt || null,
+      disponivel: grupos.length > 0,
+      grupos: grupos
+    };
+  });
+}
+
 /*
   Retorna null quando o evento não tem as duas odds necessárias. Assim ele é
   removido antes de chegar ao site e o usuário nunca vê uma partida incalculável.
@@ -211,6 +415,8 @@ function prepararPartidaComOdds(evento) {
       ? linkRecebido
       : null;
 
+  const mercados = normalizarMercados(mercadosBet365, evento.home, evento.away);
+
   return {
     id: String(evento.id),
     jogadorA: evento.home,
@@ -220,7 +426,8 @@ function prepararPartidaComOdds(evento) {
     oddA: oddA,
     oddB: oddB,
     atualizadoEm: mercadoVencedor.updatedAt || null,
-    linkBet365: linkBet365
+    linkBet365: linkBet365,
+    mercados: mercados
   };
 }
 
@@ -301,6 +508,118 @@ async function listarPartidas() {
   return partidasComOdds;
 }
 
+function converterTimestamp(valor) {
+  if (valor === null || valor === undefined) return null;
+
+  if (typeof valor === "number" || /^\d+$/.test(String(valor))) {
+    const numero = Number(valor);
+    const milissegundos = numero < 100000000000 ? numero * 1000 : numero;
+    const dataNumerica = new Date(milissegundos);
+    return Number.isNaN(dataNumerica.getTime()) ? null : dataNumerica.toISOString();
+  }
+
+  const data = new Date(valor);
+  return Number.isNaN(data.getTime()) ? null : data.toISOString();
+}
+
+function criarPontoMovimentacao(registro, origem) {
+  if (!registro || typeof registro !== "object") return null;
+
+  const oddA = Number(registro.home);
+  const oddB = Number(registro.away);
+  const momento = converterTimestamp(registro.timestamp);
+
+  if (!momento || !Number.isFinite(oddA) || !Number.isFinite(oddB) || oddA <= 1 || oddB <= 1) {
+    return null;
+  }
+
+  const calculo = calcularMercadoJusto([oddA, oddB]);
+
+  return {
+    momento: momento,
+    oddA: oddA,
+    oddB: oddB,
+    oddJustaA: calculo.resultados[0].oddJusta,
+    oddJustaB: calculo.resultados[1].oddJusta,
+    margem: calculo.margem,
+    origem: origem
+  };
+}
+
+function criarPontoAtual(partida) {
+  return criarPontoMovimentacao({
+    home: partida.oddA,
+    away: partida.oddB,
+    timestamp: partida.atualizadoEm || Date.now()
+  }, "atual");
+}
+
+/*
+  O endpoint oficial de movimentos pode não ter histórico para toda partida.
+  Nesse caso devolvemos somente a cotação atual, sem inventar mudanças antigas.
+*/
+async function obterMovimentacoes(partida) {
+  const cache = cacheMovimentacoes.get(partida.id);
+
+  if (cache && Date.now() - cache.criadoEm < TEMPO_CACHE_MOVIMENTOS) {
+    return cache.dados;
+  }
+
+  let dadosHistoricos = null;
+
+  try {
+    dadosHistoricos = await consultarApi("/odds/movements", {
+      eventId: partida.id,
+      bookmaker: "Bet365",
+      market: "ML"
+    });
+  } catch (erro) {
+    if (erro.codigoFornecedor !== 404) throw erro;
+  }
+
+  const pontos = [];
+
+  if (dadosHistoricos) {
+    const registros = [
+      { valor: dadosHistoricos.opening, origem: "abertura" },
+      ...(Array.isArray(dadosHistoricos.movements)
+        ? dadosHistoricos.movements.map(function (valor) {
+            return { valor: valor, origem: "movimento" };
+          })
+        : []),
+      { valor: dadosHistoricos.latest, origem: "mais recente" }
+    ];
+
+    registros.forEach(function (registro) {
+      const ponto = criarPontoMovimentacao(registro.valor, registro.origem);
+      if (ponto) pontos.push(ponto);
+    });
+  }
+
+  const pontoAtual = criarPontoAtual(partida);
+  if (pontoAtual) pontos.push(pontoAtual);
+
+  // Remove repetições do mesmo momento e ordena do registro mais antigo ao atual.
+  const pontosUnicos = Array.from(new Map(pontos.map(function (ponto) {
+    return [ponto.momento, ponto];
+  })).values())
+    .sort(function (primeiro, segundo) {
+      return new Date(primeiro.momento) - new Date(segundo.momento);
+    })
+    .slice(-100);
+
+  const resposta = {
+    eventoId: partida.id,
+    jogadorA: partida.jogadorA,
+    jogadorB: partida.jogadorB,
+    pontos: pontosUnicos,
+    possuiHistorico: pontosUnicos.some(function (ponto) { return ponto.origem !== "atual"; })
+  };
+
+  cacheMovimentacoes.set(partida.id, { criadoEm: Date.now(), dados: resposta });
+  return resposta;
+}
+
 function obterInformacoesDeUso() {
   return {
     limite: limiteApi.limite,
@@ -328,6 +647,30 @@ const servidor = http.createServer(async function (requisicao, resposta) {
       const partidas = await listarPartidas();
       enviarJson(resposta, 200, {
         partidas: partidas,
+        consultas: obterInformacoesDeUso()
+      });
+      return;
+    }
+
+    if (requisicao.method === "GET" && url.pathname === "/api/movimentacoes") {
+      const eventoId = url.searchParams.get("eventoId");
+
+      if (!eventoId || !/^[a-zA-Z0-9_-]+$/.test(eventoId)) {
+        enviarJson(resposta, 400, { erro: "Identificador da partida inválido." });
+        return;
+      }
+
+      const partidas = await listarPartidas();
+      const partida = partidas.find(function (item) { return item.id === eventoId; });
+
+      if (!partida) {
+        enviarJson(resposta, 404, { erro: "Partida sem odds disponíveis no momento." });
+        return;
+      }
+
+      const movimentacoes = await obterMovimentacoes(partida);
+      enviarJson(resposta, 200, {
+        ...movimentacoes,
         consultas: obterInformacoesDeUso()
       });
       return;
