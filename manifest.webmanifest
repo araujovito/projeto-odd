@@ -1,0 +1,12 @@
+{
+  "name": "Odd Clara",
+  "short_name": "Odd Clara",
+  "description": "Odds justas, comparações e acompanhamento educativo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#edf1ef",
+  "theme_color": "#045440",
+  "icons": [
+    { "src": "/icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

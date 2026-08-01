@@ -134,6 +134,18 @@ function enviarHtml(resposta) {
   });
 }
 
+function enviarArquivoPublico(resposta, nome, tipo) {
+  fs.readFile(path.join(__dirname, nome), function (erro, conteudo) {
+    if (erro) { enviarJson(resposta, 404, { erro: "Arquivo não encontrado." }); return; }
+    resposta.writeHead(200, {
+      ...obterCabecalhosSeguranca(),
+      "Content-Type": tipo,
+      "Cache-Control": nome === "service-worker.js" ? "no-cache" : "public, max-age=86400"
+    });
+    resposta.end(conteudo);
+  });
+}
+
 function obterChaveApi() {
   const chave = process.env.ODDS_API_KEY;
 
@@ -803,6 +815,16 @@ async function tratarRequisicao(requisicao, resposta) {
   try {
     if (requisicao.method === "GET" && url.pathname === "/") {
       enviarHtml(resposta);
+      return;
+    }
+
+    const arquivosPublicos = {
+      "/manifest.webmanifest": ["manifest.webmanifest", "application/manifest+json; charset=utf-8"],
+      "/icone.svg": ["icone.svg", "image/svg+xml; charset=utf-8"],
+      "/service-worker.js": ["service-worker.js", "application/javascript; charset=utf-8"]
+    };
+    if (requisicao.method === "GET" && arquivosPublicos[url.pathname]) {
+      enviarArquivoPublico(resposta, arquivosPublicos[url.pathname][0], arquivosPublicos[url.pathname][1]);
       return;
     }
 

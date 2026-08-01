@@ -17,6 +17,8 @@ Ela não prevê resultados nem recomenda apostas.
 - Simulador que distribui um valor total e mostra o retorno de cada cenário.
 - Favoritos guardados localmente no navegador, sem login ou banco de dados.
 - Partidas selecionadas ou favoritas permanecem visíveis por até seis horas após o início previsto, mesmo quando saem da API.
+- Central `Minhas partidas`, botão explícito para acompanhar e links compartilháveis por evento.
+- Anotações pessoais e linha do tempo formada somente por cotações realmente observadas.
 - Odds principais e margem já visíveis nos cartões das partidas.
 - Mercados separados por categoria e apresentados em tabelas comparativas.
 - Gráfico da movimentação das odds do mercado vencedor na Bet365.
@@ -27,10 +29,14 @@ Ela não prevê resultados nem recomenda apostas.
 - Indicadores de atualização, consumo da API e explicação didática do cálculo.
 - Controle de banca sem cadastro, salvo somente no `localStorage`, com saldo, lucro, ROI e resultados parciais.
 - Botão nas odds para preencher automaticamente o registro manual da banca, sem realizar apostas.
+- Registro rápido de uma odd como aposta pendente, pedindo apenas o valor e confirmação.
+- Painel de desempenho local com evolução acumulada e ROI por esporte e casa.
 - Edição e exclusão de apostas manuais, além de backup e restauração em JSON.
 - Alertas de alta, queda e desatualização enquanto a página estiver aberta.
 - Calculadoras de probabilidade implícita, conversão, retorno, Kelly, arbitragem, hedge e odds sem margem.
 - Layout responsivo para computador e celular.
+- Tema claro/escuro, modo educativo e compartilhamento pela API nativa do navegador.
+- PWA instalável no celular, com interface básica disponível offline; odds continuam dependendo da conexão e da API.
 
 ## Executar localmente
 
@@ -82,6 +88,10 @@ disponíveis para consulta e movimentação, mas os botões de registro e a aná
 arbitragem ficam desativados, pois aquelas odds podem não estar mais disponíveis.
 Isso não transforma o site em placar ao vivo e não cria odds artificiais.
 
+O botão de compartilhamento inclui o confronto, a margem e um link com o identificador
+do evento. Quem abrir o link ainda depende de a partida existir na resposta atual ou
+de possuir uma cópia local acompanhada. Anotações nunca entram no texto compartilhado.
+
 O detector escolhe a melhor odd disponível para cada resultado e soma suas
 probabilidades implícitas. Só existe arbitragem matemática quando essa soma é menor
 que 100%. Nessa situação, o simulador divide o valor entre os resultados e mostra
@@ -111,6 +121,17 @@ banca inicial somada ao lucro ou prejuízo dos registros; o ROI usa o resultado
 líquido dividido pelo total apostado em registros já liquidados. Apostas pendentes
 não entram nessa base. Como o navegador pode apagar o `localStorage`, a interface
 oferece exportação e importação de backup em JSON.
+
+O gráfico da banca considera apenas registros liquidados e soma seus resultados na
+ordem das datas. As divisões por esporte e casa descrevem o histórico cadastrado pelo
+usuário; não são previsões e não garantem resultados futuros.
+
+## Instalação no celular
+
+O projeto possui `manifest.webmanifest` e `service-worker.js`. Em navegadores
+compatíveis, use a opção **Adicionar à tela inicial** ou **Instalar aplicativo**.
+O service worker guarda apenas a interface. Partidas, odds e atualizações exigem
+internet, pois os endpoints da API não são armazenados para uso offline.
 
 Os alertas ficam desligados por padrão, funcionam somente com a página aberta e
 respeitam um intervalo mínimo de dez minutos. Quando a aba fica oculta, nenhuma

@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#045440">
+  <meta name="description" content="Ferramenta educativa para comparar odds, calcular margens e acompanhar movimentações.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icone.svg" type="image/svg+xml">
   <title>Odd Clara — Odds justas de tênis e futebol</title>
 
   <style>
@@ -23,6 +27,51 @@
       --erro-fundo: #fff0f0;
       --sombra: 0 16px 40px rgba(28, 51, 35, 0.08);
     }
+
+    body.tema-escuro {
+      --fundo: #101713;
+      --cartao: #18221c;
+      --texto: #eef5f0;
+      --texto-suave: #aebbb2;
+      --borda: #344239;
+      --verde-claro: #17372d;
+      --verde-borda: #376958;
+      --sombra: 0 16px 40px rgba(0, 0, 0, 0.26);
+    }
+
+    .acoes-topo { display:flex; align-items:center; gap:8px; }
+    .botao-icone { min-width:42px; min-height:42px; border:1px solid rgba(255,255,255,.3); border-radius:12px; background:transparent; color:#fff; font-weight:700; }
+    .central-acompanhamento { margin:24px 0; padding:22px; border-radius:18px; background:var(--cartao); box-shadow:var(--sombra); }
+    .central-topo { display:flex; justify-content:space-between; gap:16px; align-items:end; margin-bottom:14px; }
+    .central-topo h2, .central-topo p { margin:0; }
+    .central-topo p { color:var(--texto-suave); }
+    .lista-acompanhadas { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; }
+    .acompanhada-card { display:grid; gap:8px; padding:14px; border:1px solid var(--borda); border-radius:14px; background:var(--cartao); color:var(--texto); text-align:left; }
+    .acompanhada-card small { color:var(--texto-suave); }
+    .acompanhada-acoes { display:flex; gap:8px; align-items:center; }
+    .botao-acompanhar { border:1px solid var(--verde); border-radius:10px; background:var(--verde-claro); color:var(--verde-escuro); padding:7px 10px; font-weight:700; }
+    .botao-acompanhar.ativo { background:var(--verde); color:#fff; }
+    .resultado-ferramentas { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+    .painel-linha-tempo { margin:14px 0; padding:14px; border:1px solid var(--borda); border-radius:14px; }
+    .painel-linha-tempo h3 { margin:0 0 10px; }
+    .linha-tempo-resumo { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; }
+    .linha-tempo-resumo div { padding:10px; border-radius:10px; background:var(--verde-claro); }
+    .linha-tempo-resumo span { display:block; color:var(--texto-suave); font-size:.78rem; }
+    .anotacao-partida { width:100%; min-height:76px; padding:10px; border:1px solid var(--borda); border-radius:10px; background:var(--cartao); color:var(--texto); resize:vertical; }
+    dialog { width:min(92vw,480px); border:0; border-radius:18px; padding:0; background:var(--cartao); color:var(--texto); box-shadow:0 22px 80px rgba(0,0,0,.35); }
+    dialog::backdrop { background:rgba(0,0,0,.55); }
+    .dialogo-conteudo { padding:22px; }
+    .dialogo-conteudo h2 { margin-top:0; }
+    .dashboard-banca { margin-top:18px; display:grid; grid-template-columns:1.3fr 1fr; gap:16px; }
+    .dashboard-painel { padding:16px; border:1px solid var(--borda); border-radius:14px; overflow:hidden; }
+    .dashboard-painel h3 { margin-top:0; }
+    .lista-desempenho { display:grid; gap:7px; }
+    .linha-desempenho { display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid var(--borda); padding:6px 0; }
+    #graficoBanca { width:100%; min-height:180px; }
+    .modo-educativo { position:fixed; right:18px; bottom:18px; z-index:15; border:0; border-radius:999px; padding:12px 16px; background:var(--amarelo); color:#172019; font-weight:800; box-shadow:var(--sombra); }
+    body:not(.educativo-ativo) .dica-educativa { display:none; }
+    .dica-educativa { margin:8px 0; padding:10px 12px; border-left:4px solid var(--amarelo-escuro); background:#fffbe0; color:#273027; border-radius:8px; }
+    @media(max-width:760px){.status-topo{display:none}.dashboard-banca{grid-template-columns:1fr}.central-topo{align-items:start;flex-direction:column}.acoes-topo{margin-left:auto}.barra-site-conteudo{flex-wrap:wrap}.navegacao{order:3;width:100%}}
 
     * {
       box-sizing: border-box;
@@ -2364,7 +2413,10 @@
         <a href="#comoFunciona">Como funciona</a>
       </nav>
 
-      <span class="status-topo"><span class="ponto"></span> Bet365 + Superbet</span>
+      <div class="acoes-topo">
+        <span class="status-topo"><span class="ponto"></span> Bet365 + Superbet</span>
+        <button id="alternarTema" class="botao-icone" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+      </div>
     </div>
   </header>
 
@@ -2516,6 +2568,14 @@
       <div id="listaRadar" class="lista-radar"></div>
     </section>
 
+    <section id="minhasPartidas" class="central-acompanhamento" aria-labelledby="tituloMinhasPartidas">
+      <div class="central-topo">
+        <div><h2 id="tituloMinhasPartidas">Minhas partidas</h2><p>Confrontos que você decidiu acompanhar neste navegador.</p></div>
+        <span id="contadorAcompanhadas" class="contador">0 acompanhadas</span>
+      </div>
+      <div id="listaAcompanhadas" class="lista-acompanhadas"></div>
+    </section>
+
     <section id="partidas" class="area-trabalho">
       <section class="painel-lista" aria-label="Torneios e partidas">
         <div class="cabecalho-lista">
@@ -2552,6 +2612,20 @@
             <em id="faixaMargemCasa">Classificação</em>
           </div>
         </div>
+
+        <div class="resultado-ferramentas">
+          <button id="acompanharSelecionada" class="botao-acompanhar" type="button">Acompanhar partida</button>
+          <button id="compartilharAnalise" class="botao-secundario" type="button">Compartilhar análise</button>
+        </div>
+        <p class="dica-educativa"><strong>O que significa acompanhar?</strong> O navegador guarda as últimas odds e os snapshots observados. Isso não consulta placar ao vivo.</p>
+
+        <section class="painel-linha-tempo" aria-labelledby="tituloLinhaTempo">
+          <h3 id="tituloLinhaTempo">Linha do tempo observada</h3>
+          <div id="linhaTempoResumo" class="linha-tempo-resumo"></div>
+          <label for="anotacaoPartida"><strong>Anotação pessoal</strong></label>
+          <textarea id="anotacaoPartida" class="anotacao-partida" placeholder="Por que você está acompanhando esta partida?"></textarea>
+          <small>Salva somente neste navegador.</small>
+        </section>
 
         <section class="comparador-casas" aria-labelledby="tituloComparadorCasas">
           <div class="comparador-casas-topo">
@@ -2689,6 +2763,10 @@
       <p class="aviso-local">Os dados ficam somente neste navegador. Limpá-lo pode apagar o histórico; faça backups em JSON.</p>
       <div class="acoes-modulo"><label class="campo-calculo">Banca inicial (R$)<input id="bancaInicial" type="number" min="0" step="0.01"></label><button id="salvarBancaInicial" class="botao-calculo" type="button">Salvar banca inicial</button></div>
       <div class="grade-metricas-banca"><div class="metrica-banca"><span>Banca inicial</span><strong id="metricaBancaInicial">R$ 0,00</strong></div><div class="metrica-banca"><span>Saldo calculado</span><strong id="metricaSaldo">R$ 0,00</strong></div><div class="metrica-banca"><span>Lucro / prejuízo</span><strong id="metricaLucro">R$ 0,00</strong></div><div class="metrica-banca"><span>ROI liquidado</span><strong id="metricaRoi">0,0%</strong></div></div>
+      <div class="dashboard-banca">
+        <section class="dashboard-painel"><h3>Evolução dos resultados</h3><svg id="graficoBanca" viewBox="0 0 560 210" role="img" aria-label="Evolução acumulada do lucro e prejuízo"></svg></section>
+        <section class="dashboard-painel"><h3>Desempenho por categoria</h3><div id="desempenhoCategorias" class="lista-desempenho"></div><p class="dica-educativa">O histórico descreve apostas registradas; não é uma previsão de desempenho futuro.</p></section>
+      </div>
       <form id="formAposta"><input id="apostaEditandoId" type="hidden"><div class="grade-formulario">
         <label>Casa<input id="apostaCasa" required placeholder="Bet365"></label><label>Esporte<select id="apostaEsporte"><option>Tênis</option><option>Futebol</option><option>Outro</option></select></label><label>Evento<input id="apostaEvento" required></label>
         <label>Mercado<input id="apostaMercado" required></label><label>Seleção<input id="apostaSelecao" required></label><label>Odd<input id="apostaOdd" type="number" min="1.01" step="0.01" required></label>
@@ -2742,6 +2820,17 @@
       não recomenda apostas e não garante lucro. Conteúdo destinado a maiores de 18 anos.
     </aside>
 
+    <dialog id="dialogoRegistroRapido">
+      <form id="formRegistroRapido" class="dialogo-conteudo" method="dialog">
+        <h2>Registro rápido</h2>
+        <p id="resumoRegistroRapido"></p>
+        <label class="campo-calculo">Valor (R$)<input id="valorRegistroRapido" type="number" min="0.01" step="0.01" required></label>
+        <div class="acoes-modulo"><button class="botao-calculo" value="confirmar">Salvar como pendente</button><button id="cancelarRegistroRapido" class="botao-secundario" type="button">Cancelar</button></div>
+      </form>
+    </dialog>
+
+    <button id="alternarEducativo" class="modo-educativo" type="button" aria-pressed="false">Modo educativo</button>
+
     <footer class="rodape">
       <span>Criado e desenvolvido por Vitor Barbosa ·</span>
       <a href="https://github.com/araujovito" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -2774,6 +2863,9 @@
     const CHAVE_RADAR = "odd-clara-radar";
     const CHAVE_SNAPSHOTS_ODDS = "odd-clara-snapshots-odds-v1";
     const CHAVE_PARTIDAS_ACOMPANHADAS = "odd-clara-partidas-acompanhadas-v1";
+    const CHAVE_ANOTACOES = "odd-clara-anotacoes-v1";
+    const CHAVE_TEMA = "odd-clara-tema-v1";
+    const CHAVE_EDUCATIVO = "odd-clara-educativo-v1";
 
     function carregarFavoritos() {
       try {
@@ -2799,6 +2891,21 @@
     let entradasRadar = carregarListaLocal(CHAVE_RADAR);
     let snapshotsOdds = carregarSnapshotsOdds();
     let partidasAcompanhadas = carregarPartidasAcompanhadas();
+    let anotacoesPartidas = carregarObjetoLocal(CHAVE_ANOTACOES);
+    let apostaRegistroRapido = null;
+
+    function carregarObjetoLocal(chave) {
+      try {
+        const valor = JSON.parse(localStorage.getItem(chave) || "{}");
+        return valor && typeof valor === "object" && !Array.isArray(valor) ? valor : {};
+      } catch (erro) {
+        return {};
+      }
+    }
+
+    function salvarObjetoLocal(chave, valor) {
+      try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (erro) {}
+    }
 
     function carregarPartidasAcompanhadas() {
       try {
@@ -2829,6 +2936,16 @@
       });
       chaves.slice(20).forEach(function (chave) { delete partidasAcompanhadas[chave]; });
       salvarPartidasAcompanhadas();
+    }
+
+    function removerPartidaAcompanhada(partida) {
+      delete partidasAcompanhadas[chavePartida(partida)];
+      salvarPartidasAcompanhadas();
+      renderizarMinhasPartidas();
+    }
+
+    function estaSendoAcompanhada(partida) {
+      return Boolean(partidasAcompanhadas[chavePartida(partida)]);
     }
 
     function mesclarPartidasAcompanhadas(partidasAtuais) {
@@ -3029,9 +3146,21 @@
         "Registrar " + dadosAposta.selecao + " na " + dadosAposta.casa + " com odd " + formatarOdd(dadosAposta.odd)
       );
       botao.addEventListener("click", function () {
-        preencherRegistroBanca(dadosAposta);
+        abrirRegistroRapido(dadosAposta);
       });
       return botao;
+    }
+
+    function abrirRegistroRapido(dadosAposta) {
+      const partida = partidasDisponiveis.find(function (item) { return item.id === partidaSelecionadaId; });
+      if (!partida || partida.arquivada) return;
+      apostaRegistroRapido = { ...dadosAposta, partida: partida };
+      document.querySelector("#resumoRegistroRapido").textContent =
+        dadosAposta.casa + " · " + dadosAposta.mercado + " · " + dadosAposta.selecao +
+        " · odd " + formatarOdd(dadosAposta.odd);
+      document.querySelector("#valorRegistroRapido").value = "";
+      document.querySelector("#dialogoRegistroRapido").showModal();
+      document.querySelector("#valorRegistroRapido").focus();
     }
 
     function preencherRegistroBanca(dadosAposta) {
@@ -3064,6 +3193,60 @@
 
     function chavePartida(partida) {
       return (partida.esporte || esporteSelecionado) + ":" + partida.id;
+    }
+
+    function obterPartidasAcompanhadas() {
+      return Object.values(partidasAcompanhadas)
+        .filter(function (registro) { return registro && registro.partida; })
+        .map(function (registro) {
+          const atual = partidasDisponiveis.find(function (partida) {
+            return chavePartida(partida) === chavePartida(registro.partida);
+          });
+          return atual || { ...registro.partida, arquivada: true };
+        })
+        .sort(function (a, b) { return new Date(a.data) - new Date(b.data); });
+    }
+
+    function renderizarMinhasPartidas() {
+      const lista = document.querySelector("#listaAcompanhadas");
+      if (!lista) return;
+      const acompanhadas = obterPartidasAcompanhadas();
+      document.querySelector("#contadorAcompanhadas").textContent = acompanhadas.length + " acompanhada(s)";
+      lista.innerHTML = "";
+      if (!acompanhadas.length) {
+        const vazio = document.createElement("p");
+        vazio.textContent = "Use o botão Acompanhar em uma partida para mantê-la nesta central.";
+        vazio.className = "resultado-nota";
+        lista.appendChild(vazio);
+        return;
+      }
+      acompanhadas.forEach(function (partida) {
+        const card = document.createElement("article");
+        card.className = "acompanhada-card";
+        const torneio = document.createElement("small");
+        torneio.textContent = partida.torneio;
+        const nome = document.createElement("strong");
+        nome.textContent = partida.participanteA + " × " + partida.participanteB;
+        const status = document.createElement("small");
+        status.textContent = partida.arquivada
+          ? "Cotação arquivada"
+          : formatarData(partida.data) + " · odds disponíveis";
+        const acoes = document.createElement("div");
+        acoes.className = "acompanhada-acoes";
+        const abrir = document.createElement("button");
+        abrir.type = "button";
+        abrir.className = "botao-acompanhar ativo";
+        abrir.textContent = "Abrir";
+        abrir.onclick = function () { selecionarPartida(partida); document.querySelector("#partidas").scrollIntoView({behavior:"smooth"}); };
+        const remover = document.createElement("button");
+        remover.type = "button";
+        remover.className = "botao-secundario";
+        remover.textContent = "Remover";
+        remover.onclick = function () { removerPartidaAcompanhada(partida); };
+        acoes.append(abrir, remover);
+        card.append(torneio, nome, status, acoes);
+        lista.appendChild(card);
+      });
     }
 
     function obterResultadosPrincipais(partida) {
@@ -3693,6 +3876,17 @@
         if (somenteFavoritas) renderizarPartidas();
       });
 
+      const acompanhar = document.createElement("button");
+      acompanhar.type = "button";
+      acompanhar.className = "botao-acompanhar" + (estaSendoAcompanhada(partida) ? " ativo" : "");
+      acompanhar.textContent = estaSendoAcompanhada(partida) ? "Acompanhando" : "Acompanhar";
+      acompanhar.addEventListener("click", function () {
+        if (estaSendoAcompanhada(partida)) removerPartidaAcompanhada(partida);
+        else guardarPartidaAcompanhada(partida);
+        renderizarMinhasPartidas();
+        renderizarPartidas();
+      });
+
       meta.append(metaEsquerda, horario);
       confronto.append(jogadorA, versus, jogadorB);
       botao.append(meta, confronto, odds);
@@ -3701,7 +3895,7 @@
         selecionarPartida(partida, botao);
       });
 
-      cartao.append(botao, favorito);
+      cartao.append(botao, favorito, acompanhar);
       return cartao;
     }
 
@@ -3893,11 +4087,18 @@
         atualizarInformacoesDeUso(dados.consultas);
         atualizarResumoGeral();
         renderizarPartidas();
+        renderizarMinhasPartidas();
+        const eventoDaUrl = new URLSearchParams(window.location.search).get("evento");
+        if (eventoDaUrl) {
+          const partidaDaUrl = partidasDisponiveis.find(function (partida) { return String(partida.id) === eventoDaUrl; });
+          if (partidaDaUrl) selecionarPartida(partidaDaUrl);
+        }
         mensagem.hidden = true;
       } catch (erro) {
         partidasDisponiveis = [];
         atualizarResumoGeral();
         renderizarPartidas();
+        renderizarMinhasPartidas();
         mostrarMensagem(erro.message, true);
       } finally {
         botaoAtualizar.disabled = false;
@@ -4630,6 +4831,7 @@
       }
 
       renderizarTodosMercados(dados.mercados || []);
+      atualizarFerramentasDaPartida(partida);
       secaoMovimentacao.hidden = esporteSelecionado !== "tennis";
       if (esporteSelecionado === "tennis") {
         prepararGraficoMovimentacao(dados);
@@ -4647,6 +4849,7 @@
     function selecionarPartida(partida) {
       partidaSelecionadaId = partida.id;
       guardarPartidaAcompanhada(partida);
+      renderizarMinhasPartidas();
 
       document.querySelectorAll(".partida").forEach(function (botao) {
         botao.classList.toggle("selecionada", botao.dataset.id === partida.id);
@@ -4654,8 +4857,76 @@
 
       // As odds já vieram na consulta em lote; clicar não gasta outra consulta.
       exibirResultado(partida, partida);
+      const url = new URL(window.location.href);
+      url.searchParams.set("esporte", partida.esporte || esporteSelecionado);
+      url.searchParams.set("evento", partida.id);
+      history.replaceState(null, "", url.pathname + url.search + "#partidas");
       mensagem.hidden = true;
     }
+
+    function atualizarFerramentasDaPartida(partida) {
+      const botao = document.querySelector("#acompanharSelecionada");
+      const acompanhando = estaSendoAcompanhada(partida);
+      botao.classList.toggle("ativo", acompanhando);
+      botao.textContent = acompanhando ? "Deixar de acompanhar" : "Acompanhar partida";
+
+      const chave = chavePartida(partida);
+      const anotacao = document.querySelector("#anotacaoPartida");
+      anotacao.value = anotacoesPartidas[chave] || "";
+      anotacao.dataset.chave = chave;
+
+      const pontos = obterSnapshotsDaPartida(partida);
+      const oddsObservadas = pontos.flatMap(function (ponto) { return [ponto.oddA, ponto.oddB]; })
+        .filter(function (odd) { return Number.isFinite(odd); });
+      const resumo = document.querySelector("#linhaTempoResumo");
+      resumo.innerHTML = "";
+      const itens = [
+        ["Primeiro registro", pontos.length ? formatarData(pontos[0].momento) : "Ainda não registrado"],
+        ["Registros observados", String(pontos.length)],
+        ["Menor odd observada", oddsObservadas.length ? formatarOdd(Math.min(...oddsObservadas)) : "—"],
+        ["Maior odd observada", oddsObservadas.length ? formatarOdd(Math.max(...oddsObservadas)) : "—"]
+      ];
+      itens.forEach(function (item) {
+        const bloco = document.createElement("div");
+        const rotulo = document.createElement("span");
+        const valor = document.createElement("strong");
+        rotulo.textContent = item[0]; valor.textContent = item[1];
+        bloco.append(rotulo, valor); resumo.appendChild(bloco);
+      });
+    }
+
+    document.querySelector("#acompanharSelecionada").addEventListener("click", function () {
+      const partida = partidasDisponiveis.find(function (item) { return item.id === partidaSelecionadaId; });
+      if (!partida) return;
+      if (estaSendoAcompanhada(partida)) removerPartidaAcompanhada(partida);
+      else guardarPartidaAcompanhada(partida);
+      renderizarMinhasPartidas();
+      atualizarFerramentasDaPartida(partida);
+      renderizarPartidas();
+    });
+
+    document.querySelector("#anotacaoPartida").addEventListener("input", function (evento) {
+      const chave = evento.target.dataset.chave;
+      if (!chave) return;
+      const texto = evento.target.value.trim();
+      if (texto) anotacoesPartidas[chave] = texto;
+      else delete anotacoesPartidas[chave];
+      salvarObjetoLocal(CHAVE_ANOTACOES, anotacoesPartidas);
+    });
+
+    document.querySelector("#compartilharAnalise").addEventListener("click", async function () {
+      const partida = partidasDisponiveis.find(function (item) { return item.id === partidaSelecionadaId; });
+      if (!partida) return;
+      const texto = "Odd Clara: " + partida.participanteA + " × " + partida.participanteB +
+        ". Margem Bet365: " + formatarPorcentagem(obterMargemPrincipal(partida)) +
+        ". Análise matemática, sem recomendação de aposta.";
+      try {
+        if (navigator.share) await navigator.share({ title: "Análise Odd Clara", text: texto, url: window.location.href });
+        else { await navigator.clipboard.writeText(texto + " " + window.location.href); this.textContent = "Link copiado"; }
+      } catch (erro) {
+        if (erro.name !== "AbortError") this.textContent = "Não foi possível compartilhar";
+      }
+    });
 
     campoPesquisa.addEventListener("input", renderizarPartidas);
     botaoAtualizar.addEventListener("click", carregarPartidas);
@@ -4756,12 +5027,48 @@
     let dadosBanca = carregarBanca();
     function carregarBanca(){try{const d=JSON.parse(localStorage.getItem(CHAVE_BANCA));if(d&&Number.isFinite(d.bancaInicial)&&Array.isArray(d.apostas))return d;}catch(e){}return{bancaInicial:0,apostas:[]};}
     function lucroAposta(a){return Math.round(a.valor*({pendente:0,ganha:a.odd-1,perdida:-1,devolvida:0,parcialmente_ganha:(a.odd-1)/2,parcialmente_perdida:-.5}[a.resultado])*100)/100;}
-    function salvarBanca(){localStorage.setItem(CHAVE_BANCA,JSON.stringify(dadosBanca));renderizarBanca();}
+    function salvarBanca(){localStorage.setItem(CHAVE_BANCA,JSON.stringify(dadosBanca));renderizarBanca();renderizarDashboardBanca();}
     function renderizarBanca(){const lucro=dadosBanca.apostas.reduce(function(t,a){return t+lucroAposta(a);},0),liquidadas=dadosBanca.apostas.filter(function(a){return a.resultado!=="pendente";}),investido=liquidadas.reduce(function(t,a){return t+a.valor;},0);document.querySelector("#bancaInicial").value=dadosBanca.bancaInicial||"";document.querySelector("#metricaBancaInicial").textContent=formatarDinheiro(dadosBanca.bancaInicial);document.querySelector("#metricaSaldo").textContent=formatarDinheiro(dadosBanca.bancaInicial+lucro);document.querySelector("#metricaLucro").textContent=formatarDinheiro(lucro);document.querySelector("#metricaRoi").textContent=formatarPorcentagem(investido?lucro/investido*100:0);const corpo=document.querySelector("#listaApostas");corpo.innerHTML="";if(!dadosBanca.apostas.length){corpo.innerHTML="<tr><td colspan='7'>Nenhuma aposta registrada.</td></tr>";return;}dadosBanca.apostas.slice().sort(function(a,b){return b.data.localeCompare(a.data);}).forEach(function(a){const linha=document.createElement("tr");linha.innerHTML="<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";linha.children[0].textContent=a.data+" · "+a.evento;linha.children[1].textContent=a.casa+" · "+a.mercado+" · "+a.selecao;linha.children[2].textContent=formatarOdd(a.odd);linha.children[3].textContent=formatarDinheiro(a.valor);linha.children[4].textContent=({pendente:"Pendente",ganha:"Ganha",perdida:"Perdida",devolvida:"Devolvida",parcialmente_ganha:"Parcialmente ganha",parcialmente_perdida:"Parcialmente perdida"})[a.resultado];linha.children[5].textContent=formatarDinheiro(lucroAposta(a));const ed=document.createElement("button");ed.className="botao-secundario";ed.textContent="Editar";ed.onclick=function(){editarAposta(a);};const ex=document.createElement("button");ex.className="botao-perigo";ex.textContent="Excluir";ex.onclick=function(){if(confirm("Excluir este registro?")){dadosBanca.apostas=dadosBanca.apostas.filter(function(x){return x.id!==a.id;});salvarBanca();}};linha.children[6].append(ed," ",ex);corpo.appendChild(linha);});}
+    function renderizarDashboardBanca(){
+      const liquidadas=dadosBanca.apostas.filter(function(a){return a.resultado!=="pendente";}).slice().sort(function(a,b){return a.data.localeCompare(b.data);});
+      const categorias=new Map();
+      liquidadas.forEach(function(a){const chave=a.esporte+" · "+a.casa;const atual=categorias.get(chave)||{lucro:0,valor:0};atual.lucro+=lucroAposta(a);atual.valor+=a.valor;categorias.set(chave,atual);});
+      const lista=document.querySelector("#desempenhoCategorias");lista.innerHTML="";
+      if(!categorias.size)lista.textContent="Liquide registros para ver o desempenho por esporte e casa.";
+      categorias.forEach(function(dados,nome){const linha=document.createElement("div");linha.className="linha-desempenho";const rotulo=document.createElement("span");const valor=document.createElement("strong");rotulo.textContent=nome;valor.textContent=formatarDinheiro(dados.lucro)+" · ROI "+formatarPorcentagem(dados.valor?dados.lucro/dados.valor*100:0);linha.append(rotulo,valor);lista.appendChild(linha);});
+      const svg=document.querySelector("#graficoBanca");svg.innerHTML="";if(!liquidadas.length){const t=document.createElementNS("http://www.w3.org/2000/svg","text");t.setAttribute("x","20");t.setAttribute("y","100");t.setAttribute("fill","currentColor");t.textContent="Sem resultados liquidados.";svg.appendChild(t);return;}
+      let acumulado=0;const valores=liquidadas.map(function(a){acumulado+=lucroAposta(a);return acumulado;});const minimo=Math.min(0,...valores),maximo=Math.max(0,...valores),faixa=maximo-minimo||1;
+      const pontos=valores.map(function(v,i){const x=20+(i/(Math.max(1,valores.length-1)))*520;const y=190-((v-minimo)/faixa)*165;return x+","+y;}).join(" ");
+      const zero=document.createElementNS("http://www.w3.org/2000/svg","line");const zeroY=190-((0-minimo)/faixa)*165;zero.setAttribute("x1","20");zero.setAttribute("x2","540");zero.setAttribute("y1",zeroY);zero.setAttribute("y2",zeroY);zero.setAttribute("stroke","#9aa69d");zero.setAttribute("stroke-dasharray","5 5");
+      const linha=document.createElementNS("http://www.w3.org/2000/svg","polyline");linha.setAttribute("points",pontos);linha.setAttribute("fill","none");linha.setAttribute("stroke","#027b5b");linha.setAttribute("stroke-width","4");linha.setAttribute("stroke-linecap","round");linha.setAttribute("stroke-linejoin","round");svg.append(zero,linha);
+    }
     function limparAposta(){document.querySelector("#formAposta").reset();document.querySelector("#apostaEditandoId").value="";document.querySelector("#apostaData").value=new Date().toISOString().slice(0,10);document.querySelector("#cancelarEdicaoAposta").hidden=true;}
     function editarAposta(a){const mapa={Casa:"casa",Esporte:"esporte",Evento:"evento",Mercado:"mercado",Selecao:"selecao",Odd:"odd",Valor:"valor",Data:"data",Resultado:"resultado"};Object.keys(mapa).forEach(function(c){document.querySelector("#aposta"+c).value=a[mapa[c]];});document.querySelector("#apostaEditandoId").value=a.id;document.querySelector("#cancelarEdicaoAposta").hidden=false;document.querySelector("#formAposta").scrollIntoView({behavior:"smooth"});}
     document.querySelector("#salvarBancaInicial").onclick=function(){const v=Number(document.querySelector("#bancaInicial").value);if(Number.isFinite(v)&&v>=0){dadosBanca.bancaInicial=v;salvarBanca();}};
     document.querySelector("#formAposta").onsubmit=function(e){e.preventDefault();const id=document.querySelector("#apostaEditandoId").value,a={id:id||((crypto.randomUUID&&crypto.randomUUID())||String(Date.now())),casa:document.querySelector("#apostaCasa").value.trim(),esporte:document.querySelector("#apostaEsporte").value,evento:document.querySelector("#apostaEvento").value.trim(),mercado:document.querySelector("#apostaMercado").value.trim(),selecao:document.querySelector("#apostaSelecao").value.trim(),odd:Number(document.querySelector("#apostaOdd").value),valor:Number(document.querySelector("#apostaValor").value),data:document.querySelector("#apostaData").value,resultado:document.querySelector("#apostaResultado").value};if(id)dadosBanca.apostas=dadosBanca.apostas.map(function(x){return x.id===id?a:x;});else dadosBanca.apostas.push(a);salvarBanca();limparAposta();document.querySelector("#mensagemBanca").textContent="Registro salvo no navegador.";};document.querySelector("#cancelarEdicaoAposta").onclick=limparAposta;
+    document.querySelector("#cancelarRegistroRapido").onclick=function(){document.querySelector("#dialogoRegistroRapido").close();};
+    document.querySelector("#formRegistroRapido").onsubmit=function(evento){
+      evento.preventDefault();
+      const valor=Number(document.querySelector("#valorRegistroRapido").value);
+      if(!apostaRegistroRapido||!Number.isFinite(valor)||valor<=0)return;
+      const partida=apostaRegistroRapido.partida;
+      dadosBanca.apostas.push({
+        id:(crypto.randomUUID&&crypto.randomUUID())||String(Date.now()),
+        casa:apostaRegistroRapido.casa,
+        esporte:partida.esporte==="football"?"Futebol":"Tênis",
+        evento:partida.participanteA+" × "+partida.participanteB,
+        mercado:apostaRegistroRapido.mercado,
+        selecao:apostaRegistroRapido.selecao,
+        odd:apostaRegistroRapido.odd,
+        valor:valor,
+        data:new Date().toISOString().slice(0,10),
+        resultado:"pendente"
+      });
+      salvarBanca();
+      document.querySelector("#dialogoRegistroRapido").close();
+      document.querySelector("#mensagemBanca").textContent="Registro rápido salvo como pendente.";
+      apostaRegistroRapido=null;
+    };
     document.querySelector("#exportarBanca").onclick=function(){const b=new Blob([JSON.stringify(dadosBanca,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="odd-clara-banca.json";a.click();URL.revokeObjectURL(a.href);};document.querySelector("#importarBanca").onclick=function(){document.querySelector("#arquivoBanca").click();};document.querySelector("#arquivoBanca").onchange=function(e){const arq=e.target.files[0];if(!arq)return;const l=new FileReader();l.onload=function(){try{const d=JSON.parse(l.result);if(!d||!Number.isFinite(d.bancaInicial)||!Array.isArray(d.apostas))throw Error();if(confirm("Substituir os dados atuais por este backup?")){dadosBanca=d;salvarBanca();}}catch(x){alert("Backup inválido.");}};l.readAsText(arq);e.target.value="";};
 
     // Alertas ficam em memória e só consultam a API quando ativados.
@@ -4777,7 +5084,19 @@
     function n(id){return Number(document.querySelector(id).value);}function saida(id,t){document.querySelector(id).textContent=t;}function fracaoDecimal(o){const den=100,num=Math.round((o-1)*den);function mdc(a,b){while(b){const r=a%b;a=b;b=r;}return a;}const d=mdc(num,den);return(num/d)+"/"+(den/d);}
     document.querySelectorAll("[data-calc]").forEach(function(b){b.onclick=function(){try{const t=b.dataset.calc;if(t==="implicita"){const o=n("#calcImplicitaOdd");if(o<=1)throw Error();saida("#resultadoImplicita",formatarPorcentagem(100/o));}if(t==="conversor"){const o=n("#calcConversorDecimal");if(o<=1)throw Error();const a=o>=2?Math.round((o-1)*100):Math.round(-100/(o-1));saida("#resultadoConversor","Decimal "+formatarOdd(o)+" · Americana "+(a>0?"+":"")+a);}if(t==="retorno"){const o=n("#calcRetornoOdd"),v=n("#calcRetornoValor");if(o<=1||v<=0)throw Error();saida("#resultadoRetorno","Retorno "+formatarDinheiro(o*v)+" · lucro "+formatarDinheiro(v*(o-1)));}if(t==="kelly"){const o=n("#calcKellyOdd"),p=n("#calcKellyProbabilidade")/100,ba=n("#calcKellyBanca"),f=n("#calcKellyFracao");if(o<=1||p<=0||p>=1||ba<=0)throw Error();const k=Math.max(0,(((o-1)*p)-(1-p))/(o-1));saida("#resultadoKelly",k?"Fração aplicada "+formatarPorcentagem(k*f*100)+" · "+formatarDinheiro(ba*k*f):"Kelly zero: sem vantagem matemática pelos dados informados.");}if(t==="arbitragem"){const os=[n("#calcArbOdd1"),n("#calcArbOdd2")],o3=n("#calcArbOdd3"),v=n("#calcArbValor");if(o3>1)os.push(o3);if(os.some(function(o){return o<=1;})||v<=0)throw Error();const s=os.reduce(function(x,o){return x+1/o;},0);saida("#resultadoArbManual",s<1?"Arbitragem · lucro teórico "+formatarPorcentagem(((1/s)-1)*100)+" · retorno "+formatarDinheiro(v/s):"Sem arbitragem · soma "+formatarPorcentagem(s*100));}if(t==="hedge"){const o=n("#calcHedgeOddOriginal"),v=n("#calcHedgeValor"),h=n("#calcHedgeOddOposta");if(o<=1||v<=0||h<=1)throw Error();const vh=v*o/h;saida("#resultadoHedge","Hedge "+formatarDinheiro(vh)+" · resultado mínimo "+formatarDinheiro(Math.min(v*o,vh*h)-v-vh));}if(t==="justa"){const os=[n("#calcJustaOdd1"),n("#calcJustaOdd2")],o3=n("#calcJustaOdd3");if(o3>1)os.push(o3);if(os.some(function(o){return o<=1;}))throw Error();const c=calcularMercadoJusto(os);saida("#resultadoJustaManual","Margem "+formatarPorcentagem(c.margem)+" · justas "+c.resultados.map(function(r){return formatarOdd(r.oddJusta);}).join(" · "));}}catch(e){b.parentElement.querySelector(".resultado-calculo").textContent="Preencha os campos com números válidos.";}};});
     document.querySelector('[data-calc="conversor"]').addEventListener("click",function(){const o=n("#calcConversorDecimal");if(o>1)document.querySelector("#resultadoConversor").textContent+=" · Fracionária "+fracaoDecimal(o);});
-    limparAposta();renderizarBanca();renderizarAlertas();
+    function aplicarPreferenciasVisuais(){
+      const tema=localStorage.getItem(CHAVE_TEMA)||"claro";
+      const educativo=localStorage.getItem(CHAVE_EDUCATIVO)==="ativo";
+      document.body.classList.toggle("tema-escuro",tema==="escuro");
+      document.body.classList.toggle("educativo-ativo",educativo);
+      document.querySelector("#alternarTema").textContent=tema==="escuro"?"☀":"☾";
+      document.querySelector("#alternarEducativo").setAttribute("aria-pressed",String(educativo));
+      document.querySelector("#alternarEducativo").textContent=educativo?"Fechar modo educativo":"Modo educativo";
+    }
+    document.querySelector("#alternarTema").onclick=function(){localStorage.setItem(CHAVE_TEMA,document.body.classList.contains("tema-escuro")?"claro":"escuro");aplicarPreferenciasVisuais();};
+    document.querySelector("#alternarEducativo").onclick=function(){localStorage.setItem(CHAVE_EDUCATIVO,document.body.classList.contains("educativo-ativo")?"inativo":"ativo");aplicarPreferenciasVisuais();};
+    aplicarPreferenciasVisuais();
+    limparAposta();renderizarBanca();renderizarDashboardBanca();renderizarAlertas();renderizarMinhasPartidas();
 
     const esporteDaUrl = new URLSearchParams(window.location.search).get("esporte");
     if (esporteDaUrl === "football" || esporteDaUrl === "tennis") {
@@ -4786,6 +5105,7 @@
     configurarInterfaceDoEsporte();
     renderizarRadar();
     carregarPartidas();
+    if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/service-worker.js").catch(function(){});});}
   </script>
 </body>
 </html>
