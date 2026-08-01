@@ -2574,10 +2574,10 @@
           <div class="movimentacao-topo">
             <div>
               <h3 id="tituloMovimentacao">Movimentação das odds</h3>
-              <p>Histórico do mercado vencedor da partida, somente na Bet365.</p>
+              <p>Snapshots reais da Bet365 observados pela API e guardados neste navegador.</p>
             </div>
             <button id="carregarMovimentacao" class="botao-movimentacao" type="button">
-              Carregar histórico
+              Consultar histórico da API
             </button>
           </div>
 
@@ -2621,7 +2621,7 @@
             <div id="resultadoComparador" class="grade-comparacoes"></div>
           </section>
 
-          <p class="nota-consulta">O histórico só é consultado quando você usa o botão, ajudando a economizar a cota da API.</p>
+          <p class="nota-consulta">Cada atualização normal guarda um snapshot sem custo extra. O botão consulta também o histórico da API e pode consumir a cota.</p>
         </section>
 
         <section class="mercados-completos" aria-labelledby="tituloMercados">
@@ -2724,6 +2724,7 @@
     const CHAVE_FAVORITOS = "odd-clara-favoritos";
     const CHAVE_HISTORICOS = "odd-clara-historicos-consultados";
     const CHAVE_RADAR = "odd-clara-radar";
+    const CHAVE_SNAPSHOTS_ODDS = "odd-clara-snapshots-odds-v1";
 
     function carregarFavoritos() {
       try {
@@ -2747,6 +2748,93 @@
 
     const partidasComHistorico = new Set(carregarListaLocal(CHAVE_HISTORICOS));
     let entradasRadar = carregarListaLocal(CHAVE_RADAR);
+    let snapshotsOdds = carregarSnapshotsOdds();
+
+    function carregarSnapshotsOdds() {
+      try {
+        const valor = JSON.parse(localStorage.getItem(CHAVE_SNAPSHOTS_ODDS) || "{}");
+        return valor && typeof valor === "object" && !Array.isArray(valor) ? valor : {};
+      } catch (erro) {
+        return {};
+      }
+    }
+
+    function salvarSnapshotsOdds() {
+      try {
+        localStorage.setItem(CHAVE_SNAPSHOTS_ODDS, JSON.stringify(snapshotsOdds));
+      } catch (erro) {
+        // O gráfico ainda usa a resposta atual caso o armazenamento esteja bloqueado.
+      }
+    }
+
+    /*
+      Cada lista já consultada fornece uma fotografia real das odds. Guardá-la
+      localmente não consome API e permite comparar atualizações futuras.
+    */
+    function registrarSnapshotsOdds(partidas) {
+      if (!Array.isArray(partidas)) return;
+
+      partidas.filter(function (partida) {
+        return partida.esporte === "tennis";
+      }).forEach(function (partida) {
+        const casa = partida.casas && partida.casas.bet365;
+        const resultados = casa && casa.resultadosPrincipais;
+        if (!Array.isArray(resultados) || resultados.length < 2) return;
+
+        const oddA = Number(resultados[0].odd);
+        const oddB = Number(resultados[resultados.length - 1].odd);
+        if (!Number.isFinite(oddA) || !Number.isFinite(oddB) || oddA <= 1 || oddB <= 1) return;
+
+        const calculo = calcularMercadoJusto([oddA, oddB]);
+        const pontos = Array.isArray(snapshotsOdds[partida.id]) ? snapshotsOdds[partida.id] : [];
+        const ultimo = pontos[pontos.length - 1];
+        const agora = new Date();
+        const mesmaCotacao = ultimo && ultimo.oddA === oddA && ultimo.oddB === oddB;
+        const minutosDesdeUltimo = ultimo ? (agora - new Date(ultimo.momento)) / 60000 : Infinity;
+        if (mesmaCotacao && minutosDesdeUltimo < 10) return;
+
+        const momento = agora.toISOString();
+        const ponto = {
+          momento: momento,
+          oddA: oddA,
+          oddB: oddB,
+          margem: calculo.margem,
+          origem: "observado",
+          atualizadoNaCasa: casa.atualizadoEm || partida.atualizadoEm || null
+        };
+        const porMomento = new Map(pontos.map(function (item) { return [item.momento, item]; }));
+        porMomento.set(momento, ponto);
+        snapshotsOdds[partida.id] = Array.from(porMomento.values())
+          .sort(function (a, b) { return new Date(a.momento) - new Date(b.momento); })
+          .slice(-60);
+      });
+
+      // Limita o armazenamento aos 120 eventos vistos mais recentemente.
+      const idsOrdenados = Object.keys(snapshotsOdds).sort(function (idA, idB) {
+        const ultimoA = snapshotsOdds[idA][snapshotsOdds[idA].length - 1];
+        const ultimoB = snapshotsOdds[idB][snapshotsOdds[idB].length - 1];
+        return new Date(ultimoB.momento) - new Date(ultimoA.momento);
+      });
+      idsOrdenados.slice(120).forEach(function (id) { delete snapshotsOdds[id]; });
+      salvarSnapshotsOdds();
+    }
+
+    function obterSnapshotsDaPartida(partida) {
+      const pontos = Array.isArray(snapshotsOdds[partida.id]) ? snapshotsOdds[partida.id] : [];
+      return pontos.slice().sort(function (a, b) {
+        return new Date(a.momento) - new Date(b.momento);
+      });
+    }
+
+    function combinarComSnapshotsLocais(dados) {
+      const locais = Array.isArray(snapshotsOdds[dados.eventoId]) ? snapshotsOdds[dados.eventoId] : [];
+      const porMomento = new Map(locais.map(function (ponto) { return [ponto.momento, ponto]; }));
+      (dados.pontos || []).forEach(function (ponto) { porMomento.set(ponto.momento, ponto); });
+      const pontos = Array.from(porMomento.values())
+        .sort(function (a, b) { return new Date(a.momento) - new Date(b.momento); })
+        .slice(-100);
+      return { ...dados, pontos: pontos, possuiHistorico: pontos.length >= 2 };
+    }
 
     const campoPesquisa = document.querySelector("#pesquisa");
     const botaoAtualizar = document.querySelector("#atualizar");
@@ -3622,6 +3710,7 @@
         }
 
         partidasDisponiveis = dados.partidas;
+        registrarSnapshotsOdds(dados.partidas);
         registrarSnapshotAlertas(dados.partidas, false);
         cacheLocalEsportes.set(esporteSelecionado, dados);
         partidaSelecionadaId = null;
@@ -3765,14 +3854,18 @@
 
     function renderizarAberturaAgora(dados) {
       comparacaoAbertura.innerHTML = "";
-      const abertura = dados.pontos.find(function (ponto) { return ponto.origem === "abertura"; });
+      const aberturaReal = dados.pontos.find(function (ponto) { return ponto.origem === "abertura"; });
+      const abertura = aberturaReal || dados.pontos[0];
       const atual = dados.pontos[dados.pontos.length - 1];
+      document.querySelector("#tituloAberturaAgora").textContent = aberturaReal
+        ? "Abertura × agora"
+        : "Primeiro registro × agora";
 
-      if (!abertura || !atual) {
+      if (!abertura || !atual || dados.pontos.length < 2) {
         const aviso = document.createElement("p");
         aviso.className = "comparacao-indisponivel";
         aviso.textContent =
-          "A abertura real ainda não foi fornecida pela API para esta partida. Não substituímos por uma estimativa.";
+          "Ainda existe apenas um registro real. Atualize a lista mais tarde para formar a primeira comparação.";
         comparacaoAbertura.appendChild(aviso);
         return;
       }
@@ -3979,26 +4072,35 @@
     function prepararGraficoMovimentacao(partida) {
       partidaGraficoAtualId = partida.id;
       botaoCarregarMovimentacao.disabled = false;
-      botaoCarregarMovimentacao.textContent = "Carregar histórico";
+      botaoCarregarMovimentacao.textContent = "Consultar histórico da API";
       document.querySelector("#legendaJogadorA").textContent = partida.jogadorA;
       document.querySelector("#legendaJogadorB").textContent = partida.jogadorB;
 
       const calculo = calcularOddsJustas(partida.oddA, partida.oddB);
-      const dadosAtuais = {
-        jogadorA: partida.jogadorA,
-        jogadorB: partida.jogadorB,
-        pontos: [{
+      let pontosLocais = obterSnapshotsDaPartida(partida);
+      if (pontosLocais.length === 0) {
+        pontosLocais = [{
           momento: partida.atualizadoEm || new Date().toISOString(),
           oddA: partida.oddA,
           oddB: partida.oddB,
           margem: calculo.margem,
           origem: "atual"
-        }]
+        }];
+      }
+
+      const dadosAtuais = {
+        eventoId: partida.id,
+        jogadorA: partida.jogadorA,
+        jogadorB: partida.jogadorB,
+        pontos: pontosLocais,
+        possuiHistorico: pontosLocais.length >= 2
       };
 
       desenharGraficoMovimentacao(dadosAtuais);
-      statusMovimentacao.textContent =
-        "Cotação atual exibida. Use o botão para consultar movimentos anteriores.";
+      if (dadosAtuais.possuiHistorico) registrarNoRadar(dadosAtuais);
+      statusMovimentacao.textContent = pontosLocais.length >= 2
+        ? pontosLocais.length + " registros observados neste navegador. O botão também consulta o histórico da API."
+        : "Primeiro registro salvo neste navegador. Novas atualizações formarão o histórico sem consultas extras.";
     }
 
     async function carregarHistoricoMovimentacao() {
@@ -4012,11 +4114,12 @@
 
       try {
         const resposta = await fetch("/api/movimentacoes?eventoId=" + encodeURIComponent(eventoId));
-        const dados = await resposta.json();
+        let dados = await resposta.json();
 
         if (!resposta.ok) throw new Error(dados.erro || "Não foi possível carregar o histórico.");
         if (eventoId !== partidaGraficoAtualId) return;
 
+        dados = combinarComSnapshotsLocais(dados);
         atualizarInformacoesDeUso(dados.consultas);
         desenharGraficoMovimentacao(dados);
         registrarNoRadar(dados);
@@ -4024,8 +4127,8 @@
         if (somenteComHistoricoAtivo) renderizarPartidas();
 
         statusMovimentacao.textContent = dados.possuiHistorico
-          ? dados.pontos.length + " registros históricos encontrados."
-          : "A API ainda não possui mudanças anteriores para esta partida; mostramos apenas a cotação atual.";
+          ? dados.pontos.length + " registros combinados entre a API e este navegador."
+          : "Primeiro registro salvo. Atualize a lista mais tarde para criar a comparação automaticamente.";
         botaoCarregarMovimentacao.textContent = "Atualizar gráfico";
       } catch (erro) {
         statusMovimentacao.textContent = erro.message;
@@ -4451,7 +4554,7 @@
     function criarSnapshot(partidas){const m=new Map();partidas.forEach(function(p){Object.keys(p.casas||{}).forEach(function(c){const casa=p.casas[c];if(casa)(casa.resultadosPrincipais||[]).forEach(function(r){m.set(p.esporte+":"+p.id+":"+c+":"+r.tipo,{odd:r.odd,nome:r.nome,evento:p.participanteA+" × "+p.participanteB,casa:casa.nome,atualizadoEm:casa.atualizadoEm});});});});return m;}
     function registrarSnapshotAlertas(partidas,comparar){const novo=criarSnapshot(partidas);if(comparar){const limite=Math.max(.1,Number(document.querySelector("#limiteAlerta").value)||3);novo.forEach(function(a,chave){const velha=snapshotAlertas.get(chave);if(velha){const v=(a.odd-velha.odd)/velha.odd*100;if(Math.abs(v)>=limite)alertasExibidos.unshift({tipo:v>0?"subiu":"caiu",texto:a.evento+" · "+a.nome+" na "+a.casa+" "+(v>0?"subiu ":"caiu ")+Math.abs(v).toFixed(1).replace(".",",")+"%"});}if(a.atualizadoEm&&Date.now()-new Date(a.atualizadoEm).getTime()>30*60*1000)alertasExibidos.unshift({tipo:"",texto:a.evento+" · odds da "+a.casa+" desatualizadas."});});alertasExibidos=alertasExibidos.slice(0,20);renderizarAlertas();}snapshotAlertas=novo;}
     function renderizarAlertas(){const l=document.querySelector("#listaAlertas");l.innerHTML="";if(!alertasExibidos.length){l.textContent="Nenhum alerta nesta sessão.";return;}alertasExibidos.forEach(function(a){const d=document.createElement("div");d.className="item-alerta "+a.tipo;d.textContent=a.texto;l.appendChild(d);});}
-    async function atualizarAlertas(){if(!document.querySelector("#ativarAlertas").checked||document.hidden)return;document.querySelector("#statusAlertas").textContent="Atualizando...";try{const r=await fetch("/api/partidas?esporte="+encodeURIComponent(esporteSelecionado)),d=await r.json();if(!r.ok)throw Error();registrarSnapshotAlertas(d.partidas,true);partidasDisponiveis=d.partidas;cacheLocalEsportes.set(esporteSelecionado,d);atualizarInformacoesDeUso(d.consultas);atualizarResumoGeral();renderizarPartidas();document.querySelector("#statusAlertas").textContent="Ativos · verificado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}catch(e){document.querySelector("#statusAlertas").textContent="Falha na atualização";}}
+    async function atualizarAlertas(){if(!document.querySelector("#ativarAlertas").checked||document.hidden)return;document.querySelector("#statusAlertas").textContent="Atualizando...";try{const r=await fetch("/api/partidas?esporte="+encodeURIComponent(esporteSelecionado)),d=await r.json();if(!r.ok)throw Error();registrarSnapshotsOdds(d.partidas);registrarSnapshotAlertas(d.partidas,true);partidasDisponiveis=d.partidas;cacheLocalEsportes.set(esporteSelecionado,d);atualizarInformacoesDeUso(d.consultas);atualizarResumoGeral();renderizarPartidas();document.querySelector("#statusAlertas").textContent="Ativos · verificado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}catch(e){document.querySelector("#statusAlertas").textContent="Falha na atualização";}}
     function configurarAlertas(){clearInterval(temporizadorAlertas);if(!document.querySelector("#ativarAlertas").checked){document.querySelector("#statusAlertas").textContent="Desativados";return;}registrarSnapshotAlertas(partidasDisponiveis,false);const m=Math.max(10,Number(document.querySelector("#intervaloAlertas").value)||15);document.querySelector("#statusAlertas").textContent="Ativos · a cada "+m+" min";temporizadorAlertas=setInterval(atualizarAlertas,m*60000);}
     document.querySelector("#ativarAlertas").onchange=configurarAlertas;document.querySelector("#intervaloAlertas").onchange=configurarAlertas;document.querySelector("#limparAlertas").onclick=function(){alertasExibidos=[];renderizarAlertas();};
 

@@ -88,6 +88,13 @@ O histórico de movimentações é buscado somente quando o usuário solicita e
 fica cinco minutos em cache. Quando a API ainda não possui mudanças para uma
 partida, o gráfico mostra apenas a cotação atual, sem criar dados artificiais.
 
+Além do histórico fornecido pela API, cada atualização normal da lista salva no
+`localStorage` um snapshot real das odds de tênis da Bet365. Assim, o mesmo
+navegador passa a comparar os momentos observados sem fazer chamadas extras.
+Recarregamentos com menos de dez minutos não criam pontos repetidos; cada evento
+mantém no máximo 60 snapshots. Esse histórico é local e não acompanha o usuário
+em outro aparelho ou depois que os dados do navegador forem apagados.
+
 ## Dados locais e alertas
 
 O controle de banca não cria conta e não envia registros ao servidor. O saldo é a
