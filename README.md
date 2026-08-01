@@ -1,17 +1,23 @@
-# Odd Clara — Odds Justas de Tênis
+# Odd Clara — Odds Justas de Tênis e Futebol
 
-Aplicação didática que busca partidas ATP e WTA com odds da Bet365, apresenta
+Aplicação didática que busca partidas de tênis (ATP e WTA) e futebol com odds da Bet365, apresenta
 todos os mercados recebidos e remove matematicamente a margem quando a API
 fornece um conjunto completo de resultados mutuamente exclusivos.
 Ela não prevê resultados nem recomenda apostas.
 
 ## Recursos da interface
 
+- Abas de tênis e futebol, com cache independente para cada esporte.
 - Filtros ATP, WTA, data, pesquisa e partidas favoritas.
+- Mercado principal 1X2 do futebol com casa, empate e visitante.
 - Favoritos guardados localmente no navegador, sem login ou banco de dados.
 - Odds principais e margem já visíveis nos cartões das partidas.
 - Mercados separados por categoria e apresentados em tabelas comparativas.
 - Gráfico da movimentação das odds do mercado vencedor na Bet365.
+- Radar persistente com as maiores movimentações dos históricos consultados.
+- Comparações entre abertura e cotação atual e entre dois momentos escolhidos.
+- Filtros por tipo de partida, faixa de margem, histórico, link e ordenação.
+- Classificação matemática de margem baixa, moderada ou alta.
 - Indicadores de atualização, consumo da API e explicação didática do cálculo.
 - Layout responsivo para computador e celular.
 
@@ -46,9 +52,10 @@ responde `{ "status": "ok" }` sem consultar a API externa.
 
 ## Uso da API
 
-A lista de eventos e odds fica em cache por dez minutos. As odds são buscadas
-em lotes de até dez eventos para reduzir o consumo do plano gratuito. Partidas
-sem as duas odds do mercado vencedor são removidas antes de chegar ao navegador.
+A lista de eventos e odds fica em cache por dez minutos, separadamente por esporte.
+As odds são buscadas em lotes de até dez eventos para reduzir o consumo do plano gratuito.
+No tênis, o evento precisa das duas odds do vencedor; no futebol, precisa das três
+odds do 1X2: casa, empate e visitante.
 
 Mercados com pares completos, como vencedor, handicap e acima/abaixo, recebem
 odd justa, probabilidade justa e margem por linha. Seleções isoladas continuam

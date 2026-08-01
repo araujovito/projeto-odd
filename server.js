@@ -49,10 +49,33 @@ carregarArquivoEnv();
 const PORTA = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 
-let cachePartidas = {
-  criadoEm: 0,
-  dados: null
+// Cada esporte tem seu próprio cache. Trocar de aba não apaga nem mistura as listas.
+const cachesPartidas = new Map();
+
+const ESPORTES_DISPONIVEIS = {
+  tennis: {
+    codigo: "tennis",
+    slugApi: "tennis",
+    limiteEventos: 50
+  },
+  football: {
+    codigo: "football",
+    slugApi: "football",
+    limiteEventos: 30
+  }
 };
+
+function obterConfiguracaoEsporte(codigo) {
+  return ESPORTES_DISPONIVEIS[codigo] || null;
+}
+
+function obterCachePartidas(codigo) {
+  if (!cachesPartidas.has(codigo)) {
+    cachesPartidas.set(codigo, { criadoEm: 0, dados: null });
+  }
+
+  return cachesPartidas.get(codigo);
+}
 
 // Cada partida histórica fica cinco minutos em cache para proteger a cota da API.
 const cacheMovimentacoes = new Map();
@@ -203,9 +226,9 @@ function formatarSinal(valor) {
   return valor > 0 ? "+" + valor : String(valor);
 }
 
-function traduzirNomeMercado(nomeOriginal, jogadorA, jogadorB) {
+function traduzirNomeMercado(nomeOriginal, jogadorA, jogadorB, esporte) {
   const traducoes = {
-    "ML": "Vencedor da partida",
+    "ML": esporte === "football" ? "Resultado da partida (1X2)" : "Vencedor da partida",
     "Spread (Games)": "Handicap de games",
     "Totals (Games)": "Total de games na partida",
     "Totals 1st Set": "Total de games no 1º set",
@@ -213,7 +236,19 @@ function traduzirNomeMercado(nomeOriginal, jogadorA, jogadorB) {
     "Totals (Double Faults)": "Total de duplas faltas na partida",
     "Set Betting": "Placar correto em sets",
     "1st Set Winner": "Vencedor do 1º set",
-    "Tiebreak in Match": "Haverá tie-break na partida"
+    "Tiebreak in Match": "Haverá tie-break na partida",
+    "Spread": "Handicap",
+    "Totals": "Total de gols",
+    "Both Teams To Score": "Ambas as equipes marcam",
+    "Both Teams to Score": "Ambas as equipes marcam",
+    "Draw No Bet": "Empate anula a aposta",
+    "Double Chance": "Dupla chance",
+    "1st Half ML": "Resultado do 1º tempo",
+    "2nd Half ML": "Resultado do 2º tempo",
+    "1st Half Totals": "Total de gols no 1º tempo",
+    "2nd Half Totals": "Total de gols no 2º tempo",
+    "Correct Score": "Placar correto",
+    "Odd/Even": "Total de gols: ímpar ou par"
   };
 
   if (nomeOriginal === "Team Total (Aces) Home") {
@@ -360,7 +395,7 @@ function normalizarGrupo(entrada, jogadorA, jogadorB, indice) {
   return grupo;
 }
 
-function normalizarMercados(mercados, jogadorA, jogadorB) {
+function normalizarMercados(mercados, jogadorA, jogadorB, esporte) {
   if (!Array.isArray(mercados)) {
     return [];
   }
@@ -381,7 +416,7 @@ function normalizarMercados(mercados, jogadorA, jogadorB) {
     return {
       id: String(indiceMercado),
       codigo: mercado.name,
-      nome: traduzirNomeMercado(mercado.name, jogadorA, jogadorB),
+      nome: traduzirNomeMercado(mercado.name, jogadorA, jogadorB, esporte),
       atualizadoEm: mercado.updatedAt || null,
       disponivel: grupos.length > 0,
       grupos: grupos
@@ -393,7 +428,7 @@ function normalizarMercados(mercados, jogadorA, jogadorB) {
   Retorna null quando o evento não tem as duas odds necessárias. Assim ele é
   removido antes de chegar ao site e o usuário nunca vê uma partida incalculável.
 */
-function prepararPartidaComOdds(evento) {
+function prepararPartidaComOdds(evento, esporte) {
   const mercadosBet365 = encontrarValorSemDiferenciarMaiusculas(evento.bookmakers, "Bet365");
   const mercadoVencedor = encontrarMercadoVencedor(mercadosBet365);
 
@@ -404,10 +439,34 @@ function prepararPartidaComOdds(evento) {
   const precos = mercadoVencedor.odds[0];
   const oddA = Number(precos && precos.home);
   const oddB = Number(precos && precos.away);
+  const oddEmpate = Number(precos && precos.draw);
+  const exigeEmpate = esporte === "football";
 
-  if (!Number.isFinite(oddA) || !Number.isFinite(oddB) || oddA <= 1 || oddB <= 1) {
+  if (!Number.isFinite(oddA) || !Number.isFinite(oddB) || oddA <= 1 || oddB <= 1 ||
+      (exigeEmpate && (!Number.isFinite(oddEmpate) || oddEmpate <= 1))) {
     return null;
   }
+
+  const resultadosBrutos = esporte === "football"
+    ? [
+        { nome: evento.home, tipo: "casa", odd: oddA },
+        { nome: "Empate", tipo: "empate", odd: oddEmpate },
+        { nome: evento.away, tipo: "visitante", odd: oddB }
+      ]
+    : [
+        { nome: evento.home, tipo: "jogador-a", odd: oddA },
+        { nome: evento.away, tipo: "jogador-b", odd: oddB }
+      ];
+  const calculoPrincipal = calcularMercadoJusto(resultadosBrutos.map(function (item) {
+    return item.odd;
+  }));
+  const resultadosPrincipais = resultadosBrutos.map(function (item, indice) {
+    return {
+      ...item,
+      oddJusta: calculoPrincipal.resultados[indice].oddJusta,
+      probabilidadeJusta: calculoPrincipal.resultados[indice].probabilidadeJusta
+    };
+  });
 
   const linkRecebido = encontrarValorSemDiferenciarMaiusculas(evento.urls, "Bet365");
   const linkBet365 =
@@ -415,16 +474,23 @@ function prepararPartidaComOdds(evento) {
       ? linkRecebido
       : null;
 
-  const mercados = normalizarMercados(mercadosBet365, evento.home, evento.away);
+  const mercados = normalizarMercados(mercadosBet365, evento.home, evento.away, esporte);
 
   return {
     id: String(evento.id),
+    esporte: esporte,
     jogadorA: evento.home,
     jogadorB: evento.away,
+    participanteA: evento.home,
+    participanteB: evento.away,
     data: evento.date,
-    torneio: evento.league ? evento.league.name : "Torneio não informado",
+    torneio: evento.league ? evento.league.name : "Competição não informada",
+    competicao: evento.league ? evento.league.name : "Competição não informada",
     oddA: oddA,
     oddB: oddB,
+    oddEmpate: exigeEmpate ? oddEmpate : null,
+    margemPrincipal: calculoPrincipal.margem,
+    resultadosPrincipais: resultadosPrincipais,
     atualizadoEm: mercadoVencedor.updatedAt || null,
     linkBet365: linkBet365,
     mercados: mercados
@@ -441,7 +507,16 @@ function dividirEmLotes(lista, tamanho) {
   return lotes;
 }
 
-async function listarPartidas() {
+async function listarPartidas(codigoEsporte) {
+  const configuracao = obterConfiguracaoEsporte(codigoEsporte);
+
+  if (!configuracao) {
+    const erro = new Error("Esporte inválido. Use tennis ou football.");
+    erro.codigoHttp = 400;
+    throw erro;
+  }
+
+  const cachePartidas = obterCachePartidas(codigoEsporte);
   const cacheAindaValido =
     cachePartidas.dados !== null && Date.now() - cachePartidas.criadoEm < TEMPO_CACHE;
 
@@ -450,9 +525,10 @@ async function listarPartidas() {
   }
 
   const eventos = await consultarApi("/events", {
-    sport: "tennis",
+    sport: configuracao.slugApi,
     bookmaker: "Bet365",
-    status: "pending"
+    status: "pending",
+    limit: String(configuracao.limiteEventos)
   });
 
   if (!Array.isArray(eventos)) {
@@ -460,21 +536,21 @@ async function listarPartidas() {
   }
 
   const agora = Date.now();
-  const eventosAtpWta = eventos
+  const eventosDoEsporte = eventos
     .filter(function (evento) {
       const horario = new Date(evento.date).getTime();
       const nomeTorneio = evento.league ? evento.league.name : "";
-      const ehAtpOuWta = /^(ATP|WTA)\b/i.test(nomeTorneio);
+      const pertenceAoEsporte = codigoEsporte !== "tennis" || /^(ATP|WTA)\b/i.test(nomeTorneio);
 
-      return Number.isFinite(horario) && horario > agora && ehAtpOuWta;
+      return Number.isFinite(horario) && horario > agora && pertenceAoEsporte;
     })
     .sort(function (primeiro, segundo) {
       return new Date(primeiro.date) - new Date(segundo.date);
     })
-    .slice(0, 50);
+    .slice(0, configuracao.limiteEventos);
 
   // O endpoint multi aceita até dez eventos e cobra apenas uma consulta por lote.
-  const lotes = dividirEmLotes(eventosAtpWta, 10);
+  const lotes = dividirEmLotes(eventosDoEsporte, 10);
   const partidasComOdds = [];
 
   for (const lote of lotes) {
@@ -488,7 +564,7 @@ async function listarPartidas() {
     }
 
     dadosDoLote.forEach(function (evento) {
-      const partida = prepararPartidaComOdds(evento);
+      const partida = prepararPartidaComOdds(evento, codigoEsporte);
 
       if (partida) {
         partidasComOdds.push(partida);
@@ -500,10 +576,10 @@ async function listarPartidas() {
     return new Date(primeira.data) - new Date(segunda.data);
   });
 
-  cachePartidas = {
+  cachesPartidas.set(codigoEsporte, {
     criadoEm: Date.now(),
     dados: partidasComOdds
-  };
+  });
 
   return partidasComOdds;
 }
@@ -620,7 +696,8 @@ async function obterMovimentacoes(partida) {
   return resposta;
 }
 
-function obterInformacoesDeUso() {
+function obterInformacoesDeUso(codigoEsporte) {
+  const cachePartidas = obterCachePartidas(codigoEsporte);
   return {
     limite: limiteApi.limite,
     restantes: limiteApi.restantes,
@@ -644,23 +721,33 @@ const servidor = http.createServer(async function (requisicao, resposta) {
     }
 
     if (requisicao.method === "GET" && url.pathname === "/api/partidas") {
-      const partidas = await listarPartidas();
+      const esporte = url.searchParams.get("esporte") || "tennis";
+      const partidas = await listarPartidas(esporte);
       enviarJson(resposta, 200, {
+        esporte: esporte,
         partidas: partidas,
-        consultas: obterInformacoesDeUso()
+        consultas: obterInformacoesDeUso(esporte)
       });
       return;
     }
 
     if (requisicao.method === "GET" && url.pathname === "/api/movimentacoes") {
       const eventoId = url.searchParams.get("eventoId");
+      const esporte = url.searchParams.get("esporte") || "tennis";
 
       if (!eventoId || !/^[a-zA-Z0-9_-]+$/.test(eventoId)) {
         enviarJson(resposta, 400, { erro: "Identificador da partida inválido." });
         return;
       }
 
-      const partidas = await listarPartidas();
+      if (esporte !== "tennis") {
+        enviarJson(resposta, 400, {
+          erro: "O histórico de movimentação ainda está disponível somente para o tênis."
+        });
+        return;
+      }
+
+      const partidas = await listarPartidas(esporte);
       const partida = partidas.find(function (item) { return item.id === eventoId; });
 
       if (!partida) {
@@ -671,7 +758,7 @@ const servidor = http.createServer(async function (requisicao, resposta) {
       const movimentacoes = await obterMovimentacoes(partida);
       enviarJson(resposta, 200, {
         ...movimentacoes,
-        consultas: obterInformacoesDeUso()
+        consultas: obterInformacoesDeUso(esporte)
       });
       return;
     }
@@ -679,13 +766,14 @@ const servidor = http.createServer(async function (requisicao, resposta) {
     // Mantemos esta rota para compatibilidade, mas ela usa o cache e não gasta nova consulta.
     if (requisicao.method === "GET" && url.pathname === "/api/odds") {
       const eventoId = url.searchParams.get("eventoId");
+      const esporte = url.searchParams.get("esporte") || "tennis";
 
       if (!eventoId || !/^[a-zA-Z0-9_-]+$/.test(eventoId)) {
         enviarJson(resposta, 400, { erro: "Identificador da partida inválido." });
         return;
       }
 
-      const partidas = await listarPartidas();
+      const partidas = await listarPartidas(esporte);
       const partida = partidas.find(function (item) { return item.id === eventoId; });
 
       if (!partida) {

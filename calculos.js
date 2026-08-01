@@ -45,6 +45,26 @@ function calcularMercadoJusto(odds) {
   };
 }
 
+function calcularVariacaoPercentual(valorInicial, valorFinal) {
+  if (!Number.isFinite(valorInicial) || !Number.isFinite(valorFinal) || valorInicial <= 0) {
+    throw new Error("A variação precisa de valores numéricos e um valor inicial positivo.");
+  }
+
+  return ((valorFinal - valorInicial) / valorInicial) * 100;
+}
+
+function classificarMargem(margem) {
+  if (!Number.isFinite(margem)) {
+    throw new Error("A margem precisa ser um número válido.");
+  }
+
+  if (margem <= 5) return "baixa";
+  if (margem <= 8) return "moderada";
+  return "alta";
+}
+
 module.exports = {
-  calcularMercadoJusto: calcularMercadoJusto
+  calcularMercadoJusto: calcularMercadoJusto,
+  calcularVariacaoPercentual: calcularVariacaoPercentual,
+  classificarMargem: classificarMargem
 };

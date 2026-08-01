@@ -1,12 +1,21 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { calcularMercadoJusto } = require("../calculos");
+const {
+  calcularMercadoJusto,
+  calcularVariacaoPercentual,
+  classificarMargem
+} = require("../calculos");
 
 function aproximadamente(valor, esperado, tolerancia = 0.000001) {
   assert.ok(
     Math.abs(valor - esperado) <= tolerancia,
     valor + " deveria estar próximo de " + esperado
   );
+}
+
+function arredondar(valor, casas) {
+  const fator = 10 ** casas;
+  return Math.round(valor * fator) / fator;
 }
 
 test("normaliza corretamente o exemplo de duas odds", function () {
@@ -18,10 +27,16 @@ test("normaliza corretamente o exemplo de duas odds", function () {
   aproximadamente(calculo.somaProbabilidadesJustas, 100);
 });
 
-test("normaliza um mercado com mais de dois resultados", function () {
+test("normaliza o mercado 1X2 de futebol incluindo o empate", function () {
   const calculo = calcularMercadoJusto([2, 3.4, 3.6]);
 
   aproximadamente(calculo.margem, 7.189542483660141);
+  aproximadamente(calculo.resultados[0].oddJusta, 2.1437908496732025);
+  aproximadamente(calculo.resultados[1].oddJusta, 3.6444444444444444);
+  aproximadamente(calculo.resultados[2].oddJusta, 3.8588235294117648);
+  aproximadamente(calculo.resultados[0].probabilidadeJusta, 46.64634146341463);
+  aproximadamente(calculo.resultados[1].probabilidadeJusta, 27.439024390243897);
+  aproximadamente(calculo.resultados[2].probabilidadeJusta, 25.91463414634146);
   aproximadamente(calculo.somaProbabilidadesJustas, 100);
   assert.equal(calculo.resultados.length, 3);
 });
@@ -38,4 +53,16 @@ test("rejeita odds inválidas", function () {
     function () { calcularMercadoJusto([1, 2]); },
     /maiores que 1/
   );
+});
+
+test("calcula a movimentação percentual entre dois momentos", function () {
+  assert.equal(arredondar(calcularVariacaoPercentual(2.10, 1.85), 2), -11.90);
+  assert.equal(arredondar(calcularVariacaoPercentual(1.72, 1.90), 2), 10.47);
+});
+
+test("classifica as faixas de margem nos limites definidos", function () {
+  assert.equal(classificarMargem(5), "baixa");
+  assert.equal(classificarMargem(5.01), "moderada");
+  assert.equal(classificarMargem(8), "moderada");
+  assert.equal(classificarMargem(8.01), "alta");
 });

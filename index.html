@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Odd Clara — Odds justas de tênis</title>
+  <title>Odd Clara — Odds justas de tênis e futebol</title>
 
   <style>
     /* Cores e medidas principais ficam reunidas para facilitar futuras mudanças. */
@@ -140,6 +140,34 @@
       padding: 4px;
       border-radius: 10px;
       background: #e8ecea;
+    }
+
+    .abas-esportes {
+      display: flex;
+      gap: 8px;
+      padding: 6px;
+      margin-bottom: 18px;
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      background: #f4f7f4;
+    }
+
+    .aba-esporte {
+      flex: 1;
+      min-height: 46px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--texto-suave);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .aba-esporte[aria-selected="true"] {
+      background: var(--verde);
+      color: white;
+      box-shadow: 0 6px 18px rgba(18, 102, 61, 0.18);
     }
 
     .filtro-circuito {
@@ -280,7 +308,7 @@
 
     .resultado-jogadores {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
       gap: 14px;
     }
 
@@ -725,6 +753,27 @@
       color: var(--amarelo);
     }
 
+    .rodape {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 18px 10px 0;
+      color: var(--texto-suave);
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    .rodape a {
+      color: var(--verde-escuro);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .rodape a:hover {
+      text-decoration: underline;
+    }
+
     [hidden] {
       display: none !important;
     }
@@ -1065,7 +1114,7 @@
 
     .odds-cartao {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
       gap: 6px;
       margin: 12px 48px 0 14px;
     }
@@ -1367,6 +1416,275 @@
       animation: brilho 1.25s infinite linear;
     }
 
+    .filtros-avancados {
+      border-top: 1px solid var(--borda);
+      background: #fbfcfb;
+    }
+
+    .filtros-avancados summary {
+      padding: 13px 22px;
+      color: var(--verde-escuro);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .grade-filtros-avancados {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      padding: 4px 22px 18px;
+    }
+
+    .grade-filtros-avancados label {
+      color: var(--texto-suave);
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .grade-filtros-avancados select,
+    .seletores-momentos select {
+      display: block;
+      width: 100%;
+      margin-top: 5px;
+      padding: 9px 10px;
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--texto);
+      font: inherit;
+    }
+
+    .opcao-marcavel {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .opcao-marcavel input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--verde);
+    }
+
+    .margem em {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.66rem;
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    .faixa-baixa {
+      background: #dff4e8 !important;
+      color: #08733f !important;
+    }
+
+    .faixa-moderada {
+      background: #fff5c7 !important;
+      color: #756500 !important;
+    }
+
+    .faixa-alta {
+      background: #ffe7e7 !important;
+      color: #962222 !important;
+    }
+
+    .radar-movimentacoes {
+      margin: 18px 0;
+      padding: clamp(20px, 3vw, 28px);
+      border-radius: 18px;
+      background: linear-gradient(135deg, #073f31, var(--verde-escuro));
+      color: #fff;
+      box-shadow: var(--sombra);
+    }
+
+    .radar-topo {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .etiqueta-radar {
+      margin: 0 0 3px !important;
+      color: var(--amarelo) !important;
+      font-size: 0.67rem !important;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .radar-topo h2 {
+      margin: 0;
+      font-size: 1.35rem;
+    }
+
+    .radar-topo p {
+      max-width: 660px;
+      margin: 5px 0 0;
+      color: #cfe1db;
+      font-size: 0.8rem;
+    }
+
+    .contador-radar {
+      flex: 0 0 auto;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--amarelo);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .lista-radar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .cartao-radar {
+      padding: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      text-align: left;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .cartao-radar:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .cartao-radar small {
+      display: block;
+      overflow: hidden;
+      color: #bcd4cb;
+      font-size: 0.66rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cartao-radar strong {
+      display: block;
+      margin: 5px 0 10px;
+      font-size: 0.86rem;
+    }
+
+    .movimentos-radar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .movimentos-radar span {
+      padding: 7px;
+      border-radius: 7px;
+      background: rgba(0, 0, 0, 0.16);
+      color: #dbe9e4;
+      font-size: 0.65rem;
+    }
+
+    .movimentos-radar b {
+      display: block;
+      color: var(--amarelo);
+      font-size: 0.82rem;
+    }
+
+    .radar-vazio {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 18px;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: #cfe1db;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .abertura-agora,
+    .comparador-momentos {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--borda);
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .abertura-agora h4,
+    .comparador-momentos h4 {
+      margin: 0;
+      font-size: 0.92rem;
+    }
+
+    .grade-comparacoes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .comparacao-item {
+      padding: 10px;
+      border-radius: 8px;
+      background: #f2f5f3;
+    }
+
+    .comparacao-item span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.61rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .comparacao-item strong {
+      display: block;
+      margin-top: 2px;
+      color: var(--verde-escuro);
+      font-size: 0.82rem;
+    }
+
+    .comparacao-indisponivel {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: var(--texto-suave);
+      font-size: 0.75rem;
+    }
+
+    .comparador-topo {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .comparador-topo p {
+      margin: 3px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.7rem;
+    }
+
+    .seletores-momentos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      min-width: 300px;
+    }
+
+    .seletores-momentos label {
+      color: var(--texto-suave);
+      font-size: 0.64rem;
+      font-weight: 700;
+    }
+
     @keyframes brilho {
       from { background-position: 200% 0; }
       to { background-position: -200% 0; }
@@ -1429,6 +1747,26 @@
 
       .filtro-favoritas {
         margin-left: 0;
+      }
+
+      .grade-filtros-avancados,
+      .lista-radar {
+        grid-template-columns: 1fr;
+      }
+
+      .radar-topo,
+      .comparador-topo {
+        flex-direction: column;
+      }
+
+      .seletores-momentos {
+        grid-template-columns: 1fr;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .grade-comparacoes {
+        grid-template-columns: 1fr;
       }
 
       .resumo-geral {
@@ -1549,7 +1887,7 @@
   <main class="pagina">
     <section id="inicio" class="apresentacao">
       <div>
-        <p class="etiqueta">Análise transparente · ATP e WTA</p>
+        <p id="etiquetaEsporte" class="etiqueta">Análise transparente · ATP e WTA</p>
         <h1>Odds sem a margem escondida.</h1>
         <p class="subtitulo">
           Compare as odds da Bet365 com as probabilidades normalizadas, sem previsões e sem recomendações de apostas.
@@ -1557,10 +1895,15 @@
       </div>
     </section>
 
-    <section class="painel" aria-label="Partidas de tênis da Bet365">
+    <section id="painelPartidas" class="painel" aria-label="Partidas de tênis da Bet365">
+      <div class="abas-esportes" role="tablist" aria-label="Escolher esporte">
+        <button class="aba-esporte" type="button" role="tab" data-esporte="tennis" aria-selected="true">Tênis</button>
+        <button class="aba-esporte" type="button" role="tab" data-esporte="football" aria-selected="false">Futebol</button>
+      </div>
+
       <div class="barra-filtros">
         <div class="campo-pesquisa">
-          <label for="pesquisa">Pesquisar jogador ou torneio</label>
+          <label id="rotuloPesquisa" for="pesquisa">Pesquisar jogador ou torneio</label>
           <input
             id="pesquisa"
             type="search"
@@ -1570,7 +1913,7 @@
         </div>
 
         <div class="acoes-filtros">
-          <div class="filtros-circuito" role="group" aria-label="Filtrar circuito">
+          <div id="filtrosCircuito" class="filtros-circuito" role="group" aria-label="Filtrar circuito">
             <button class="filtro-circuito" type="button" data-circuito="ATP" aria-pressed="true">ATP</button>
             <button class="filtro-circuito" type="button" data-circuito="WTA" aria-pressed="true">WTA</button>
           </div>
@@ -1590,6 +1933,46 @@
         <button id="filtrarFavoritas" class="filtro-favoritas" type="button" aria-pressed="false">★ Favoritas</button>
       </div>
 
+      <details class="filtros-avancados">
+        <summary>Filtros avançados e ordenação</summary>
+        <div class="grade-filtros-avancados">
+          <label id="grupoTipoPartida">
+            Tipo de partida
+            <select id="filtroTipoPartida">
+              <option value="todos">Simples e duplas</option>
+              <option value="simples">Somente simples</option>
+              <option value="duplas">Somente duplas</option>
+            </select>
+          </label>
+          <label>
+            Faixa de margem
+            <select id="filtroFaixaMargem">
+              <option value="todas">Todas as margens</option>
+              <option value="baixa">Baixa: até 5%</option>
+              <option value="moderada">Moderada: 5% a 8%</option>
+              <option value="alta">Alta: acima de 8%</option>
+            </select>
+          </label>
+          <label>
+            Ordenar por
+            <select id="ordenarPartidas">
+              <option value="horario">Horário mais próximo</option>
+              <option value="margem-menor">Menor margem</option>
+              <option value="margem-maior">Maior margem</option>
+              <option value="atualizacao">Atualização mais recente</option>
+            </select>
+          </label>
+          <label id="grupoHistorico" class="opcao-marcavel">
+            <input id="somenteComLink" type="checkbox">
+            Somente com link da Bet365
+          </label>
+          <label class="opcao-marcavel">
+            <input id="somenteComHistorico" type="checkbox">
+            Somente com histórico consultado
+          </label>
+        </div>
+      </details>
+
       <div class="informacoes-api">
         <span id="consultasApi" class="consultas-restantes">Consultas: carregando...</span>
         <span id="cacheApi">A lista usa cache para economizar o plano gratuito.</span>
@@ -1608,7 +1991,7 @@
         <strong id="resumoPartidas">—</strong>
       </article>
       <article class="cartao-resumo">
-        <span>Torneios</span>
+        <span id="rotuloResumoCompeticoes">Torneios</span>
         <strong id="resumoTorneios">—</strong>
       </article>
       <article class="cartao-resumo">
@@ -1621,10 +2004,22 @@
       </article>
     </section>
 
+    <section id="radar" class="radar-movimentacoes" aria-labelledby="tituloRadar">
+      <div class="radar-topo">
+        <div>
+          <p class="etiqueta-radar">Acompanhamento matemático</p>
+          <h2 id="tituloRadar">Radar de movimentações</h2>
+          <p>Ordena as maiores mudanças entre o primeiro e o último registro dos históricos já consultados.</p>
+        </div>
+        <span id="contadorRadar" class="contador-radar">0 movimentos</span>
+      </div>
+      <div id="listaRadar" class="lista-radar"></div>
+    </section>
+
     <section id="partidas" class="area-trabalho">
       <section class="painel-lista" aria-label="Torneios e partidas">
         <div class="cabecalho-lista">
-          <h2>Torneios</h2>
+          <h2 id="tituloLista">Torneios</h2>
           <span id="contador" class="contador"></span>
         </div>
 
@@ -1654,28 +2049,11 @@
           <div class="margem">
             <span>Margem da casa</span>
             <strong id="margemCasa">—</strong>
+            <em id="faixaMargemCasa">Classificação</em>
           </div>
         </div>
 
-        <div class="resultado-jogadores">
-          <article class="resultado-jogador">
-            <h3 id="nomeResultadoA">Jogador A</h3>
-            <div class="numeros">
-              <div class="numero"><span>Odd Bet365</span><strong id="oddDigitadaA">—</strong></div>
-              <div class="numero"><span>Odd justa</span><strong id="oddJustaA">—</strong></div>
-              <div class="numero"><span>Prob. justa</span><strong id="probabilidadeA">—</strong></div>
-            </div>
-          </article>
-
-          <article class="resultado-jogador">
-            <h3 id="nomeResultadoB">Jogador B</h3>
-            <div class="numeros">
-              <div class="numero"><span>Odd Bet365</span><strong id="oddDigitadaB">—</strong></div>
-              <div class="numero"><span>Odd justa</span><strong id="oddJustaB">—</strong></div>
-              <div class="numero"><span>Prob. justa</span><strong id="probabilidadeB">—</strong></div>
-            </div>
-          </article>
-        </div>
+        <div id="resultadoPrincipal" class="resultado-jogadores"></div>
 
         <div class="resultado-acoes">
           <p id="resultadoAtualizacao" class="resultado-nota"></p>
@@ -1689,7 +2067,7 @@
           >Abrir confronto na Bet365 ↗</a>
         </div>
 
-        <section class="movimentacao-odds" aria-labelledby="tituloMovimentacao">
+        <section id="secaoMovimentacao" class="movimentacao-odds" aria-labelledby="tituloMovimentacao">
           <div class="movimentacao-topo">
             <div>
               <h3 id="tituloMovimentacao">Movimentação das odds</h3>
@@ -1720,6 +2098,26 @@
           </div>
 
           <div id="resumoMovimentacao" class="resumo-movimentacao"></div>
+
+          <section class="abertura-agora" aria-labelledby="tituloAberturaAgora">
+            <h4 id="tituloAberturaAgora">Abertura × agora</h4>
+            <div id="comparacaoAbertura" class="grade-comparacoes"></div>
+          </section>
+
+          <section class="comparador-momentos" aria-labelledby="tituloComparadorMomentos">
+            <div class="comparador-topo">
+              <div>
+                <h4 id="tituloComparadorMomentos">Comparar dois momentos</h4>
+                <p>Escolha dois registros do histórico para medir a mudança entre eles.</p>
+              </div>
+              <div class="seletores-momentos">
+                <label>Momento inicial <select id="momentoInicial"></select></label>
+                <label>Momento final <select id="momentoFinal"></select></label>
+              </div>
+            </div>
+            <div id="resultadoComparador" class="grade-comparacoes"></div>
+          </section>
+
           <p class="nota-consulta">O histórico só é consultado quando você usa o botão, ajudando a economizar a cota da API.</p>
         </section>
 
@@ -1764,6 +2162,11 @@
       Este site apenas remove matematicamente a margem das odds. Ele não prevê resultados,
       não recomenda apostas e não garante lucro. Conteúdo destinado a maiores de 18 anos.
     </aside>
+
+    <footer class="rodape">
+      <span>Criado e desenvolvido por Vitor Barbosa ·</span>
+      <a href="https://github.com/araujovito" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </footer>
   </main>
 
   <script>
@@ -1775,8 +2178,18 @@
     let periodoAtivo = "todos";
     let somenteFavoritas = false;
     let partidaGraficoAtualId = null;
+    let tipoPartidaAtivo = "todos";
+    let faixaMargemAtiva = "todas";
+    let somenteComLinkAtivo = false;
+    let somenteComHistoricoAtivo = false;
+    let ordenacaoAtiva = "horario";
+    let dadosGraficoAtual = null;
+    let esporteSelecionado = "tennis";
+    const cacheLocalEsportes = new Map();
     const circuitosAtivos = new Set(["ATP", "WTA"]);
     const CHAVE_FAVORITOS = "odd-clara-favoritos";
+    const CHAVE_HISTORICOS = "odd-clara-historicos-consultados";
+    const CHAVE_RADAR = "odd-clara-radar";
 
     function carregarFavoritos() {
       try {
@@ -1788,6 +2201,18 @@
     }
 
     const partidasFavoritas = carregarFavoritos();
+
+    function carregarListaLocal(chave) {
+      try {
+        const valor = JSON.parse(localStorage.getItem(chave) || "[]");
+        return Array.isArray(valor) ? valor : [];
+      } catch (erro) {
+        return [];
+      }
+    }
+
+    const partidasComHistorico = new Set(carregarListaLocal(CHAVE_HISTORICOS));
+    let entradasRadar = carregarListaLocal(CHAVE_RADAR);
 
     const campoPesquisa = document.querySelector("#pesquisa");
     const botaoAtualizar = document.querySelector("#atualizar");
@@ -1807,6 +2232,23 @@
     const graficoMovimentacao = document.querySelector("#graficoMovimentacao");
     const statusMovimentacao = document.querySelector("#statusMovimentacao");
     const resumoMovimentacao = document.querySelector("#resumoMovimentacao");
+    const filtroTipoPartida = document.querySelector("#filtroTipoPartida");
+    const filtroFaixaMargem = document.querySelector("#filtroFaixaMargem");
+    const ordenarPartidas = document.querySelector("#ordenarPartidas");
+    const somenteComLink = document.querySelector("#somenteComLink");
+    const somenteComHistorico = document.querySelector("#somenteComHistorico");
+    const listaRadar = document.querySelector("#listaRadar");
+    const contadorRadar = document.querySelector("#contadorRadar");
+    const comparacaoAbertura = document.querySelector("#comparacaoAbertura");
+    const momentoInicial = document.querySelector("#momentoInicial");
+    const momentoFinal = document.querySelector("#momentoFinal");
+    const resultadoComparador = document.querySelector("#resultadoComparador");
+    const filtrosCircuito = document.querySelector("#filtrosCircuito");
+    const grupoTipoPartida = document.querySelector("#grupoTipoPartida");
+    const grupoHistorico = document.querySelector("#grupoHistorico");
+    const secaoRadar = document.querySelector("#radar");
+    const secaoMovimentacao = document.querySelector("#secaoMovimentacao");
+    const resultadoPrincipal = document.querySelector("#resultadoPrincipal");
 
     function formatarOdd(valor) {
       return valor.toFixed(2).replace(".", ",");
@@ -1814,6 +2256,40 @@
 
     function formatarPorcentagem(valor) {
       return valor.toFixed(1).replace(".", ",") + "%";
+    }
+
+    function classificarMargem(valor) {
+      if (valor <= 5) return { codigo: "baixa", texto: "Baixa" };
+      if (valor <= 8) return { codigo: "moderada", texto: "Moderada" };
+      return { codigo: "alta", texto: "Alta" };
+    }
+
+    function chavePartida(partida) {
+      return (partida.esporte || esporteSelecionado) + ":" + partida.id;
+    }
+
+    function obterResultadosPrincipais(partida) {
+      if (Array.isArray(partida.resultadosPrincipais) && partida.resultadosPrincipais.length >= 2) {
+        return partida.resultadosPrincipais;
+      }
+
+      const calculo = calcularMercadoJusto([partida.oddA, partida.oddB]);
+      return [
+        { nome: partida.jogadorA, odd: partida.oddA, ...calculo.resultados[0] },
+        { nome: partida.jogadorB, odd: partida.oddB, ...calculo.resultados[1] }
+      ];
+    }
+
+    function obterMargemPrincipal(partida) {
+      if (Number.isFinite(partida.margemPrincipal)) return partida.margemPrincipal;
+      return calcularMercadoJusto(obterResultadosPrincipais(partida).map(function (item) {
+        return item.odd;
+      })).margem;
+    }
+
+    function partidaEhDeDuplas(partida) {
+      return /doubles|duplas/i.test(partida.torneio) ||
+        partida.jogadorA.includes("/") || partida.jogadorB.includes("/");
     }
 
     // Intl.DateTimeFormat converte o horário da API para o fuso do computador.
@@ -1946,6 +2422,110 @@
       }
     }
 
+    function salvarListaLocal(chave, valor) {
+      try {
+        localStorage.setItem(chave, JSON.stringify(valor));
+      } catch (erro) {
+        // A interface continua funcionando mesmo com armazenamento bloqueado.
+      }
+    }
+
+    function registrarNoRadar(dados) {
+      if (!dados.possuiHistorico || !Array.isArray(dados.pontos) || dados.pontos.length < 2) {
+        return;
+      }
+
+      const primeiro = dados.pontos[0];
+      const ultimo = dados.pontos[dados.pontos.length - 1];
+      const variacaoA = ((ultimo.oddA - primeiro.oddA) / primeiro.oddA) * 100;
+      const variacaoB = ((ultimo.oddB - primeiro.oddB) / primeiro.oddB) * 100;
+      const partida = partidasDisponiveis.find(function (item) { return item.id === dados.eventoId; });
+
+      partidasComHistorico.add(dados.eventoId);
+      salvarListaLocal(CHAVE_HISTORICOS, Array.from(partidasComHistorico));
+
+      const entrada = {
+        eventoId: dados.eventoId,
+        jogadorA: dados.jogadorA,
+        jogadorB: dados.jogadorB,
+        torneio: partida ? partida.torneio : "Torneio não disponível",
+        variacaoA: variacaoA,
+        variacaoB: variacaoB,
+        maiorMovimento: Math.max(Math.abs(variacaoA), Math.abs(variacaoB)),
+        atualizadoEm: ultimo.momento
+      };
+
+      entradasRadar = entradasRadar.filter(function (item) {
+        return item.eventoId !== dados.eventoId;
+      });
+      entradasRadar.push(entrada);
+      entradasRadar = entradasRadar
+        .sort(function (a, b) { return b.maiorMovimento - a.maiorMovimento; })
+        .slice(0, 30);
+
+      salvarListaLocal(CHAVE_RADAR, entradasRadar);
+      renderizarRadar();
+    }
+
+    function renderizarRadar() {
+      listaRadar.innerHTML = "";
+      const entradas = entradasRadar
+        .slice()
+        .sort(function (a, b) { return b.maiorMovimento - a.maiorMovimento; })
+        .slice(0, 6);
+
+      contadorRadar.textContent = entradas.length + " movimento(s)";
+
+      if (entradas.length === 0) {
+        const vazio = document.createElement("p");
+        vazio.className = "radar-vazio";
+        vazio.textContent =
+          "O radar será preenchido quando você consultar partidas que possuam dois ou mais registros históricos.";
+        listaRadar.appendChild(vazio);
+        return;
+      }
+
+      entradas.forEach(function (entrada) {
+        const cartao = document.createElement("button");
+        cartao.type = "button";
+        cartao.className = "cartao-radar";
+
+        const torneio = document.createElement("small");
+        torneio.textContent = entrada.torneio;
+        const confronto = document.createElement("strong");
+        confronto.textContent = entrada.jogadorA + " × " + entrada.jogadorB;
+        const movimentos = document.createElement("div");
+        movimentos.className = "movimentos-radar";
+
+        [
+          { nome: entrada.jogadorA, valor: entrada.variacaoA },
+          { nome: entrada.jogadorB, valor: entrada.variacaoB }
+        ].forEach(function (movimento) {
+          const item = document.createElement("span");
+          const nome = document.createTextNode(movimento.nome + " ");
+          const valor = document.createElement("b");
+          const seta = movimento.valor > 0.05 ? "↑ " : movimento.valor < -0.05 ? "↓ " : "→ ";
+          valor.textContent = seta + (movimento.valor > 0 ? "+" : "") +
+            movimento.valor.toFixed(1).replace(".", ",") + "%";
+          item.append(nome, valor);
+          movimentos.appendChild(item);
+        });
+
+        cartao.append(torneio, confronto, movimentos);
+        cartao.addEventListener("click", function () {
+          const partida = partidasDisponiveis.find(function (item) {
+            return item.id === entrada.eventoId;
+          });
+
+          if (partida) {
+            selecionarPartida(partida);
+            document.querySelector("#partidas").scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+        listaRadar.appendChild(cartao);
+      });
+    }
+
     /*
       Cada partida vira um botão. Assim ela pode ser selecionada com mouse,
       toque, tecla Enter ou barra de espaço.
@@ -1968,7 +2548,9 @@
 
       const tipoMercado = document.createElement("span");
       tipoMercado.className = "tipo-mercado";
-      tipoMercado.textContent = "Vencedor da partida";
+      tipoMercado.textContent = esporteSelecionado === "tennis"
+        ? "Vencedor da partida"
+        : "Resultado da partida · 1X2";
 
       const metaEsquerda = document.createElement("span");
       metaEsquerda.className = "meta-esquerda";
@@ -1998,17 +2580,26 @@
       acao.textContent = "Analisar →";
       jogadorB.appendChild(acao);
 
-      const calculo = calcularOddsJustas(partida.oddA, partida.oddB);
+      const resultadosPrincipais = obterResultadosPrincipais(partida);
+      const margemPrincipal = obterMargemPrincipal(partida);
+      const faixaMargem = classificarMargem(margemPrincipal);
       const odds = document.createElement("div");
       odds.className = "odds-cartao";
 
-      [
-        { rotulo: "Jogador A", valor: formatarOdd(partida.oddA) },
-        { rotulo: "Jogador B", valor: formatarOdd(partida.oddB) },
-        { rotulo: "Margem", valor: formatarPorcentagem(calculo.margem), margem: true }
-      ].forEach(function (item) {
+      resultadosPrincipais.map(function (resultadoMercado) {
+        let rotulo = resultadoMercado.nome;
+        if (resultadoMercado.tipo === "casa") rotulo = "Casa";
+        if (resultadoMercado.tipo === "visitante") rotulo = "Visitante";
+        return { rotulo: rotulo, valor: formatarOdd(resultadoMercado.odd) };
+      }).concat([{
+          rotulo: "Margem · " + faixaMargem.texto,
+          valor: formatarPorcentagem(margemPrincipal),
+          margem: true,
+          faixa: faixaMargem.codigo
+        }]).forEach(function (item) {
         const bloco = document.createElement("div");
-        bloco.className = "odd-resumo" + (item.margem ? " margem-cartao" : "");
+        bloco.className = "odd-resumo" +
+          (item.margem ? " margem-cartao faixa-" + item.faixa : "");
         const rotulo = document.createElement("span");
         const valor = document.createElement("strong");
         rotulo.textContent = item.rotulo;
@@ -2022,7 +2613,7 @@
       favorito.className = "favoritar-partida";
 
       function atualizarBotaoFavorito() {
-        const estaFavorita = partidasFavoritas.has(partida.id);
+        const estaFavorita = partidasFavoritas.has(chavePartida(partida));
         favorito.classList.toggle("ativa", estaFavorita);
         favorito.textContent = estaFavorita ? "★" : "☆";
         favorito.setAttribute("aria-pressed", String(estaFavorita));
@@ -2036,10 +2627,11 @@
       atualizarBotaoFavorito();
 
       favorito.addEventListener("click", function () {
-        if (partidasFavoritas.has(partida.id)) {
-          partidasFavoritas.delete(partida.id);
+        const chave = chavePartida(partida);
+        if (partidasFavoritas.has(chave)) {
+          partidasFavoritas.delete(chave);
         } else {
-          partidasFavoritas.add(partida.id);
+          partidasFavoritas.add(chave);
         }
 
         salvarFavoritos();
@@ -2068,18 +2660,49 @@
         const textoPartida = normalizarTexto(
           partida.jogadorA + " " + partida.jogadorB + " " + partida.torneio
         );
-        const correspondeFavoritos = !somenteFavoritas || partidasFavoritas.has(partida.id);
+        const correspondeFavoritos = !somenteFavoritas || partidasFavoritas.has(chavePartida(partida));
+        const ehDuplas = partidaEhDeDuplas(partida);
+        const correspondeTipo = esporteSelecionado !== "tennis" || tipoPartidaAtivo === "todos" ||
+          (tipoPartidaAtivo === "duplas" && ehDuplas) ||
+          (tipoPartidaAtivo === "simples" && !ehDuplas);
+        const margem = obterMargemPrincipal(partida);
+        const correspondeMargem = faixaMargemAtiva === "todas" ||
+          classificarMargem(margem).codigo === faixaMargemAtiva;
+        const correspondeLink = !somenteComLinkAtivo || Boolean(partida.linkBet365);
+        const correspondeHistorico = esporteSelecionado !== "tennis" || !somenteComHistoricoAtivo ||
+          partidasComHistorico.has(partida.id);
 
-        return circuitosAtivos.has(circuito) &&
+        const correspondeCircuito = esporteSelecionado !== "tennis" || circuitosAtivos.has(circuito);
+        return correspondeCircuito &&
           textoPartida.includes(pesquisa) &&
           partidaEstaNoPeriodo(partida) &&
-          correspondeFavoritos;
+          correspondeFavoritos &&
+          correspondeTipo &&
+          correspondeMargem &&
+          correspondeLink &&
+          correspondeHistorico;
+      });
+
+      partidasFiltradas.sort(function (primeira, segunda) {
+        if (ordenacaoAtiva === "margem-menor" || ordenacaoAtiva === "margem-maior") {
+          const margemPrimeira = obterMargemPrincipal(primeira);
+          const margemSegunda = obterMargemPrincipal(segunda);
+          return ordenacaoAtiva === "margem-menor"
+            ? margemPrimeira - margemSegunda
+            : margemSegunda - margemPrimeira;
+        }
+
+        if (ordenacaoAtiva === "atualizacao") {
+          return new Date(segunda.atualizadoEm) - new Date(primeira.atualizadoEm);
+        }
+
+        return new Date(primeira.data) - new Date(segunda.data);
       });
 
       listaPartidas.innerHTML = "";
 
       if (partidasFiltradas.length === 0) {
-        contador.textContent = "0 torneios";
+        contador.textContent = esporteSelecionado === "tennis" ? "0 torneios" : "0 competições";
         const vazio = document.createElement("p");
         vazio.className = "vazio";
         vazio.textContent = somenteFavoritas
@@ -2104,7 +2727,8 @@
       });
 
       contador.textContent =
-        torneios.size + " torneio(s) · " + partidasFiltradas.length + " partida(s)";
+        torneios.size + (esporteSelecionado === "tennis" ? " torneio(s) · " : " competição(ões) · ") +
+        partidasFiltradas.length + " partida(s)";
 
       torneios.forEach(function (partidasDoTorneio, nomeDoTorneio) {
         const grupo = document.createElement("details");
@@ -2159,6 +2783,33 @@
       }
     }
 
+    function configurarInterfaceDoEsporte() {
+      const ehTenis = esporteSelecionado === "tennis";
+      document.querySelector("#etiquetaEsporte").textContent = ehTenis
+        ? "Análise transparente · ATP e WTA"
+        : "Análise transparente · Futebol";
+      document.querySelector("#painelPartidas").setAttribute(
+        "aria-label",
+        ehTenis ? "Partidas de tênis da Bet365" : "Partidas de futebol da Bet365"
+      );
+      document.querySelector("#rotuloPesquisa").textContent = ehTenis
+        ? "Pesquisar jogador ou torneio"
+        : "Pesquisar time ou competição";
+      campoPesquisa.placeholder = ehTenis
+        ? "Pesquisar jogador ou torneio..."
+        : "Pesquisar time ou competição...";
+      document.querySelector("#rotuloResumoCompeticoes").textContent = ehTenis ? "Torneios" : "Competições";
+      document.querySelector("#tituloLista").textContent = ehTenis ? "Torneios" : "Competições";
+      filtrosCircuito.hidden = !ehTenis;
+      grupoTipoPartida.hidden = !ehTenis;
+      grupoHistorico.hidden = !ehTenis;
+      secaoRadar.hidden = !ehTenis;
+
+      document.querySelectorAll(".aba-esporte").forEach(function (aba) {
+        aba.setAttribute("aria-selected", String(aba.dataset.esporte === esporteSelecionado));
+      });
+    }
+
     async function carregarPartidas() {
       botaoAtualizar.disabled = true;
       listaPartidas.setAttribute("aria-busy", "true");
@@ -2168,7 +2819,7 @@
       mostrarEsqueletosDeCarregamento();
 
       try {
-        const resposta = await fetch("/api/partidas");
+        const resposta = await fetch("/api/partidas?esporte=" + encodeURIComponent(esporteSelecionado));
         const dados = await resposta.json();
 
         if (!resposta.ok) {
@@ -2176,6 +2827,7 @@
         }
 
         partidasDisponiveis = dados.partidas;
+        cacheLocalEsportes.set(esporteSelecionado, dados);
         partidaSelecionadaId = null;
         atualizarInformacoesDeUso(dados.consultas);
         atualizarResumoGeral();
@@ -2192,21 +2844,58 @@
       }
     }
 
-    // Esta é a mesma normalização matemática usada desde a primeira versão.
-    function calcularOddsJustas(oddA, oddB) {
-      const probabilidadeImplicitaA = 1 / oddA;
-      const probabilidadeImplicitaB = 1 / oddB;
-      const soma = probabilidadeImplicitaA + probabilidadeImplicitaB;
+    function trocarEsporte(novoEsporte) {
+      if (novoEsporte !== "tennis" && novoEsporte !== "football") return;
 
-      const probabilidadeJustaA = probabilidadeImplicitaA / soma;
-      const probabilidadeJustaB = probabilidadeImplicitaB / soma;
+      esporteSelecionado = novoEsporte;
+      partidaSelecionadaId = null;
+      campoPesquisa.value = "";
+      resultado.hidden = true;
+      estadoInicial.hidden = false;
+      configurarInterfaceDoEsporte();
+      window.history.replaceState(null, "", "?esporte=" + novoEsporte);
+
+      const dadosEmCache = cacheLocalEsportes.get(novoEsporte);
+      if (dadosEmCache) {
+        partidasDisponiveis = dadosEmCache.partidas;
+        atualizarInformacoesDeUso(dadosEmCache.consultas);
+        atualizarResumoGeral();
+        renderizarPartidas();
+        mensagem.hidden = true;
+      } else {
+        carregarPartidas();
+      }
+    }
+
+    // A mesma fórmula atende mercados de dois, três ou mais resultados complementares.
+    function calcularMercadoJusto(odds) {
+      const probabilidadesImplicitas = odds.map(function (odd) { return 1 / odd; });
+      const soma = probabilidadesImplicitas.reduce(function (total, valor) {
+        return total + valor;
+      }, 0);
 
       return {
         margem: (soma - 1) * 100,
-        probabilidadeJustaA: probabilidadeJustaA * 100,
-        probabilidadeJustaB: probabilidadeJustaB * 100,
-        oddJustaA: 1 / probabilidadeJustaA,
-        oddJustaB: 1 / probabilidadeJustaB
+        resultados: probabilidadesImplicitas.map(function (probabilidade) {
+          const probabilidadeJusta = probabilidade / soma;
+          return {
+            probabilidadeJusta: probabilidadeJusta * 100,
+            oddJusta: 1 / probabilidadeJusta
+          };
+        })
+      };
+    }
+
+    // Mantemos este pequeno adaptador porque o gráfico de tênis ainda usa os nomes A e B.
+    function calcularOddsJustas(oddA, oddB) {
+      const calculo = calcularMercadoJusto([oddA, oddB]);
+
+      return {
+        margem: calculo.margem,
+        probabilidadeJustaA: calculo.resultados[0].probabilidadeJusta,
+        probabilidadeJustaB: calculo.resultados[1].probabilidadeJusta,
+        oddJustaA: calculo.resultados[0].oddJusta,
+        oddJustaB: calculo.resultados[1].oddJusta
       };
     }
 
@@ -2249,6 +2938,109 @@
       return seta + (percentual > 0 ? "+" : "") + percentual.toFixed(1).replace(".", ",") + "%";
     }
 
+    function criarComparacaoItem(rotulo, texto) {
+      const item = document.createElement("div");
+      item.className = "comparacao-item";
+      const nome = document.createElement("span");
+      const valor = document.createElement("strong");
+      nome.textContent = rotulo;
+      valor.textContent = texto;
+      item.append(nome, valor);
+      return item;
+    }
+
+    function textoMudancaMargem(inicial, atual) {
+      const diferenca = atual - inicial;
+      return formatarPorcentagem(inicial) + " → " + formatarPorcentagem(atual) +
+        " (" + (diferenca > 0 ? "+" : "") + diferenca.toFixed(1).replace(".", ",") + " p.p.)";
+    }
+
+    function renderizarAberturaAgora(dados) {
+      comparacaoAbertura.innerHTML = "";
+      const abertura = dados.pontos.find(function (ponto) { return ponto.origem === "abertura"; });
+      const atual = dados.pontos[dados.pontos.length - 1];
+
+      if (!abertura || !atual) {
+        const aviso = document.createElement("p");
+        aviso.className = "comparacao-indisponivel";
+        aviso.textContent =
+          "A abertura real ainda não foi fornecida pela API para esta partida. Não substituímos por uma estimativa.";
+        comparacaoAbertura.appendChild(aviso);
+        return;
+      }
+
+      comparacaoAbertura.append(
+        criarComparacaoItem(
+          dados.jogadorA,
+          formatarOdd(abertura.oddA) + " → " + formatarOdd(atual.oddA) +
+            " · " + formatarVariacao(abertura.oddA, atual.oddA)
+        ),
+        criarComparacaoItem(
+          dados.jogadorB,
+          formatarOdd(abertura.oddB) + " → " + formatarOdd(atual.oddB) +
+            " · " + formatarVariacao(abertura.oddB, atual.oddB)
+        ),
+        criarComparacaoItem("Margem", textoMudancaMargem(abertura.margem, atual.margem))
+      );
+    }
+
+    function renderizarComparadorMomentos() {
+      resultadoComparador.innerHTML = "";
+
+      if (!dadosGraficoAtual || dadosGraficoAtual.pontos.length < 2) {
+        const aviso = document.createElement("p");
+        aviso.className = "comparacao-indisponivel";
+        aviso.textContent = "São necessários pelo menos dois registros para comparar momentos.";
+        resultadoComparador.appendChild(aviso);
+        return;
+      }
+
+      const inicial = dadosGraficoAtual.pontos[Number(momentoInicial.value)];
+      const final = dadosGraficoAtual.pontos[Number(momentoFinal.value)];
+      if (!inicial || !final) return;
+
+      resultadoComparador.append(
+        criarComparacaoItem(
+          dadosGraficoAtual.jogadorA,
+          formatarOdd(inicial.oddA) + " → " + formatarOdd(final.oddA) +
+            " · " + formatarVariacao(inicial.oddA, final.oddA)
+        ),
+        criarComparacaoItem(
+          dadosGraficoAtual.jogadorB,
+          formatarOdd(inicial.oddB) + " → " + formatarOdd(final.oddB) +
+            " · " + formatarVariacao(inicial.oddB, final.oddB)
+        ),
+        criarComparacaoItem("Margem", textoMudancaMargem(inicial.margem, final.margem))
+      );
+    }
+
+    function prepararComparacoes(dados) {
+      dadosGraficoAtual = dados;
+      momentoInicial.innerHTML = "";
+      momentoFinal.innerHTML = "";
+
+      dados.pontos.forEach(function (ponto, indice) {
+        const texto = formatarMomentoGrafico(ponto.momento) +
+          (ponto.origem === "abertura" ? " · abertura" : "");
+        const opcaoInicial = document.createElement("option");
+        const opcaoFinal = document.createElement("option");
+        opcaoInicial.value = String(indice);
+        opcaoFinal.value = String(indice);
+        opcaoInicial.textContent = texto;
+        opcaoFinal.textContent = texto;
+        momentoInicial.appendChild(opcaoInicial);
+        momentoFinal.appendChild(opcaoFinal);
+      });
+
+      momentoInicial.value = "0";
+      momentoFinal.value = String(Math.max(0, dados.pontos.length - 1));
+      momentoInicial.disabled = dados.pontos.length < 2;
+      momentoFinal.disabled = dados.pontos.length < 2;
+
+      renderizarAberturaAgora(dados);
+      renderizarComparadorMomentos();
+    }
+
     function desenharGraficoMovimentacao(dados) {
       const pontos = dados.pontos || [];
       graficoMovimentacao.innerHTML = "";
@@ -2271,6 +3063,7 @@
           "Nenhuma cotação disponível"
         );
         graficoMovimentacao.appendChild(mensagem);
+        prepararComparacoes(dados);
         return;
       }
 
@@ -2372,6 +3165,7 @@
         criarIndicadorMovimento(dados.jogadorB, formatarVariacao(primeiro.oddB, ultimo.oddB)),
         criarIndicadorMovimento("Margem atual", formatarPorcentagem(ultimo.margem))
       );
+      prepararComparacoes(dados);
     }
 
     function prepararGraficoMovimentacao(partida) {
@@ -2389,7 +3183,8 @@
           momento: partida.atualizadoEm || new Date().toISOString(),
           oddA: partida.oddA,
           oddB: partida.oddB,
-          margem: calculo.margem
+          margem: calculo.margem,
+          origem: "atual"
         }]
       };
 
@@ -2416,6 +3211,10 @@
 
         atualizarInformacoesDeUso(dados.consultas);
         desenharGraficoMovimentacao(dados);
+        registrarNoRadar(dados);
+
+        if (somenteComHistoricoAtivo) renderizarPartidas();
+
         statusMovimentacao.textContent = dados.possuiHistorico
           ? dados.pontos.length + " registros históricos encontrados."
           : "A API ainda não possui mudanças anteriores para esta partida; mostramos apenas a cotação atual.";
@@ -2508,6 +3307,19 @@
       const texto = String(mercado.codigo || mercado.nome || "").toLowerCase();
 
       if (texto === "ml" || texto.includes("vencedor da partida")) return "principal";
+      if (esporteSelecionado === "football") {
+        if (texto.includes("double chance") || texto.includes("draw no bet") ||
+            texto.includes("resultado da partida")) return "principal";
+        if (texto.includes("1st half") || texto.includes("2nd half") ||
+            texto.includes("primeiro tempo") || texto.includes("1º tempo") ||
+            texto.includes("segundo tempo") || texto.includes("2º tempo")) return "periodos";
+        if (texto.includes("spread") || texto.includes("handicap")) return "handicaps";
+        if (texto.includes("total") || texto.includes("goal") || texto.includes("gol") ||
+            texto.includes("both teams") || texto.includes("ambas")) return "gols";
+        if (texto.includes("correct score") || texto.includes("placar") ||
+            texto.includes("odd/even") || texto.includes("impar") || texto.includes("ímpar")) return "especiais";
+        return "outros";
+      }
       if (texto.includes("double fault") || texto.includes("duplas faltas")) return "duplas";
       if (texto.includes("ace")) return "aces";
       if (texto.includes("set")) return "sets";
@@ -2570,7 +3382,7 @@
     function renderizarTodosMercados(mercados) {
       mercadosPartidaAtual = mercados;
 
-      const rotulos = {
+      const rotulosTenis = {
         principal: "Principal",
         games: "Games",
         sets: "Sets",
@@ -2578,7 +3390,18 @@
         duplas: "Duplas faltas",
         outros: "Outros"
       };
-      const ordem = ["principal", "games", "sets", "aces", "duplas", "outros"];
+      const rotulosFutebol = {
+        principal: "Principais",
+        gols: "Gols",
+        handicaps: "Handicaps",
+        periodos: "Tempos",
+        especiais: "Especiais",
+        outros: "Outros"
+      };
+      const rotulos = esporteSelecionado === "tennis" ? rotulosTenis : rotulosFutebol;
+      const ordem = esporteSelecionado === "tennis"
+        ? ["principal", "games", "sets", "aces", "duplas", "outros"]
+        : ["principal", "gols", "handicaps", "periodos", "especiais", "outros"];
       const categoriasDisponiveis = ordem.filter(function (categoria) {
         return mercados.some(function (mercado) {
           return descobrirCategoriaMercado(mercado) === categoria;
@@ -2617,24 +3440,46 @@
     }
 
     function exibirResultado(partida, dados) {
-      const calculo = calcularOddsJustas(dados.oddA, dados.oddB);
+      const resultados = obterResultadosPrincipais(dados);
+      const margemPrincipal = obterMargemPrincipal(dados);
+      const faixaMargem = classificarMargem(margemPrincipal);
 
       document.querySelector("#resultadoTorneio").textContent = partida.torneio;
       document.querySelector("#resultadoConfronto").textContent =
         dados.jogadorA + " × " + dados.jogadorB;
-      document.querySelector("#margemCasa").textContent = formatarPorcentagem(calculo.margem);
+      document.querySelector("#margemCasa").textContent = formatarPorcentagem(margemPrincipal);
+      const margemResultado = document.querySelector(".resultado .margem");
+      margemResultado.classList.remove("faixa-baixa", "faixa-moderada", "faixa-alta");
+      margemResultado.classList.add("faixa-" + faixaMargem.codigo);
+      document.querySelector("#faixaMargemCasa").textContent = "Margem " + faixaMargem.texto.toLowerCase();
 
-      document.querySelector("#nomeResultadoA").textContent = dados.jogadorA;
-      document.querySelector("#oddDigitadaA").textContent = formatarOdd(dados.oddA);
-      document.querySelector("#oddJustaA").textContent = formatarOdd(calculo.oddJustaA);
-      document.querySelector("#probabilidadeA").textContent =
-        formatarPorcentagem(calculo.probabilidadeJustaA);
+      resultadoPrincipal.innerHTML = "";
+      resultados.forEach(function (item) {
+        const cartao = document.createElement("article");
+        cartao.className = "resultado-jogador";
+        const nome = document.createElement("h3");
+        nome.textContent = item.nome;
+        const numeros = document.createElement("div");
+        numeros.className = "numeros";
 
-      document.querySelector("#nomeResultadoB").textContent = dados.jogadorB;
-      document.querySelector("#oddDigitadaB").textContent = formatarOdd(dados.oddB);
-      document.querySelector("#oddJustaB").textContent = formatarOdd(calculo.oddJustaB);
-      document.querySelector("#probabilidadeB").textContent =
-        formatarPorcentagem(calculo.probabilidadeJustaB);
+        [
+          ["Odd Bet365", formatarOdd(item.odd)],
+          ["Odd justa", formatarOdd(item.oddJusta)],
+          ["Prob. justa", formatarPorcentagem(item.probabilidadeJusta)]
+        ].forEach(function ([rotulo, valor]) {
+          const numero = document.createElement("div");
+          numero.className = "numero";
+          const texto = document.createElement("span");
+          const destaque = document.createElement("strong");
+          texto.textContent = rotulo;
+          destaque.textContent = valor;
+          numero.append(texto, destaque);
+          numeros.appendChild(numero);
+        });
+
+        cartao.append(nome, numeros);
+        resultadoPrincipal.appendChild(cartao);
+      });
 
       const avaliacao = avaliarAtualizacao(dados.atualizadoEm);
       const statusResultado = document.querySelector("#statusResultado");
@@ -2658,7 +3503,10 @@
       }
 
       renderizarTodosMercados(dados.mercados || []);
-      prepararGraficoMovimentacao(dados);
+      secaoMovimentacao.hidden = esporteSelecionado !== "tennis";
+      if (esporteSelecionado === "tennis") {
+        prepararGraficoMovimentacao(dados);
+      }
 
       estadoInicial.hidden = true;
       resultado.hidden = false;
@@ -2684,6 +3532,40 @@
     campoPesquisa.addEventListener("input", renderizarPartidas);
     botaoAtualizar.addEventListener("click", carregarPartidas);
     botaoCarregarMovimentacao.addEventListener("click", carregarHistoricoMovimentacao);
+    momentoInicial.addEventListener("change", renderizarComparadorMomentos);
+    momentoFinal.addEventListener("change", renderizarComparadorMomentos);
+
+    function aplicarFiltroAvancado() {
+      partidaSelecionadaId = null;
+      resultado.hidden = true;
+      estadoInicial.hidden = false;
+      renderizarPartidas();
+    }
+
+    filtroTipoPartida.addEventListener("change", function () {
+      tipoPartidaAtivo = filtroTipoPartida.value;
+      aplicarFiltroAvancado();
+    });
+
+    filtroFaixaMargem.addEventListener("change", function () {
+      faixaMargemAtiva = filtroFaixaMargem.value;
+      aplicarFiltroAvancado();
+    });
+
+    ordenarPartidas.addEventListener("change", function () {
+      ordenacaoAtiva = ordenarPartidas.value;
+      aplicarFiltroAvancado();
+    });
+
+    somenteComLink.addEventListener("change", function () {
+      somenteComLinkAtivo = somenteComLink.checked;
+      aplicarFiltroAvancado();
+    });
+
+    somenteComHistorico.addEventListener("change", function () {
+      somenteComHistoricoAtivo = somenteComHistorico.checked;
+      aplicarFiltroAvancado();
+    });
 
     document.querySelectorAll(".filtro-data").forEach(function (botao) {
       botao.addEventListener("click", function () {
@@ -2728,7 +3610,19 @@
       });
     });
 
-    // A lista é carregada automaticamente ao abrir a página.
+    document.querySelectorAll(".aba-esporte").forEach(function (aba) {
+      aba.addEventListener("click", function () {
+        trocarEsporte(aba.dataset.esporte);
+      });
+    });
+
+    // O radar local aparece imediatamente; a lista da API é carregada em seguida.
+    const esporteDaUrl = new URLSearchParams(window.location.search).get("esporte");
+    if (esporteDaUrl === "football" || esporteDaUrl === "tennis") {
+      esporteSelecionado = esporteDaUrl;
+    }
+    configurarInterfaceDoEsporte();
+    renderizarRadar();
     carregarPartidas();
   </script>
 </body>
