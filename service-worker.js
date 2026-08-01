@@ -1,4 +1,4 @@
-const CACHE = "odd-clara-interface-v2";
+const CACHE = "odd-clara-interface-v3";
 const ARQUIVOS = ["/", "/manifest.webmanifest", "/icone.svg"];
 
 self.addEventListener("install", function (evento) {

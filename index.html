@@ -2589,6 +2589,45 @@
       background:linear-gradient(90deg,#1a261f 25%,#29372f 50%,#1a261f 75%);
       background-size:200% 100%;
     }
+
+    /* Seletores diretos para os cartões criados dinamicamente pelo JavaScript. */
+    body.tema-escuro #comparacaoAbertura .comparacao-item,
+    body.tema-escuro #resultadoComparador .comparacao-item,
+    body.tema-escuro #resumoMovimentacao .indicador-movimento {
+      background:#25352d !important;
+      border:1px solid #4a5d52 !important;
+      color:#eef6f1 !important;
+    }
+    body.tema-escuro #comparacaoAbertura .comparacao-item span,
+    body.tema-escuro #resultadoComparador .comparacao-item span,
+    body.tema-escuro #resumoMovimentacao .indicador-movimento span {
+      color:#b9c8bf !important;
+    }
+    body.tema-escuro #comparacaoAbertura .comparacao-item strong,
+    body.tema-escuro #resultadoComparador .comparacao-item strong,
+    body.tema-escuro #resumoMovimentacao .indicador-movimento strong {
+      color:#76d9b1 !important;
+    }
+    body.tema-escuro #listaMercados .mercado-detalhe,
+    body.tema-escuro #listaMercados .grupo-mercado,
+    body.tema-escuro #listaMercados .tabela-odds,
+    body.tema-escuro #listaMercados .linha-tabela:not(.cabecalho-tabela) {
+      background:#1d2922 !important;
+      border-color:#4b5d52 !important;
+      color:#eef6f1 !important;
+    }
+    body.tema-escuro #listaMercados .grupos-mercado,
+    body.tema-escuro #listaMercados .mercado-detalhe[open] > summary {
+      background:#18241e !important;
+      border-color:#4b5d52 !important;
+    }
+    body.tema-escuro #listaMercados .linha-tabela:not(.cabecalho-tabela):nth-child(odd) {
+      background:#24332b !important;
+    }
+    body.tema-escuro #listaMercados .linha-tabela strong,
+    body.tema-escuro #listaMercados .margem-linha {
+      color:#77dcb4 !important;
+    }
   </style>
 </head>
 
