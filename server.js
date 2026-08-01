@@ -2,7 +2,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
-const { calcularMercadoJusto } = require("./calculos");
+const { calcularMercadoJusto, calcularArbitragem } = require("./calculos");
 
 const CAMINHO_INDEX = path.join(__dirname, "index.html");
 const CAMINHO_ENV = path.join(__dirname, ".env");
@@ -64,6 +64,16 @@ const ESPORTES_DISPONIVEIS = {
     limiteEventos: 30
   }
 };
+
+// O código interno é estável; o nome é exatamente como a fornecedora identifica a casa.
+const CASAS_APOSTAS = {
+  bet365: { codigo: "bet365", nomeApi: "Bet365", nomeExibicao: "Bet365" },
+  superbet: { codigo: "superbet", nomeApi: "Superbet", nomeExibicao: "Superbet" }
+};
+
+const NOMES_CASAS_API = Object.values(CASAS_APOSTAS)
+  .map(function (casa) { return casa.nomeApi; })
+  .join(",");
 
 function obterConfiguracaoEsporte(codigo) {
   return ESPORTES_DISPONIVEIS[codigo] || null;
@@ -425,12 +435,15 @@ function normalizarMercados(mercados, jogadorA, jogadorB, esporte) {
 }
 
 /*
-  Retorna null quando o evento não tem as duas odds necessárias. Assim ele é
-  removido antes de chegar ao site e o usuário nunca vê uma partida incalculável.
+  Cada casa é normalizada isoladamente. Isso é importante porque a margem da
+  Bet365 jamais deve ser calculada com uma odd que veio da Superbet, ou vice-versa.
 */
-function prepararPartidaComOdds(evento, esporte) {
-  const mercadosBet365 = encontrarValorSemDiferenciarMaiusculas(evento.bookmakers, "Bet365");
-  const mercadoVencedor = encontrarMercadoVencedor(mercadosBet365);
+function prepararDadosDaCasa(evento, esporte, configuracaoCasa) {
+  const mercadosRecebidos = encontrarValorSemDiferenciarMaiusculas(
+    evento.bookmakers,
+    configuracaoCasa.nomeApi
+  );
+  const mercadoVencedor = encontrarMercadoVencedor(mercadosRecebidos);
 
   if (!mercadoVencedor || !Array.isArray(mercadoVencedor.odds)) {
     return null;
@@ -468,13 +481,86 @@ function prepararPartidaComOdds(evento, esporte) {
     };
   });
 
-  const linkRecebido = encontrarValorSemDiferenciarMaiusculas(evento.urls, "Bet365");
-  const linkBet365 =
+  const linkRecebido = encontrarValorSemDiferenciarMaiusculas(
+    evento.urls,
+    configuracaoCasa.nomeApi
+  );
+  const link =
     typeof linkRecebido === "string" && linkRecebido.startsWith("https://")
       ? linkRecebido
       : null;
 
-  const mercados = normalizarMercados(mercadosBet365, evento.home, evento.away, esporte);
+  return {
+    codigo: configuracaoCasa.codigo,
+    nome: configuracaoCasa.nomeExibicao,
+    margemPrincipal: calculoPrincipal.margem,
+    resultadosPrincipais: resultadosPrincipais,
+    atualizadoEm: mercadoVencedor.updatedAt || null,
+    link: link,
+    mercados: normalizarMercados(mercadosRecebidos, evento.home, evento.away, esporte)
+  };
+}
+
+function encontrarResultadoCorrespondente(casa, resultadoReferencia, indice) {
+  if (!casa || !Array.isArray(casa.resultadosPrincipais)) return null;
+
+  return casa.resultadosPrincipais.find(function (resultado) {
+    return resultado.tipo === resultadoReferencia.tipo;
+  }) || casa.resultadosPrincipais[indice] || null;
+}
+
+function prepararArbitragemPrincipal(dadosBet365, dadosSuperbet) {
+  if (!dadosBet365 || !dadosSuperbet) {
+    return {
+      calculavel: false,
+      motivo: "São necessárias odds completas da Bet365 e da Superbet."
+    };
+  }
+
+  const resultados = dadosBet365.resultadosPrincipais.map(function (referencia, indice) {
+    const resultadoBet365 = encontrarResultadoCorrespondente(dadosBet365, referencia, indice);
+    const resultadoSuperbet = encontrarResultadoCorrespondente(dadosSuperbet, referencia, indice);
+
+    return {
+      nome: referencia.nome,
+      tipo: referencia.tipo,
+      ofertas: [
+        resultadoBet365 ? { casa: "Bet365", odd: resultadoBet365.odd } : null,
+        resultadoSuperbet ? { casa: "Superbet", odd: resultadoSuperbet.odd } : null
+      ].filter(Boolean)
+    };
+  });
+
+  if (resultados.some(function (resultado) { return resultado.ofertas.length < 2; })) {
+    return {
+      calculavel: false,
+      motivo: "Uma das casas não enviou todos os resultados complementares."
+    };
+  }
+
+  return {
+    calculavel: true,
+    ...calcularArbitragem(resultados)
+  };
+}
+
+/*
+  A Bet365 continua sendo a fonte principal nesta etapa. Se ela estiver sem o
+  mercado completo, a partida é escondida como antes. A Superbet é opcional.
+*/
+function prepararPartidaComOdds(evento, esporte) {
+  const dadosBet365 = prepararDadosDaCasa(evento, esporte, CASAS_APOSTAS.bet365);
+
+  if (!dadosBet365) {
+    return null;
+  }
+
+  const dadosSuperbet = prepararDadosDaCasa(evento, esporte, CASAS_APOSTAS.superbet);
+  const arbitragemPrincipal = prepararArbitragemPrincipal(dadosBet365, dadosSuperbet);
+  const resultadosBet365 = dadosBet365.resultadosPrincipais;
+  const resultadoEmpate = resultadosBet365.find(function (resultado) {
+    return resultado.tipo === "empate";
+  });
 
   return {
     id: String(evento.id),
@@ -486,14 +572,19 @@ function prepararPartidaComOdds(evento, esporte) {
     data: evento.date,
     torneio: evento.league ? evento.league.name : "Competição não informada",
     competicao: evento.league ? evento.league.name : "Competição não informada",
-    oddA: oddA,
-    oddB: oddB,
-    oddEmpate: exigeEmpate ? oddEmpate : null,
-    margemPrincipal: calculoPrincipal.margem,
-    resultadosPrincipais: resultadosPrincipais,
-    atualizadoEm: mercadoVencedor.updatedAt || null,
-    linkBet365: linkBet365,
-    mercados: mercados
+    casas: {
+      bet365: dadosBet365,
+      superbet: dadosSuperbet
+    },
+    arbitragemPrincipal: arbitragemPrincipal,
+    oddA: resultadosBet365[0].odd,
+    oddB: resultadosBet365[resultadosBet365.length - 1].odd,
+    oddEmpate: resultadoEmpate ? resultadoEmpate.odd : null,
+    margemPrincipal: dadosBet365.margemPrincipal,
+    resultadosPrincipais: dadosBet365.resultadosPrincipais,
+    atualizadoEm: dadosBet365.atualizadoEm,
+    linkBet365: dadosBet365.link,
+    mercados: dadosBet365.mercados
   };
 }
 
@@ -556,7 +647,7 @@ async function listarPartidas(codigoEsporte) {
   for (const lote of lotes) {
     const dadosDoLote = await consultarApi("/odds/multi", {
       eventIds: lote.map(function (evento) { return evento.id; }).join(","),
-      bookmakers: "Bet365"
+      bookmakers: NOMES_CASAS_API
     });
 
     if (!Array.isArray(dadosDoLote)) {
@@ -706,7 +797,7 @@ function obterInformacoesDeUso(codigoEsporte) {
   };
 }
 
-const servidor = http.createServer(async function (requisicao, resposta) {
+async function tratarRequisicao(requisicao, resposta) {
   const url = new URL(requisicao.url, "http://localhost");
 
   try {
@@ -792,15 +883,21 @@ const servidor = http.createServer(async function (requisicao, resposta) {
       erro: erro.message || "Ocorreu um erro inesperado."
     });
   }
-});
+}
 
-servidor.listen(PORTA, HOST, function () {
-  console.log("Calculadora disponível em http://localhost:" + PORTA);
-});
+const servidor = http.createServer(tratarRequisicao);
 
-// Plataformas de hospedagem enviam SIGTERM antes de desligar uma aplicação.
-process.on("SIGTERM", function () {
-  servidor.close(function () {
-    process.exit(0);
+// Localmente abrimos uma porta. Na Vercel, a plataforma chama a função exportada.
+if (require.main === module) {
+  servidor.listen(PORTA, HOST, function () {
+    console.log("Calculadora disponível em http://localhost:" + PORTA);
   });
-});
+
+  process.on("SIGTERM", function () {
+    servidor.close(function () {
+      process.exit(0);
+    });
+  });
+}
+
+module.exports = tratarRequisicao;

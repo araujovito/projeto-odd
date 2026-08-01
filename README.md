@@ -10,6 +10,11 @@ Ela não prevê resultados nem recomenda apostas.
 - Abas de tênis e futebol, com cache independente para cada esporte.
 - Filtros ATP, WTA, data, pesquisa e partidas favoritas.
 - Mercado principal 1X2 do futebol com casa, empate e visitante.
+- Estrutura preparada para manter Bet365 e Superbet separadas por evento.
+- Comparador do mercado principal com odds e margens da Bet365 e Superbet lado a lado.
+- Destaque da melhor odd por resultado e filtro para partidas presentes nas duas casas.
+- Detector de arbitragem para mercados principais de dois resultados e futebol 1X2.
+- Simulador que distribui um valor total e mostra o retorno de cada cenário.
 - Favoritos guardados localmente no navegador, sem login ou banco de dados.
 - Odds principais e margem já visíveis nos cartões das partidas.
 - Mercados separados por categoria e apresentados em tabelas comparativas.
@@ -19,6 +24,10 @@ Ela não prevê resultados nem recomenda apostas.
 - Filtros por tipo de partida, faixa de margem, histórico, link e ordenação.
 - Classificação matemática de margem baixa, moderada ou alta.
 - Indicadores de atualização, consumo da API e explicação didática do cálculo.
+- Controle de banca sem cadastro, salvo somente no `localStorage`, com saldo, lucro, ROI e resultados parciais.
+- Edição e exclusão de apostas manuais, além de backup e restauração em JSON.
+- Alertas de alta, queda e desatualização enquanto a página estiver aberta.
+- Calculadoras de probabilidade implícita, conversão, retorno, Kelly, arbitragem, hedge e odds sem margem.
 - Layout responsivo para computador e celular.
 
 ## Executar localmente
@@ -57,6 +66,19 @@ As odds são buscadas em lotes de até dez eventos para reduzir o consumo do pla
 No tênis, o evento precisa das duas odds do vencedor; no futebol, precisa das três
 odds do 1X2: casa, empate e visitante.
 
+As duas casas são solicitadas no mesmo lote de eventos para economizar a cota. Cada
+casa possui resultados, margem, mercados, horário de atualização e link próprios.
+Os campos antigos da resposta continuam representando somente a Bet365 enquanto o
+restante da interface usa essa casa como referência, preservando a compatibilidade.
+O comparador usa somente o mercado principal completo de cada casa e informa quando
+a Superbet não possui odds suficientes, sem completar dados artificialmente.
+
+O detector escolhe a melhor odd disponível para cada resultado e soma suas
+probabilidades implícitas. Só existe arbitragem matemática quando essa soma é menor
+que 100%. Nessa situação, o simulador divide o valor entre os resultados e mostra
+os retornos após o ajuste de centavos. As odds podem mudar antes da execução de todas
+as apostas, portanto o site não promete que a oportunidade continuará disponível.
+
 Mercados com pares completos, como vencedor, handicap e acima/abaixo, recebem
 odd justa, probabilidade justa e margem por linha. Seleções isoladas continuam
 visíveis, mas não são normalizadas, pois isso produziria uma probabilidade
@@ -66,7 +88,15 @@ O histórico de movimentações é buscado somente quando o usuário solicita e
 fica cinco minutos em cache. Quando a API ainda não possui mudanças para uma
 partida, o gráfico mostra apenas a cotação atual, sem criar dados artificiais.
 
-## Próxima etapa planejada
+## Dados locais e alertas
 
-Adicionar a Superbet como fonte separada. As odds de casas diferentes nunca
-devem ser misturadas no mesmo cálculo de margem.
+O controle de banca não cria conta e não envia registros ao servidor. O saldo é a
+banca inicial somada ao lucro ou prejuízo dos registros; o ROI usa o resultado
+líquido dividido pelo total apostado em registros já liquidados. Apostas pendentes
+não entram nessa base. Como o navegador pode apagar o `localStorage`, a interface
+oferece exportação e importação de backup em JSON.
+
+Os alertas ficam desligados por padrão, funcionam somente com a página aberta e
+respeitam um intervalo mínimo de dez minutos. Quando a aba fica oculta, nenhuma
+consulta automática é feita. O cache do servidor continua evitando chamadas
+repetidas à Odds-API.io dentro da janela configurada.

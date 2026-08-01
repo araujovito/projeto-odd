@@ -324,6 +324,291 @@
       font-size: 1rem;
     }
 
+    .comparador-casas {
+      margin: 0 0 22px;
+      padding: 18px;
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .comparador-casas-topo {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .comparador-casas h3,
+    .titulo-odds-justas {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .comparador-casas-topo p {
+      margin: 4px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.78rem;
+    }
+
+    .margens-casas {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      min-width: 250px;
+    }
+
+    .resumo-casa {
+      padding: 9px 11px;
+      border-radius: 9px;
+      background: #f2f5f3;
+    }
+
+    .resumo-casa span,
+    .resumo-casa small {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.65rem;
+    }
+
+    .resumo-casa strong {
+      color: var(--verde-escuro);
+      font-size: 1rem;
+    }
+
+    .resumo-casa.indisponivel strong {
+      color: #8a918c;
+      font-size: 0.78rem;
+    }
+
+    .tabela-comparacao {
+      overflow: hidden;
+      border: 1px solid var(--borda);
+      border-radius: 10px;
+    }
+
+    .linha-comparacao {
+      display: grid;
+      grid-template-columns: minmax(150px, 1.25fr) repeat(2, minmax(95px, 0.75fr));
+      align-items: stretch;
+    }
+
+    .linha-comparacao + .linha-comparacao {
+      border-top: 1px solid var(--borda);
+    }
+
+    .linha-comparacao > span {
+      position: relative;
+      padding: 11px 12px;
+    }
+
+    .linha-comparacao > span + span {
+      border-left: 1px solid var(--borda);
+      text-align: center;
+    }
+
+    .cabecalho-comparacao {
+      background: #f2f5f3;
+      color: var(--texto-suave);
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .odd-comparada {
+      font-weight: 800;
+    }
+
+    .odd-comparada.melhor-odd {
+      background: #fffbd1;
+      color: var(--verde-escuro);
+    }
+
+    .melhor-odd::after {
+      content: "Melhor";
+      display: block;
+      margin-top: 2px;
+      color: #756900;
+      font-size: 0.56rem;
+      text-transform: uppercase;
+    }
+
+    .nota-comparacao {
+      margin: 10px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.72rem;
+    }
+
+    .detector-arbitragem {
+      margin: 0 0 22px;
+      padding: 18px;
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      background: #f8faf8;
+    }
+
+    .detector-arbitragem.tem-oportunidade {
+      border-color: #92cba8;
+      background: #edf8f1;
+    }
+
+    .detector-arbitragem-topo {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .detector-arbitragem h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .detector-arbitragem-topo p,
+    .descricao-arbitragem,
+    .aviso-arbitragem {
+      margin: 5px 0 0;
+      color: var(--texto-suave);
+      font-size: 0.76rem;
+    }
+
+    .status-arbitragem {
+      flex: 0 0 auto;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: #edf1ee;
+      color: var(--texto-suave);
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+
+    .status-arbitragem.positiva {
+      background: #d9f2e2;
+      color: #08733f;
+    }
+
+    .simulador-arbitragem {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--borda);
+    }
+
+    .controle-valor-arbitragem {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .controle-valor-arbitragem label {
+      color: var(--texto-suave);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .controle-valor-arbitragem input {
+      display: block;
+      width: 150px;
+      margin-top: 5px;
+      padding: 9px 10px;
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    .percentual-arbitragem {
+      color: var(--verde-escuro);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .distribuicao-arbitragem {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 8px;
+    }
+
+    .aposta-arbitragem {
+      padding: 10px;
+      border: 1px solid var(--borda);
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    .aposta-arbitragem span,
+    .aposta-arbitragem small {
+      display: block;
+    }
+
+    .aposta-arbitragem span {
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .aposta-arbitragem strong {
+      display: block;
+      margin: 4px 0;
+      color: var(--verde-escuro);
+      font-size: 1rem;
+    }
+
+    .aposta-arbitragem small {
+      color: var(--texto-suave);
+      font-size: 0.66rem;
+    }
+
+    .resumo-arbitragem {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .resumo-arbitragem div {
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: #dff4e8;
+    }
+
+    .resumo-arbitragem span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+    }
+
+    .resumo-arbitragem strong {
+      color: var(--verde-escuro);
+    }
+
+    .erro-arbitragem {
+      margin: 8px 0 0;
+      color: #a52323;
+      font-size: 0.72rem;
+    }
+
+    .titulo-odds-justas {
+      margin-bottom: 12px;
+    }
+
+    .selo-cobertura {
+      flex: 0 0 auto;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #edf1ee;
+      color: var(--texto-suave);
+      font-size: 0.62rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .selo-cobertura.duas-casas {
+      background: #e2f4e9;
+      color: var(--verde);
+    }
+
     .numeros {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -540,6 +825,8 @@
     }
 
     .grupo-torneio {
+      /* Mantém cada competição legível; quando há muitas, a lista deve rolar. */
+      flex: 0 0 auto;
       overflow: hidden;
       border: 1px solid var(--borda);
       border-radius: 14px;
@@ -653,8 +940,13 @@
     .meta-esquerda {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 8px;
       min-width: 0;
+    }
+
+    .meta-esquerda .tipo-mercado {
+      flex-basis: 100%;
     }
 
     .atualizacao-badge {
@@ -843,6 +1135,10 @@
 
     .painel-lista .partidas-do-torneio {
       grid-template-columns: 1fr;
+    }
+
+    .painel-lista .acao {
+      display: none;
     }
 
     .painel-detalhes {
@@ -1813,6 +2109,33 @@
         flex-direction: column;
       }
 
+      .comparador-casas-topo {
+        display: block;
+      }
+
+      .margens-casas {
+        min-width: 0;
+        margin-top: 12px;
+      }
+
+      .linha-comparacao {
+        grid-template-columns: minmax(105px, 1.1fr) repeat(2, minmax(75px, 0.75fr));
+      }
+
+      .detector-arbitragem-topo,
+      .controle-valor-arbitragem {
+        display: block;
+      }
+
+      .status-arbitragem {
+        display: inline-block;
+        margin-top: 10px;
+      }
+
+      .resumo-arbitragem {
+        grid-template-columns: 1fr;
+      }
+
       .margem {
         width: 100%;
         text-align: left;
@@ -1864,6 +2187,26 @@
         grid-template-columns: 1fr;
       }
     }
+    .modulo-ferramenta { min-width:0; margin-top:32px; padding:28px; background:#fff; border:1px solid #d8e2db; border-radius:20px; }
+    .modulo-topo { display:flex; justify-content:space-between; gap:20px; align-items:start; margin-bottom:22px; }
+    .modulo-topo h2,.cartao-calculadora h3 { margin:0 0 6px; color:#0b5132; }
+    .modulo-topo p,.cartao-calculadora p { margin:0; color:#5f6d64; }
+    .grade-metricas-banca { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0; }
+    .metrica-banca { padding:16px; background:#f3f8f4; border-radius:14px; }
+    .metrica-banca span { display:block; color:#68746c; font-size:.82rem; }
+    .metrica-banca strong { display:block; margin-top:5px; font-size:1.25rem; color:#173d2b; }
+    .grade-formulario { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .grade-formulario label,.campo-calculo { min-width:0; display:flex; flex-direction:column; gap:6px; font-weight:700; color:#25372d; }
+    .grade-formulario input,.grade-formulario select,.campo-calculo input,.campo-calculo select,.controles-alerta input,.controles-alerta select { padding:11px 12px; border:1px solid #cfdad2; border-radius:10px; font:inherit; background:#fff; }
+    .acoes-modulo,.controles-alerta { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; align-items:end; }
+    .controles-alerta label { display:flex; flex-direction:column; gap:6px; font-weight:700; }
+    .botao-secundario,.botao-perigo,.botao-calculo { padding:11px 16px; border-radius:10px; border:1px solid #156a43; background:#fff; color:#156a43; font-weight:800; cursor:pointer; }
+    .botao-calculo { background:#156a43; color:#fff; }.botao-perigo { border-color:#b32d2d; color:#b32d2d; }
+    .tabela-banca { width:100%; border-collapse:collapse; margin-top:20px; font-size:.9rem; }.tabela-banca th,.tabela-banca td { padding:11px 8px; border-bottom:1px solid #e1e8e3; text-align:left; vertical-align:top; }.tabela-responsiva { width:100%; max-width:100%; overflow-x:auto; }
+    .aviso-local { padding:12px 14px; background:#fff8df; border:1px solid #ead689; border-radius:10px; color:#6b5714; }
+    .lista-alertas { display:grid; gap:9px; margin-top:15px; }.item-alerta { padding:12px 14px; border-left:4px solid #d6a800; background:#fffbed; border-radius:8px; }.item-alerta.subiu { border-color:#17804f; }.item-alerta.caiu { border-color:#c53b35; }
+    .grade-calculadoras { min-width:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }.cartao-calculadora { min-width:0; padding:20px; border:1px solid #d8e2db; border-radius:15px; background:#fbfdfb; }.campos-calculo { min-width:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:16px 0; }.campos-calculo input,.campos-calculo select { width:100%; min-width:0; box-sizing:border-box; }.resultado-calculo { min-height:24px; margin-top:12px; font-weight:700; color:#174e33; }.texto-menor { font-size:.85rem; color:#647168; }
+    @media(max-width:760px){.grade-metricas-banca,.grade-formulario,.grade-calculadoras{grid-template-columns:1fr}.modulo-ferramenta{padding:20px}}
   </style>
 </head>
 
@@ -1877,10 +2220,12 @@
 
       <nav class="navegacao" aria-label="Navegação principal">
         <a href="#partidas">Partidas</a>
+        <a href="#banca">Banca</a>
+        <a href="#calculadoras">Calculadoras</a>
         <a href="#comoFunciona">Como funciona</a>
       </nav>
 
-      <span class="status-topo"><span class="ponto"></span> Dados Bet365</span>
+      <span class="status-topo"><span class="ponto"></span> Bet365 + Superbet</span>
     </div>
   </header>
 
@@ -1890,7 +2235,7 @@
         <p id="etiquetaEsporte" class="etiqueta">Análise transparente · ATP e WTA</p>
         <h1>Odds sem a margem escondida.</h1>
         <p class="subtitulo">
-          Compare as odds da Bet365 com as probabilidades normalizadas, sem previsões e sem recomendações de apostas.
+          Compare Bet365 e Superbet e veja as probabilidades normalizadas, sem previsões e sem recomendações de apostas.
         </p>
       </div>
     </section>
@@ -1970,6 +2315,10 @@
             <input id="somenteComHistorico" type="checkbox">
             Somente com histórico consultado
           </label>
+          <label class="opcao-marcavel">
+            <input id="somenteDuasCasas" type="checkbox">
+            Somente Bet365 + Superbet
+          </label>
         </div>
       </details>
 
@@ -1980,7 +2329,7 @@
 
       <!-- Mensagens de carregamento e erro são anunciadas por leitores de tela. -->
       <p id="mensagem" class="mensagem" role="status" aria-live="polite">
-        Carregando partidas da Bet365...
+        Carregando partidas e odds disponíveis...
       </p>
     </section>
 
@@ -2002,6 +2351,18 @@
         <span>Consultas restantes</span>
         <strong id="resumoConsultas">—</strong>
       </article>
+    </section>
+
+    <section id="alertas" class="modulo-ferramenta" aria-labelledby="tituloAlertas">
+      <div class="modulo-topo"><div><h2 id="tituloAlertas">Alertas de movimentação</h2><p>Compara novas consultas com o último retrato enquanto esta página estiver aberta.</p></div><strong id="statusAlertas">Desativados</strong></div>
+      <div class="controles-alerta">
+        <label><span>Monitoramento</span><span><input id="ativarAlertas" type="checkbox"> Ativar alertas</span></label>
+        <label>Variação mínima (%)<input id="limiteAlerta" type="number" min="0.1" step="0.1" value="3"></label>
+        <label>Intervalo<select id="intervaloAlertas"><option value="10">10 minutos</option><option value="15" selected>15 minutos</option><option value="30">30 minutos</option></select></label>
+        <button id="limparAlertas" class="botao-secundario" type="button">Limpar avisos</button>
+      </div>
+      <p class="texto-menor">A atualização pausa quando a aba fica oculta. O menor intervalo é 10 minutos e o cache do servidor continua sendo respeitado.</p>
+      <div id="listaAlertas" class="lista-alertas" aria-live="polite"></div>
     </section>
 
     <section id="radar" class="radar-movimentacoes" aria-labelledby="tituloRadar">
@@ -2032,7 +2393,7 @@
             <div class="estado-inicial-icone" aria-hidden="true">→</div>
             <h2>Escolha uma partida</h2>
             <p>
-              Selecione um confronto na lista para comparar as odds da Bet365 com as odds justas.
+              Selecione um confronto para comparar Bet365, Superbet e as odds justas da Bet365.
             </p>
           </div>
         </div>
@@ -2047,12 +2408,63 @@
           </div>
 
           <div class="margem">
-            <span>Margem da casa</span>
+            <span>Margem Bet365</span>
             <strong id="margemCasa">—</strong>
             <em id="faixaMargemCasa">Classificação</em>
           </div>
         </div>
 
+        <section class="comparador-casas" aria-labelledby="tituloComparadorCasas">
+          <div class="comparador-casas-topo">
+            <div>
+              <h3 id="tituloComparadorCasas">Bet365 × Superbet</h3>
+              <p>Comparação do mercado principal. Cada margem é calculada separadamente.</p>
+            </div>
+            <div id="margensCasas" class="margens-casas"></div>
+          </div>
+
+          <div class="tabela-comparacao">
+            <div class="linha-comparacao cabecalho-comparacao" aria-hidden="true">
+              <span>Resultado</span>
+              <span>Bet365</span>
+              <span>Superbet</span>
+            </div>
+            <div id="linhasComparacaoCasas"></div>
+          </div>
+          <p id="notaComparacaoCasas" class="nota-comparacao"></p>
+        </section>
+
+        <section id="detectorArbitragem" class="detector-arbitragem" aria-labelledby="tituloArbitragem">
+          <div class="detector-arbitragem-topo">
+            <div>
+              <h3 id="tituloArbitragem">Detector de arbitragem</h3>
+              <p>Verifica as melhores odds do mercado principal entre as duas casas.</p>
+            </div>
+            <span id="statusArbitragem" class="status-arbitragem">Analisando</span>
+          </div>
+
+          <p id="descricaoArbitragem" class="descricao-arbitragem"></p>
+
+          <div id="simuladorArbitragem" class="simulador-arbitragem" hidden>
+            <div class="controle-valor-arbitragem">
+              <label for="valorTotalArbitragem">
+                Valor total da simulação (R$)
+                <input id="valorTotalArbitragem" type="number" min="1" step="10" value="100">
+              </label>
+              <strong id="percentualArbitragem" class="percentual-arbitragem"></strong>
+            </div>
+
+            <div id="distribuicaoArbitragem" class="distribuicao-arbitragem"></div>
+            <div id="resumoArbitragem" class="resumo-arbitragem"></div>
+            <p id="erroArbitragem" class="erro-arbitragem" role="status"></p>
+          </div>
+
+          <p class="aviso-arbitragem">
+            As odds podem mudar antes da conclusão de todas as apostas. A simulação não garante que os preços continuarão disponíveis.
+          </p>
+        </section>
+
+        <h3 class="titulo-odds-justas">Odds justas da Bet365</h3>
         <div id="resultadoPrincipal" class="resultado-jogadores"></div>
 
         <div class="resultado-acoes">
@@ -2133,6 +2545,33 @@
       </section>
     </section>
 
+    <section id="banca" class="modulo-ferramenta" aria-labelledby="tituloBanca">
+      <div class="modulo-topo"><div><h2 id="tituloBanca">Controle de banca local</h2><p>Registre apostas manualmente. Nada desta área é enviado ao servidor.</p></div></div>
+      <p class="aviso-local">Os dados ficam somente neste navegador. Limpá-lo pode apagar o histórico; faça backups em JSON.</p>
+      <div class="acoes-modulo"><label class="campo-calculo">Banca inicial (R$)<input id="bancaInicial" type="number" min="0" step="0.01"></label><button id="salvarBancaInicial" class="botao-calculo" type="button">Salvar banca inicial</button></div>
+      <div class="grade-metricas-banca"><div class="metrica-banca"><span>Banca inicial</span><strong id="metricaBancaInicial">R$ 0,00</strong></div><div class="metrica-banca"><span>Saldo calculado</span><strong id="metricaSaldo">R$ 0,00</strong></div><div class="metrica-banca"><span>Lucro / prejuízo</span><strong id="metricaLucro">R$ 0,00</strong></div><div class="metrica-banca"><span>ROI liquidado</span><strong id="metricaRoi">0,0%</strong></div></div>
+      <form id="formAposta"><input id="apostaEditandoId" type="hidden"><div class="grade-formulario">
+        <label>Casa<input id="apostaCasa" required placeholder="Bet365"></label><label>Esporte<select id="apostaEsporte"><option>Tênis</option><option>Futebol</option><option>Outro</option></select></label><label>Evento<input id="apostaEvento" required></label>
+        <label>Mercado<input id="apostaMercado" required></label><label>Seleção<input id="apostaSelecao" required></label><label>Odd<input id="apostaOdd" type="number" min="1.01" step="0.01" required></label>
+        <label>Valor (R$)<input id="apostaValor" type="number" min="0.01" step="0.01" required></label><label>Data<input id="apostaData" type="date" required></label><label>Resultado<select id="apostaResultado"><option value="pendente">Pendente</option><option value="ganha">Ganha</option><option value="perdida">Perdida</option><option value="devolvida">Devolvida</option><option value="parcialmente_ganha">Parcialmente ganha</option><option value="parcialmente_perdida">Parcialmente perdida</option></select></label>
+      </div><div class="acoes-modulo"><button class="botao-calculo" type="submit">Salvar aposta</button><button id="cancelarEdicaoAposta" class="botao-secundario" type="button" hidden>Cancelar edição</button><span id="mensagemBanca" role="status"></span></div></form>
+      <div class="acoes-modulo"><button id="exportarBanca" class="botao-secundario" type="button">Exportar backup</button><button id="importarBanca" class="botao-secundario" type="button">Importar backup</button><input id="arquivoBanca" type="file" accept="application/json" hidden></div>
+      <div class="tabela-responsiva"><table class="tabela-banca"><thead><tr><th>Data / evento</th><th>Aposta</th><th>Odd</th><th>Valor</th><th>Resultado</th><th>Lucro</th><th>Ações</th></tr></thead><tbody id="listaApostas"></tbody></table></div>
+    </section>
+
+    <section id="calculadoras" class="modulo-ferramenta" aria-labelledby="tituloCalculadoras">
+      <div class="modulo-topo"><div><h2 id="tituloCalculadoras">Calculadoras</h2><p>Ferramentas independentes. Nenhuma delas prevê resultados.</p></div></div>
+      <div class="grade-calculadoras">
+        <article class="cartao-calculadora"><h3>Probabilidade implícita</h3><p>Mostra qual probabilidade uma odd representa antes de retirar a margem da casa. Por exemplo, uma odd 2,00 equivale a 50%.</p><div class="campos-calculo"><label class="campo-calculo">Odd decimal<input id="calcImplicitaOdd" type="number" min="1.01" step="0.01"></label></div><button class="botao-calculo" data-calc="implicita">Calcular</button><div id="resultadoImplicita" class="resultado-calculo"></div></article>
+        <article class="cartao-calculadora"><h3>Conversor de formatos</h3><p>Transforma uma odd decimal nos formatos americano e fracionário. O valor da possível aposta continua sendo o mesmo.</p><div class="campos-calculo"><label class="campo-calculo">Odd decimal<input id="calcConversorDecimal" type="number" min="1.01" step="0.01"></label></div><button class="botao-calculo" data-calc="conversor">Converter</button><div id="resultadoConversor" class="resultado-calculo"></div></article>
+        <article class="cartao-calculadora"><h3>Retorno e lucro</h3><p>Calcula quanto voltaria no total e qual seria o lucro líquido se a aposta fosse ganha. O retorno inclui o valor apostado.</p><div class="campos-calculo"><label class="campo-calculo">Odd<input id="calcRetornoOdd" type="number" min="1.01" step="0.01"></label><label class="campo-calculo">Valor<input id="calcRetornoValor" type="number" min=".01" step=".01"></label></div><button class="botao-calculo" data-calc="retorno">Calcular</button><div id="resultadoRetorno" class="resultado-calculo"></div></article>
+        <article class="cartao-calculadora"><h3>Critério de Kelly</h3><p>Calcula uma fração matemática da banca usando a odd e a probabilidade estimada por você. Kelly zero significa que os dados não indicam vantagem.</p><div class="campos-calculo"><label class="campo-calculo">Odd<input id="calcKellyOdd" type="number" min="1.01" step=".01"></label><label class="campo-calculo">Sua probabilidade (%)<input id="calcKellyProbabilidade" type="number" min=".1" max="99.9" step=".1"></label><label class="campo-calculo">Banca<input id="calcKellyBanca" type="number" min=".01" step=".01"></label><label class="campo-calculo">Fração<select id="calcKellyFracao"><option value="1">Completo</option><option value=".5">Meio Kelly</option><option value=".25">1/4 Kelly</option></select></label></div><button class="botao-calculo" data-calc="kelly">Calcular</button><div id="resultadoKelly" class="resultado-calculo"></div></article>
+        <article class="cartao-calculadora"><h3>Arbitragem manual</h3><p>Verifica se resultados complementares somam menos de 100%. Use duas odds sem empate ou três no futebol 1X2.</p><div class="campos-calculo"><label class="campo-calculo">Odd 1<input id="calcArbOdd1" type="number" min="1.01" step=".01"></label><label class="campo-calculo">Odd 2<input id="calcArbOdd2" type="number" min="1.01" step=".01"></label><label class="campo-calculo">Odd 3<input id="calcArbOdd3" type="number" min="1.01" step=".01"></label><label class="campo-calculo">Valor<input id="calcArbValor" type="number" min=".01" value="100"></label></div><button class="botao-calculo" data-calc="arbitragem">Calcular</button><div id="resultadoArbManual" class="resultado-calculo"></div></article>
+        <article class="cartao-calculadora"><h3>Hedge</h3><p>Calcula um valor para o resultado oposto buscando equilibrar os retornos. O resultado mínimo ainda pode ser negativo, dependendo das odds.</p><div class="campos-calculo"><label class="campo-calculo">Odd original<input id="calcHedgeOddOriginal" type="number" min="1.01" step=".01"></label><label class="campo-calculo">Valor original<input id="calcHedgeValor" type="number" min=".01" step=".01"></label><label class="campo-calculo">Odd oposta<input id="calcHedgeOddOposta" type="number" min="1.01" step=".01"></label></div><button class="botao-calculo" data-calc="hedge">Calcular</button><div id="resultadoHedge" class="resultado-calculo"></div></article>
+        <article class="cartao-calculadora"><h3>Odds sem margem</h3><p>Normaliza o mercado para 100% e reconverte em odds justas. Use somente resultados do mesmo mercado e da mesma casa.</p><div class="campos-calculo"><label class="campo-calculo">Odd 1<input id="calcJustaOdd1" type="number" min="1.01" step=".01"></label><label class="campo-calculo">Odd 2<input id="calcJustaOdd2" type="number" min="1.01" step=".01"></label><label class="campo-calculo">Odd 3<input id="calcJustaOdd3" type="number" min="1.01" step=".01"></label></div><button class="botao-calculo" data-calc="justa">Remover margem</button><div id="resultadoJustaManual" class="resultado-calculo"></div></article>
+      </div>
+    </section>
+
     <section id="comoFunciona" class="como-funciona" aria-labelledby="tituloComoFunciona">
       <h2 id="tituloComoFunciona">Como a odd justa é calculada?</h2>
       <p>
@@ -2182,8 +2621,10 @@
     let faixaMargemAtiva = "todas";
     let somenteComLinkAtivo = false;
     let somenteComHistoricoAtivo = false;
+    let somenteDuasCasasAtivo = false;
     let ordenacaoAtiva = "horario";
     let dadosGraficoAtual = null;
+    let arbitragemAtual = null;
     let esporteSelecionado = "tennis";
     const cacheLocalEsportes = new Map();
     const circuitosAtivos = new Set(["ATP", "WTA"]);
@@ -2237,6 +2678,7 @@
     const ordenarPartidas = document.querySelector("#ordenarPartidas");
     const somenteComLink = document.querySelector("#somenteComLink");
     const somenteComHistorico = document.querySelector("#somenteComHistorico");
+    const somenteDuasCasas = document.querySelector("#somenteDuasCasas");
     const listaRadar = document.querySelector("#listaRadar");
     const contadorRadar = document.querySelector("#contadorRadar");
     const comparacaoAbertura = document.querySelector("#comparacaoAbertura");
@@ -2249,6 +2691,18 @@
     const secaoRadar = document.querySelector("#radar");
     const secaoMovimentacao = document.querySelector("#secaoMovimentacao");
     const resultadoPrincipal = document.querySelector("#resultadoPrincipal");
+    const margensCasas = document.querySelector("#margensCasas");
+    const linhasComparacaoCasas = document.querySelector("#linhasComparacaoCasas");
+    const notaComparacaoCasas = document.querySelector("#notaComparacaoCasas");
+    const detectorArbitragem = document.querySelector("#detectorArbitragem");
+    const statusArbitragem = document.querySelector("#statusArbitragem");
+    const descricaoArbitragem = document.querySelector("#descricaoArbitragem");
+    const simuladorArbitragem = document.querySelector("#simuladorArbitragem");
+    const valorTotalArbitragem = document.querySelector("#valorTotalArbitragem");
+    const percentualArbitragem = document.querySelector("#percentualArbitragem");
+    const distribuicaoArbitragem = document.querySelector("#distribuicaoArbitragem");
+    const resumoArbitragem = document.querySelector("#resumoArbitragem");
+    const erroArbitragem = document.querySelector("#erroArbitragem");
 
     function formatarOdd(valor) {
       return valor.toFixed(2).replace(".", ",");
@@ -2256,6 +2710,13 @@
 
     function formatarPorcentagem(valor) {
       return valor.toFixed(1).replace(".", ",") + "%";
+    }
+
+    function formatarDinheiro(valor) {
+      return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      }).format(valor);
     }
 
     function classificarMargem(valor) {
@@ -2285,6 +2746,234 @@
       return calcularMercadoJusto(obterResultadosPrincipais(partida).map(function (item) {
         return item.odd;
       })).margem;
+    }
+
+    function obterDadosCasa(partida, codigoCasa) {
+      if (partida.casas && partida.casas[codigoCasa]) {
+        return partida.casas[codigoCasa];
+      }
+
+      // Compatibilidade com respostas antigas que possuíam somente campos Bet365.
+      if (codigoCasa === "bet365") {
+        return {
+          codigo: "bet365",
+          nome: "Bet365",
+          margemPrincipal: obterMargemPrincipal(partida),
+          resultadosPrincipais: obterResultadosPrincipais(partida),
+          atualizadoEm: partida.atualizadoEm,
+          link: partida.linkBet365 || null,
+          mercados: partida.mercados || []
+        };
+      }
+
+      return null;
+    }
+
+    function encontrarResultadoDaCasa(casa, resultadoReferencia, indice) {
+      if (!casa || !Array.isArray(casa.resultadosPrincipais)) return null;
+
+      return casa.resultadosPrincipais.find(function (resultadoCasa) {
+        return resultadoCasa.tipo === resultadoReferencia.tipo;
+      }) || casa.resultadosPrincipais[indice] || null;
+    }
+
+    function renderizarComparadorCasas(partida) {
+      const bet365 = obterDadosCasa(partida, "bet365");
+      const superbet = obterDadosCasa(partida, "superbet");
+      const casas = [
+        { codigo: "bet365", nome: "Bet365", dados: bet365 },
+        { codigo: "superbet", nome: "Superbet", dados: superbet }
+      ];
+
+      margensCasas.innerHTML = "";
+      casas.forEach(function (casa) {
+        const resumo = document.createElement("div");
+        resumo.className = "resumo-casa" + (casa.dados ? "" : " indisponivel");
+        const nome = document.createElement("span");
+        const margem = document.createElement("strong");
+        const atualizacao = document.createElement("small");
+        nome.textContent = casa.nome;
+
+        if (casa.dados) {
+          margem.textContent = formatarPorcentagem(casa.dados.margemPrincipal);
+          atualizacao.textContent = avaliarAtualizacao(casa.dados.atualizadoEm).texto;
+        } else {
+          margem.textContent = "Sem odds completas";
+          atualizacao.textContent = "Não disponível nesta partida";
+        }
+
+        resumo.append(nome, margem, atualizacao);
+        margensCasas.appendChild(resumo);
+      });
+
+      linhasComparacaoCasas.innerHTML = "";
+      const resultadosReferencia = bet365 ? bet365.resultadosPrincipais : [];
+
+      resultadosReferencia.forEach(function (resultadoReferencia, indice) {
+        const resultadoBet365 = encontrarResultadoDaCasa(bet365, resultadoReferencia, indice);
+        const resultadoSuperbet = encontrarResultadoDaCasa(superbet, resultadoReferencia, indice);
+        const oddsDisponiveis = [resultadoBet365, resultadoSuperbet]
+          .filter(Boolean)
+          .map(function (resultadoCasa) { return resultadoCasa.odd; });
+        const melhorOdd = oddsDisponiveis.length === 2 ? Math.max(...oddsDisponiveis) : null;
+        const linha = document.createElement("div");
+        linha.className = "linha-comparacao";
+
+        const nomeResultado = document.createElement("span");
+        nomeResultado.textContent = resultadoReferencia.nome;
+        linha.appendChild(nomeResultado);
+
+        [resultadoBet365, resultadoSuperbet].forEach(function (resultadoCasa) {
+          const celula = document.createElement("span");
+          celula.className = "odd-comparada";
+
+          if (resultadoCasa) {
+            celula.textContent = formatarOdd(resultadoCasa.odd);
+            const ehMelhor = melhorOdd !== null && Math.abs(resultadoCasa.odd - melhorOdd) < 0.000001;
+            celula.classList.toggle("melhor-odd", ehMelhor);
+          } else {
+            celula.textContent = "—";
+            celula.setAttribute("aria-label", "Odd não disponível");
+          }
+
+          linha.appendChild(celula);
+        });
+
+        linhasComparacaoCasas.appendChild(linha);
+      });
+
+      notaComparacaoCasas.textContent = superbet
+        ? "A melhor odd é destacada por resultado. Isso é uma comparação de preços, não uma recomendação."
+        : "A Superbet não enviou o mercado principal completo para esta partida. A Bet365 continua disponível normalmente.";
+    }
+
+    function arredondarCentavos(valor) {
+      return Math.round((valor + Number.EPSILON) * 100) / 100;
+    }
+
+    function calcularDistribuicaoNoNavegador(selecoes, valorTotal) {
+      if (!Number.isFinite(valorTotal) || valorTotal <= 0) {
+        throw new Error("Digite um valor total maior que zero.");
+      }
+
+      const somaInversos = selecoes.reduce(function (total, selecao) {
+        return total + (1 / selecao.odd);
+      }, 0);
+      let valorJaDistribuido = 0;
+
+      const apostas = selecoes.map(function (selecao, indice) {
+        const ehUltima = indice === selecoes.length - 1;
+        const valor = ehUltima
+          ? arredondarCentavos(valorTotal - valorJaDistribuido)
+          : arredondarCentavos(valorTotal * (1 / selecao.odd) / somaInversos);
+
+        valorJaDistribuido += valor;
+
+        return {
+          ...selecao,
+          valor: valor,
+          retorno: arredondarCentavos(valor * selecao.odd)
+        };
+      });
+
+      const retornoGarantido = Math.min(...apostas.map(function (aposta) {
+        return aposta.retorno;
+      }));
+      const lucro = arredondarCentavos(retornoGarantido - valorTotal);
+
+      return {
+        apostas: apostas,
+        retornoGarantido: retornoGarantido,
+        lucro: lucro,
+        percentualLucro: (lucro / valorTotal) * 100
+      };
+    }
+
+    function renderizarDistribuicaoArbitragem() {
+      distribuicaoArbitragem.innerHTML = "";
+      resumoArbitragem.innerHTML = "";
+      erroArbitragem.textContent = "";
+
+      if (!arbitragemAtual || !arbitragemAtual.existe) return;
+
+      const valorTotal = Number(String(valorTotalArbitragem.value).replace(",", "."));
+
+      try {
+        const distribuicao = calcularDistribuicaoNoNavegador(
+          arbitragemAtual.selecoes,
+          valorTotal
+        );
+
+        distribuicao.apostas.forEach(function (aposta) {
+          const cartao = document.createElement("article");
+          cartao.className = "aposta-arbitragem";
+          const nome = document.createElement("span");
+          const valor = document.createElement("strong");
+          const detalhes = document.createElement("small");
+          const retorno = document.createElement("small");
+          nome.textContent = aposta.nome;
+          valor.textContent = formatarDinheiro(aposta.valor);
+          detalhes.textContent = aposta.casa + " · odd " + formatarOdd(aposta.odd);
+          retorno.textContent = "Retorno neste cenário: " + formatarDinheiro(aposta.retorno);
+          cartao.append(nome, valor, detalhes, retorno);
+          distribuicaoArbitragem.appendChild(cartao);
+        });
+
+        [
+          ["Valor distribuído", formatarDinheiro(valorTotal)],
+          ["Menor retorno simulado", formatarDinheiro(distribuicao.retornoGarantido)],
+          ["Resultado líquido simulado", formatarDinheiro(distribuicao.lucro)]
+        ].forEach(function ([rotulo, valor]) {
+          const bloco = document.createElement("div");
+          const texto = document.createElement("span");
+          const destaque = document.createElement("strong");
+          texto.textContent = rotulo;
+          destaque.textContent = valor;
+          bloco.append(texto, destaque);
+          resumoArbitragem.appendChild(bloco);
+        });
+      } catch (erro) {
+        erroArbitragem.textContent = erro.message;
+      }
+    }
+
+    function renderizarDetectorArbitragem(partida) {
+      const arbitragem = partida.arbitragemPrincipal;
+      arbitragemAtual = arbitragem && arbitragem.calculavel ? arbitragem : null;
+      detectorArbitragem.classList.remove("tem-oportunidade");
+      statusArbitragem.className = "status-arbitragem";
+      simuladorArbitragem.hidden = true;
+      distribuicaoArbitragem.innerHTML = "";
+      resumoArbitragem.innerHTML = "";
+      erroArbitragem.textContent = "";
+
+      if (!arbitragem || !arbitragem.calculavel) {
+        statusArbitragem.textContent = "Análise indisponível";
+        descricaoArbitragem.textContent = arbitragem && arbitragem.motivo
+          ? arbitragem.motivo
+          : "As duas casas precisam fornecer todos os resultados do mercado principal.";
+        return;
+      }
+
+      if (!arbitragem.existe) {
+        statusArbitragem.textContent = "Sem arbitragem";
+        descricaoArbitragem.textContent =
+          "As melhores odds somam " + formatarPorcentagem(arbitragem.somaImplicita) +
+          ". Para existir arbitragem, essa soma precisa ser menor que 100%.";
+        return;
+      }
+
+      detectorArbitragem.classList.add("tem-oportunidade");
+      statusArbitragem.classList.add("positiva");
+      statusArbitragem.textContent = "Oportunidade matemática";
+      descricaoArbitragem.textContent =
+        "As melhores odds somam " + formatarPorcentagem(arbitragem.somaImplicita) +
+        ", abaixo de 100%.";
+      percentualArbitragem.textContent =
+        "Diferença: " + formatarPorcentagem(arbitragem.percentualArbitragem) +
+        " · retorno teórico: " + formatarPorcentagem(arbitragem.percentualLucroTeorico);
+      simuladorArbitragem.hidden = false;
+      renderizarDistribuicaoArbitragem();
     }
 
     function partidaEhDeDuplas(partida) {
@@ -2554,7 +3243,15 @@
 
       const metaEsquerda = document.createElement("span");
       metaEsquerda.className = "meta-esquerda";
-      metaEsquerda.append(tipoMercado, criarBadgeAtualizacao(partida.atualizadoEm));
+      const possuiSuperbet = Boolean(obterDadosCasa(partida, "superbet"));
+      const seloCobertura = document.createElement("span");
+      seloCobertura.className = "selo-cobertura" + (possuiSuperbet ? " duas-casas" : "");
+      seloCobertura.textContent = possuiSuperbet ? "2 casas" : "Só Bet365";
+      metaEsquerda.append(
+        tipoMercado,
+        seloCobertura,
+        criarBadgeAtualizacao(partida.atualizadoEm)
+      );
 
       const horario = document.createElement("span");
       horario.className = "horario";
@@ -2671,6 +3368,8 @@
         const correspondeLink = !somenteComLinkAtivo || Boolean(partida.linkBet365);
         const correspondeHistorico = esporteSelecionado !== "tennis" || !somenteComHistoricoAtivo ||
           partidasComHistorico.has(partida.id);
+        const correspondeDuasCasas = !somenteDuasCasasAtivo ||
+          Boolean(obterDadosCasa(partida, "bet365") && obterDadosCasa(partida, "superbet"));
 
         const correspondeCircuito = esporteSelecionado !== "tennis" || circuitosAtivos.has(circuito);
         return correspondeCircuito &&
@@ -2680,7 +3379,8 @@
           correspondeTipo &&
           correspondeMargem &&
           correspondeLink &&
-          correspondeHistorico;
+          correspondeHistorico &&
+          correspondeDuasCasas;
       });
 
       partidasFiltradas.sort(function (primeira, segunda) {
@@ -2790,7 +3490,9 @@
         : "Análise transparente · Futebol";
       document.querySelector("#painelPartidas").setAttribute(
         "aria-label",
-        ehTenis ? "Partidas de tênis da Bet365" : "Partidas de futebol da Bet365"
+        ehTenis
+          ? "Partidas de tênis da Bet365 e Superbet"
+          : "Partidas de futebol da Bet365 e Superbet"
       );
       document.querySelector("#rotuloPesquisa").textContent = ehTenis
         ? "Pesquisar jogador ou torneio"
@@ -2815,7 +3517,7 @@
       listaPartidas.setAttribute("aria-busy", "true");
       resultado.hidden = true;
       estadoInicial.hidden = false;
-      mostrarMensagem("Carregando partidas da Bet365...", false);
+      mostrarMensagem("Carregando partidas e odds disponíveis...", false);
       mostrarEsqueletosDeCarregamento();
 
       try {
@@ -2827,6 +3529,7 @@
         }
 
         partidasDisponiveis = dados.partidas;
+        registrarSnapshotAlertas(dados.partidas, false);
         cacheLocalEsportes.set(esporteSelecionado, dados);
         partidaSelecionadaId = null;
         atualizarInformacoesDeUso(dados.consultas);
@@ -2858,6 +3561,7 @@
       const dadosEmCache = cacheLocalEsportes.get(novoEsporte);
       if (dadosEmCache) {
         partidasDisponiveis = dadosEmCache.partidas;
+        registrarSnapshotAlertas(dadosEmCache.partidas, false);
         atualizarInformacoesDeUso(dadosEmCache.consultas);
         atualizarResumoGeral();
         renderizarPartidas();
@@ -3453,6 +4157,8 @@
       margemResultado.classList.add("faixa-" + faixaMargem.codigo);
       document.querySelector("#faixaMargemCasa").textContent = "Margem " + faixaMargem.texto.toLowerCase();
 
+      renderizarComparadorCasas(dados);
+      renderizarDetectorArbitragem(dados);
       resultadoPrincipal.innerHTML = "";
       resultados.forEach(function (item) {
         const cartao = document.createElement("article");
@@ -3487,7 +4193,7 @@
       statusResultado.textContent = avaliacao.texto;
 
       const textoAtualizacao = dados.atualizadoEm
-        ? "Odds atualizadas em " + formatarData(dados.atualizadoEm) + ". "
+        ? "Odds da Bet365 atualizadas em " + formatarData(dados.atualizadoEm) + ". "
         : "";
       document.querySelector("#resultadoAtualizacao").textContent =
         textoAtualizacao + "O cálculo remove a margem; não prevê o vencedor.";
@@ -3532,6 +4238,7 @@
     campoPesquisa.addEventListener("input", renderizarPartidas);
     botaoAtualizar.addEventListener("click", carregarPartidas);
     botaoCarregarMovimentacao.addEventListener("click", carregarHistoricoMovimentacao);
+    valorTotalArbitragem.addEventListener("input", renderizarDistribuicaoArbitragem);
     momentoInicial.addEventListener("change", renderizarComparadorMomentos);
     momentoFinal.addEventListener("change", renderizarComparadorMomentos);
 
@@ -3564,6 +4271,11 @@
 
     somenteComHistorico.addEventListener("change", function () {
       somenteComHistoricoAtivo = somenteComHistorico.checked;
+      aplicarFiltroAvancado();
+    });
+
+    somenteDuasCasas.addEventListener("change", function () {
+      somenteDuasCasasAtivo = somenteDuasCasas.checked;
       aplicarFiltroAvancado();
     });
 
@@ -3617,6 +4329,34 @@
     });
 
     // O radar local aparece imediatamente; a lista da API é carregada em seguida.
+    // A banca é salva somente neste navegador.
+    const CHAVE_BANCA = "odd-clara-banca-v1";
+    let dadosBanca = carregarBanca();
+    function carregarBanca(){try{const d=JSON.parse(localStorage.getItem(CHAVE_BANCA));if(d&&Number.isFinite(d.bancaInicial)&&Array.isArray(d.apostas))return d;}catch(e){}return{bancaInicial:0,apostas:[]};}
+    function lucroAposta(a){return Math.round(a.valor*({pendente:0,ganha:a.odd-1,perdida:-1,devolvida:0,parcialmente_ganha:(a.odd-1)/2,parcialmente_perdida:-.5}[a.resultado])*100)/100;}
+    function salvarBanca(){localStorage.setItem(CHAVE_BANCA,JSON.stringify(dadosBanca));renderizarBanca();}
+    function renderizarBanca(){const lucro=dadosBanca.apostas.reduce(function(t,a){return t+lucroAposta(a);},0),liquidadas=dadosBanca.apostas.filter(function(a){return a.resultado!=="pendente";}),investido=liquidadas.reduce(function(t,a){return t+a.valor;},0);document.querySelector("#bancaInicial").value=dadosBanca.bancaInicial||"";document.querySelector("#metricaBancaInicial").textContent=formatarDinheiro(dadosBanca.bancaInicial);document.querySelector("#metricaSaldo").textContent=formatarDinheiro(dadosBanca.bancaInicial+lucro);document.querySelector("#metricaLucro").textContent=formatarDinheiro(lucro);document.querySelector("#metricaRoi").textContent=formatarPorcentagem(investido?lucro/investido*100:0);const corpo=document.querySelector("#listaApostas");corpo.innerHTML="";if(!dadosBanca.apostas.length){corpo.innerHTML="<tr><td colspan='7'>Nenhuma aposta registrada.</td></tr>";return;}dadosBanca.apostas.slice().sort(function(a,b){return b.data.localeCompare(a.data);}).forEach(function(a){const linha=document.createElement("tr");linha.innerHTML="<td></td><td></td><td></td><td></td><td></td><td></td><td></td>";linha.children[0].textContent=a.data+" · "+a.evento;linha.children[1].textContent=a.casa+" · "+a.mercado+" · "+a.selecao;linha.children[2].textContent=formatarOdd(a.odd);linha.children[3].textContent=formatarDinheiro(a.valor);linha.children[4].textContent=({pendente:"Pendente",ganha:"Ganha",perdida:"Perdida",devolvida:"Devolvida",parcialmente_ganha:"Parcialmente ganha",parcialmente_perdida:"Parcialmente perdida"})[a.resultado];linha.children[5].textContent=formatarDinheiro(lucroAposta(a));const ed=document.createElement("button");ed.className="botao-secundario";ed.textContent="Editar";ed.onclick=function(){editarAposta(a);};const ex=document.createElement("button");ex.className="botao-perigo";ex.textContent="Excluir";ex.onclick=function(){if(confirm("Excluir este registro?")){dadosBanca.apostas=dadosBanca.apostas.filter(function(x){return x.id!==a.id;});salvarBanca();}};linha.children[6].append(ed," ",ex);corpo.appendChild(linha);});}
+    function limparAposta(){document.querySelector("#formAposta").reset();document.querySelector("#apostaEditandoId").value="";document.querySelector("#apostaData").value=new Date().toISOString().slice(0,10);document.querySelector("#cancelarEdicaoAposta").hidden=true;}
+    function editarAposta(a){const mapa={Casa:"casa",Esporte:"esporte",Evento:"evento",Mercado:"mercado",Selecao:"selecao",Odd:"odd",Valor:"valor",Data:"data",Resultado:"resultado"};Object.keys(mapa).forEach(function(c){document.querySelector("#aposta"+c).value=a[mapa[c]];});document.querySelector("#apostaEditandoId").value=a.id;document.querySelector("#cancelarEdicaoAposta").hidden=false;document.querySelector("#formAposta").scrollIntoView({behavior:"smooth"});}
+    document.querySelector("#salvarBancaInicial").onclick=function(){const v=Number(document.querySelector("#bancaInicial").value);if(Number.isFinite(v)&&v>=0){dadosBanca.bancaInicial=v;salvarBanca();}};
+    document.querySelector("#formAposta").onsubmit=function(e){e.preventDefault();const id=document.querySelector("#apostaEditandoId").value,a={id:id||((crypto.randomUUID&&crypto.randomUUID())||String(Date.now())),casa:document.querySelector("#apostaCasa").value.trim(),esporte:document.querySelector("#apostaEsporte").value,evento:document.querySelector("#apostaEvento").value.trim(),mercado:document.querySelector("#apostaMercado").value.trim(),selecao:document.querySelector("#apostaSelecao").value.trim(),odd:Number(document.querySelector("#apostaOdd").value),valor:Number(document.querySelector("#apostaValor").value),data:document.querySelector("#apostaData").value,resultado:document.querySelector("#apostaResultado").value};if(id)dadosBanca.apostas=dadosBanca.apostas.map(function(x){return x.id===id?a:x;});else dadosBanca.apostas.push(a);salvarBanca();limparAposta();document.querySelector("#mensagemBanca").textContent="Registro salvo no navegador.";};document.querySelector("#cancelarEdicaoAposta").onclick=limparAposta;
+    document.querySelector("#exportarBanca").onclick=function(){const b=new Blob([JSON.stringify(dadosBanca,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="odd-clara-banca.json";a.click();URL.revokeObjectURL(a.href);};document.querySelector("#importarBanca").onclick=function(){document.querySelector("#arquivoBanca").click();};document.querySelector("#arquivoBanca").onchange=function(e){const arq=e.target.files[0];if(!arq)return;const l=new FileReader();l.onload=function(){try{const d=JSON.parse(l.result);if(!d||!Number.isFinite(d.bancaInicial)||!Array.isArray(d.apostas))throw Error();if(confirm("Substituir os dados atuais por este backup?")){dadosBanca=d;salvarBanca();}}catch(x){alert("Backup inválido.");}};l.readAsText(arq);e.target.value="";};
+
+    // Alertas ficam em memória e só consultam a API quando ativados.
+    let snapshotAlertas=new Map(),temporizadorAlertas=null,alertasExibidos=[];
+    function criarSnapshot(partidas){const m=new Map();partidas.forEach(function(p){Object.keys(p.casas||{}).forEach(function(c){const casa=p.casas[c];if(casa)(casa.resultadosPrincipais||[]).forEach(function(r){m.set(p.esporte+":"+p.id+":"+c+":"+r.tipo,{odd:r.odd,nome:r.nome,evento:p.participanteA+" × "+p.participanteB,casa:casa.nome,atualizadoEm:casa.atualizadoEm});});});});return m;}
+    function registrarSnapshotAlertas(partidas,comparar){const novo=criarSnapshot(partidas);if(comparar){const limite=Math.max(.1,Number(document.querySelector("#limiteAlerta").value)||3);novo.forEach(function(a,chave){const velha=snapshotAlertas.get(chave);if(velha){const v=(a.odd-velha.odd)/velha.odd*100;if(Math.abs(v)>=limite)alertasExibidos.unshift({tipo:v>0?"subiu":"caiu",texto:a.evento+" · "+a.nome+" na "+a.casa+" "+(v>0?"subiu ":"caiu ")+Math.abs(v).toFixed(1).replace(".",",")+"%"});}if(a.atualizadoEm&&Date.now()-new Date(a.atualizadoEm).getTime()>30*60*1000)alertasExibidos.unshift({tipo:"",texto:a.evento+" · odds da "+a.casa+" desatualizadas."});});alertasExibidos=alertasExibidos.slice(0,20);renderizarAlertas();}snapshotAlertas=novo;}
+    function renderizarAlertas(){const l=document.querySelector("#listaAlertas");l.innerHTML="";if(!alertasExibidos.length){l.textContent="Nenhum alerta nesta sessão.";return;}alertasExibidos.forEach(function(a){const d=document.createElement("div");d.className="item-alerta "+a.tipo;d.textContent=a.texto;l.appendChild(d);});}
+    async function atualizarAlertas(){if(!document.querySelector("#ativarAlertas").checked||document.hidden)return;document.querySelector("#statusAlertas").textContent="Atualizando...";try{const r=await fetch("/api/partidas?esporte="+encodeURIComponent(esporteSelecionado)),d=await r.json();if(!r.ok)throw Error();registrarSnapshotAlertas(d.partidas,true);partidasDisponiveis=d.partidas;cacheLocalEsportes.set(esporteSelecionado,d);atualizarInformacoesDeUso(d.consultas);atualizarResumoGeral();renderizarPartidas();document.querySelector("#statusAlertas").textContent="Ativos · verificado às "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}catch(e){document.querySelector("#statusAlertas").textContent="Falha na atualização";}}
+    function configurarAlertas(){clearInterval(temporizadorAlertas);if(!document.querySelector("#ativarAlertas").checked){document.querySelector("#statusAlertas").textContent="Desativados";return;}registrarSnapshotAlertas(partidasDisponiveis,false);const m=Math.max(10,Number(document.querySelector("#intervaloAlertas").value)||15);document.querySelector("#statusAlertas").textContent="Ativos · a cada "+m+" min";temporizadorAlertas=setInterval(atualizarAlertas,m*60000);}
+    document.querySelector("#ativarAlertas").onchange=configurarAlertas;document.querySelector("#intervaloAlertas").onchange=configurarAlertas;document.querySelector("#limparAlertas").onclick=function(){alertasExibidos=[];renderizarAlertas();};
+
+    // As sete calculadoras compartilham a mesma validação amigável.
+    function n(id){return Number(document.querySelector(id).value);}function saida(id,t){document.querySelector(id).textContent=t;}function fracaoDecimal(o){const den=100,num=Math.round((o-1)*den);function mdc(a,b){while(b){const r=a%b;a=b;b=r;}return a;}const d=mdc(num,den);return(num/d)+"/"+(den/d);}
+    document.querySelectorAll("[data-calc]").forEach(function(b){b.onclick=function(){try{const t=b.dataset.calc;if(t==="implicita"){const o=n("#calcImplicitaOdd");if(o<=1)throw Error();saida("#resultadoImplicita",formatarPorcentagem(100/o));}if(t==="conversor"){const o=n("#calcConversorDecimal");if(o<=1)throw Error();const a=o>=2?Math.round((o-1)*100):Math.round(-100/(o-1));saida("#resultadoConversor","Decimal "+formatarOdd(o)+" · Americana "+(a>0?"+":"")+a);}if(t==="retorno"){const o=n("#calcRetornoOdd"),v=n("#calcRetornoValor");if(o<=1||v<=0)throw Error();saida("#resultadoRetorno","Retorno "+formatarDinheiro(o*v)+" · lucro "+formatarDinheiro(v*(o-1)));}if(t==="kelly"){const o=n("#calcKellyOdd"),p=n("#calcKellyProbabilidade")/100,ba=n("#calcKellyBanca"),f=n("#calcKellyFracao");if(o<=1||p<=0||p>=1||ba<=0)throw Error();const k=Math.max(0,(((o-1)*p)-(1-p))/(o-1));saida("#resultadoKelly",k?"Fração aplicada "+formatarPorcentagem(k*f*100)+" · "+formatarDinheiro(ba*k*f):"Kelly zero: sem vantagem matemática pelos dados informados.");}if(t==="arbitragem"){const os=[n("#calcArbOdd1"),n("#calcArbOdd2")],o3=n("#calcArbOdd3"),v=n("#calcArbValor");if(o3>1)os.push(o3);if(os.some(function(o){return o<=1;})||v<=0)throw Error();const s=os.reduce(function(x,o){return x+1/o;},0);saida("#resultadoArbManual",s<1?"Arbitragem · lucro teórico "+formatarPorcentagem(((1/s)-1)*100)+" · retorno "+formatarDinheiro(v/s):"Sem arbitragem · soma "+formatarPorcentagem(s*100));}if(t==="hedge"){const o=n("#calcHedgeOddOriginal"),v=n("#calcHedgeValor"),h=n("#calcHedgeOddOposta");if(o<=1||v<=0||h<=1)throw Error();const vh=v*o/h;saida("#resultadoHedge","Hedge "+formatarDinheiro(vh)+" · resultado mínimo "+formatarDinheiro(Math.min(v*o,vh*h)-v-vh));}if(t==="justa"){const os=[n("#calcJustaOdd1"),n("#calcJustaOdd2")],o3=n("#calcJustaOdd3");if(o3>1)os.push(o3);if(os.some(function(o){return o<=1;}))throw Error();const c=calcularMercadoJusto(os);saida("#resultadoJustaManual","Margem "+formatarPorcentagem(c.margem)+" · justas "+c.resultados.map(function(r){return formatarOdd(r.oddJusta);}).join(" · "));}}catch(e){b.parentElement.querySelector(".resultado-calculo").textContent="Preencha os campos com números válidos.";}};});
+    document.querySelector('[data-calc="conversor"]').addEventListener("click",function(){const o=n("#calcConversorDecimal");if(o>1)document.querySelector("#resultadoConversor").textContent+=" · Fracionária "+fracaoDecimal(o);});
+    limparAposta();renderizarBanca();renderizarAlertas();
+
     const esporteDaUrl = new URLSearchParams(window.location.search).get("esporte");
     if (esporteDaUrl === "football" || esporteDaUrl === "tennis") {
       esporteSelecionado = esporteDaUrl;
