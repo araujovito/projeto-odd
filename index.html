@@ -2525,6 +2525,70 @@
       background: var(--amarelo);
       color: #172019;
     }
+
+    /* Demais caixas da página que ainda possuíam fundo claro fixo. */
+    body.tema-escuro .abas-esportes,
+    body.tema-escuro .filtros-circuito,
+    body.tema-escuro .informacoes-api,
+    body.tema-escuro .filtros-avancados,
+    body.tema-escuro .grupo-torneio,
+    body.tema-escuro .cartao-resumo,
+    body.tema-escuro .opcao-marcavel,
+    body.tema-escuro .acompanhada-card {
+      background:#18241e !important;
+      border-color:#43534a !important;
+      color:#eef5f0 !important;
+    }
+    body.tema-escuro .grupo-torneio summary:hover,
+    body.tema-escuro .linha-tabela:not(.cabecalho-tabela):nth-child(odd),
+    body.tema-escuro .grupo-mercado,
+    body.tema-escuro .grupos-mercado,
+    body.tema-escuro .mercado-detalhe[open] summary,
+    body.tema-escuro .indicador-movimento,
+    body.tema-escuro .comparacao-item {
+      background:#213029 !important;
+      border-color:#45564c !important;
+      color:#eef5f0 !important;
+    }
+    body.tema-escuro .filtro-data,
+    body.tema-escuro .filtro-favoritas,
+    body.tema-escuro .favoritar-partida,
+    body.tema-escuro .aba-mercado {
+      background:#142019 !important;
+      border-color:#4b5d52 !important;
+      color:#c3d0c7 !important;
+    }
+    body.tema-escuro .filtro-data[aria-pressed="true"],
+    body.tema-escuro .filtro-favoritas[aria-pressed="true"] {
+      background:#254438 !important;
+      border-color:#62c19a !important;
+      color:#c9f3df !important;
+    }
+    body.tema-escuro .mercado-detalhe,
+    body.tema-escuro .grupo-mercado {
+      background:#1d2922 !important;
+      border-color:#45564c !important;
+    }
+    body.tema-escuro .odd-resumo:not(.margem-cartao) {
+      background:#26372e !important;
+    }
+    body.tema-escuro .odd-resumo:not(.margem-cartao) strong,
+    body.tema-escuro .linha-tabela strong,
+    body.tema-escuro .indicador-movimento strong,
+    body.tema-escuro .margem-linha,
+    body.tema-escuro .consultas-restantes,
+    body.tema-escuro .filtros-avancados summary {
+      color:#91dfbf !important;
+    }
+    body.tema-escuro .grafico-grade { stroke:#3f5147; }
+    body.tema-escuro .grafico-eixo-texto { fill:#c0cdc4; }
+    body.tema-escuro .grafico-ponto-a,
+    body.tema-escuro .grafico-ponto-b { stroke:#17231c; }
+    body.tema-escuro .esqueleto,
+    body.tema-escuro .grafico-container.carregando {
+      background:linear-gradient(90deg,#1a261f 25%,#29372f 50%,#1a261f 75%);
+      background-size:200% 100%;
+    }
   </style>
 </head>
 
