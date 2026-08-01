@@ -25,6 +25,7 @@ Ela não prevê resultados nem recomenda apostas.
 - Classificação matemática de margem baixa, moderada ou alta.
 - Indicadores de atualização, consumo da API e explicação didática do cálculo.
 - Controle de banca sem cadastro, salvo somente no `localStorage`, com saldo, lucro, ROI e resultados parciais.
+- Botão nas odds para preencher automaticamente o registro manual da banca, sem realizar apostas.
 - Edição e exclusão de apostas manuais, além de backup e restauração em JSON.
 - Alertas de alta, queda e desatualização enquanto a página estiver aberta.
 - Calculadoras de probabilidade implícita, conversão, retorno, Kelly, arbitragem, hedge e odds sem margem.

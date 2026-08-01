@@ -420,6 +420,31 @@
       font-weight: 800;
     }
 
+    .botao-registrar-odd {
+      display: block;
+      width: 100%;
+      min-height: 32px;
+      margin-top: 7px;
+      padding: 6px 7px;
+      border: 1px solid var(--verde);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--verde-escuro);
+      font-size: 0.68rem;
+      font-weight: 800;
+      line-height: 1.15;
+      cursor: pointer;
+    }
+
+    .botao-registrar-odd:hover {
+      background: var(--verde-claro);
+    }
+
+    .odd-com-acao {
+      min-width: 0;
+      text-align: center;
+    }
+
     .odd-comparada.melhor-odd {
       background: #fffbd1;
       color: var(--verde-escuro);
@@ -2287,6 +2312,7 @@
       .dica-tabela-mobile { display:block; margin:14px 0 0; color:var(--texto-suave); font-size:.78rem; }
       .linha-comparacao > span { padding-right:6px; padding-left:6px; }
       .cabecalho-comparacao { font-size:.58rem; letter-spacing:-.01em; }
+      .botao-registrar-odd { min-height:36px; padding:5px 3px; font-size:.62rem; }
       input, select, textarea { font-size:16px !important; }
       .jogo-responsavel, .rodape { line-height: 1.55; }
     }
@@ -2900,6 +2926,43 @@
       }).format(valor);
     }
 
+    function criarBotaoRegistrarOdd(dadosAposta) {
+      const botao = document.createElement("button");
+      botao.type = "button";
+      botao.className = "botao-registrar-odd";
+      botao.textContent = "Registrar na banca";
+      botao.setAttribute(
+        "aria-label",
+        "Registrar " + dadosAposta.selecao + " na " + dadosAposta.casa + " com odd " + formatarOdd(dadosAposta.odd)
+      );
+      botao.addEventListener("click", function () {
+        preencherRegistroBanca(dadosAposta);
+      });
+      return botao;
+    }
+
+    function preencherRegistroBanca(dadosAposta) {
+      const partida = partidasDisponiveis.find(function (item) {
+        return item.id === partidaSelecionadaId;
+      });
+      if (!partida) return;
+
+      limparAposta();
+      document.querySelector("#apostaCasa").value = dadosAposta.casa;
+      document.querySelector("#apostaEsporte").value = esporteSelecionado === "tennis" ? "Tênis" : "Futebol";
+      document.querySelector("#apostaEvento").value = partida.participanteA + " × " + partida.participanteB;
+      document.querySelector("#apostaMercado").value = dadosAposta.mercado;
+      document.querySelector("#apostaSelecao").value = dadosAposta.selecao;
+      document.querySelector("#apostaOdd").value = dadosAposta.odd.toFixed(2);
+      document.querySelector("#apostaResultado").value = "pendente";
+      document.querySelector("#mensagemBanca").textContent =
+        "Dados preenchidos automaticamente. Informe o valor e confirme em Salvar aposta.";
+      document.querySelector("#banca").scrollIntoView({ behavior: "smooth", block: "start" });
+      window.setTimeout(function () {
+        document.querySelector("#apostaValor").focus({ preventScroll: true });
+      }, 450);
+    }
+
     function classificarMargem(valor) {
       if (valor <= 5) return { codigo: "baixa", texto: "Baixa" };
       if (valor <= 8) return { codigo: "moderada", texto: "Moderada" };
@@ -3004,7 +3067,7 @@
         nomeResultado.textContent = resultadoReferencia.nome;
         linha.appendChild(nomeResultado);
 
-        [resultadoBet365, resultadoSuperbet].forEach(function (resultadoCasa) {
+        [resultadoBet365, resultadoSuperbet].forEach(function (resultadoCasa, indiceCasa) {
           const celula = document.createElement("span");
           celula.className = "odd-comparada";
 
@@ -3012,6 +3075,12 @@
             celula.textContent = formatarOdd(resultadoCasa.odd);
             const ehMelhor = melhorOdd !== null && Math.abs(resultadoCasa.odd - melhorOdd) < 0.000001;
             celula.classList.toggle("melhor-odd", ehMelhor);
+            celula.appendChild(criarBotaoRegistrarOdd({
+              casa: casas[indiceCasa].nome,
+              mercado: esporteSelecionado === "football" ? "Resultado da partida (1X2)" : "Vencedor da partida",
+              selecao: resultadoReferencia.nome,
+              odd: resultadoCasa.odd
+            }));
           } else {
             celula.textContent = "—";
             celula.setAttribute("aria-label", "Odd não disponível");
@@ -4139,7 +4208,7 @@
       }
     }
 
-    function criarSelecaoMercado(resultadoMercado, calculavel) {
+    function criarSelecaoMercado(resultadoMercado, calculavel, nomeMercado) {
       const selecao = document.createElement("div");
       selecao.className = "linha-tabela";
 
@@ -4155,7 +4224,24 @@
 
       selecao.appendChild(nome);
 
-      valores.forEach(function (item) {
+      valores.forEach(function (item, indice) {
+        if (indice === 0) {
+          const oddComAcao = document.createElement("div");
+          oddComAcao.className = "odd-com-acao";
+          const odd = document.createElement("strong");
+          odd.textContent = item;
+          oddComAcao.append(
+            odd,
+            criarBotaoRegistrarOdd({
+              casa: "Bet365",
+              mercado: nomeMercado,
+              selecao: resultadoMercado.nome,
+              odd: resultadoMercado.odd
+            })
+          );
+          selecao.appendChild(oddComAcao);
+          return;
+        }
         const valor = document.createElement("strong");
         valor.textContent = item;
         selecao.appendChild(valor);
@@ -4164,7 +4250,7 @@
       return selecao;
     }
 
-    function criarGrupoMercado(grupo, posicao) {
+    function criarGrupoMercado(grupo, posicao, nomeMercado) {
       const elemento = document.createElement("div");
       elemento.className = "grupo-mercado";
 
@@ -4193,7 +4279,10 @@
       resultados.appendChild(cabecalho);
 
       grupo.resultados.forEach(function (resultadoMercado) {
-        resultados.appendChild(criarSelecaoMercado(resultadoMercado, grupo.calculavel));
+        const descricaoMercado = grupo.linha !== null
+          ? nomeMercado + " · Linha " + grupo.linha
+          : nomeMercado;
+        resultados.appendChild(criarSelecaoMercado(resultadoMercado, grupo.calculavel, descricaoMercado));
       });
 
       topo.append(linha, margem);
@@ -4275,7 +4364,7 @@
 
         if (mercado.disponivel) {
           mercado.grupos.forEach(function (grupo, posicao) {
-            conteudo.appendChild(criarGrupoMercado(grupo, posicao));
+            conteudo.appendChild(criarGrupoMercado(grupo, posicao, mercado.nome));
           });
         } else {
           const vazio = document.createElement("p");
