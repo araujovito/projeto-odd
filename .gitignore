@@ -1,0 +1,7 @@
+# A chave da API é secreta e não deve ser enviada ao GitHub.
+.env
+
+# Arquivos temporários comuns do sistema.
+.DS_Store
+Thumbs.db
+*.log

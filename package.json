@@ -1,0 +1,12 @@
+{
+  "name": "calculadora-odds-justas-tenis",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Calculadora didática de odds justas para partidas de tênis",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
